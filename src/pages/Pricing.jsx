@@ -113,16 +113,65 @@ function CopyButton({ text }) {
   );
 }
 
-function BankCard({ bank }) {
+// QR code using Google Charts API (no extra package needed)
+function QRCode({ data, size = 160 }) {
+  const encoded = encodeURIComponent(data);
+  const url = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encoded}&margin=10`;
+  return (
+    <img src={url} alt="QR chuyển khoản" width={size} height={size} className="rounded-xl border border-gray-200 shadow-sm" />
+  );
+}
+
+function BankCard({ bank, plan }) {
+  const [showQR, setShowQR] = useState(false);
+
+  // Build QR data per bank type
+  const qrData = bank.qr
+    ? bank.qr(plan)
+    : `${bank.bank}\n${bank.fields.find(f => f.label === "Số tài khoản")?.value || ""}`;
+
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
-      <div className="flex items-center gap-2 mb-3">
-        <span className="text-2xl">{bank.flag}</span>
-        <div>
-          <div className="font-bold text-[#0a1628] text-sm">{bank.label}</div>
-          <div className="text-xs text-gray-400">{bank.bank}</div>
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <span className="text-2xl">{bank.flag}</span>
+          <div>
+            <div className="font-bold text-[#0a1628] text-sm">{bank.label}</div>
+            <div className="text-xs text-gray-400">{bank.bank}</div>
+          </div>
         </div>
+        <button
+          onClick={() => setShowQR(!showQR)}
+          className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all border ${showQR ? "bg-blue-600 text-white border-blue-600" : "border-blue-200 text-blue-600 hover:bg-blue-50"}`}
+        >
+          <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+            <rect x="5" y="5" width="3" height="3" fill="currentColor" stroke="none"/>
+            <rect x="16" y="5" width="3" height="3" fill="currentColor" stroke="none"/>
+            <rect x="5" y="16" width="3" height="3" fill="currentColor" stroke="none"/>
+            <path d="M14 14h3v3h-3zM17 17h3v3h-3zM14 20h3"/>
+          </svg>
+          {showQR ? "Ẩn QR" : "Quét QR"}
+        </button>
       </div>
+
+      {showQR && (
+        <div className="flex flex-col items-center gap-2 py-4 mb-3 bg-gray-50 rounded-xl border border-gray-100">
+          <QRCode data={qrData} size={180} />
+          <p className="text-xs text-gray-500 text-center px-4">
+            📱 Mở app ngân hàng → Quét QR → Kiểm tra thông tin → Xác nhận
+          </p>
+          {plan && (
+            <div className="flex items-center gap-2 bg-white border border-blue-200 rounded-lg px-4 py-2">
+              <span className="text-xs text-gray-500">Số tiền:</span>
+              <span className="text-sm font-black text-blue-600">
+                {bank.flag === "🇦🇺" ? `AUD ${plan.amount}` : `VND (tương đương AUD ${plan.amount})`}
+              </span>
+            </div>
+          )}
+        </div>
+      )}
+
       <div className="space-y-2">
         {bank.fields.map((f, i) => (
           <div key={i} className="flex items-center justify-between py-1.5 border-b border-gray-100 last:border-0">
@@ -141,13 +190,7 @@ function BankCard({ bank }) {
 function BankTransferCard({ plan }) {
   return (
     <div className="space-y-4">
-      {BANKS.map((bank, i) => <BankCard key={i} bank={bank} />)}
-      {plan && (
-        <div className="bg-white rounded-2xl border border-gray-200 p-4 flex items-center justify-between">
-          <span className="text-sm text-gray-500">Số tiền thanh toán</span>
-          <span className="text-xl font-black text-blue-600">AUD {plan.amount}</span>
-        </div>
-      )}
+      {BANKS.map((bank, i) => <BankCard key={i} bank={bank} plan={plan} />)}
       <div className="bg-amber-50 border border-amber-200 rounded-xl p-3">
         <p className="text-xs text-amber-700">
           <strong>Nội dung chuyển khoản:</strong> Ghi email + gói dịch vụ (ví dụ: <em>nguyenvana@email.com Monthly</em>).
