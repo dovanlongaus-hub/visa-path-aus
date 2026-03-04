@@ -4,6 +4,7 @@ import { Upload, FileText, Loader2, CheckCircle, User, Briefcase, GraduationCap,
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import VisaPathwayRecommendation from "@/components/VisaPathwayRecommendation";
+import CVOptimizer from "@/components/CVOptimizer";
 
 const EXTRACT_SCHEMA = {
   type: "object",
@@ -36,6 +37,9 @@ export default function CVUpload() {
   const [savedProfile, setSavedProfile] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [visaAnalysis, setVisaAnalysis] = useState(null);
+  const [optimizing, setOptimizing] = useState(false);
+  const [selectedVisaForOptimization, setSelectedVisaForOptimization] = useState(null);
+  const [optimizationData, setOptimizationData] = useState(null);
   const fileRef = useRef();
 
   const handleFile = (f) => {
@@ -90,6 +94,30 @@ export default function CVUpload() {
     } finally {
       setAnalyzing(false);
     }
+  };
+
+  const handleOptimizeCV = async (visaCode, visaName) => {
+    if (!extracted) return;
+    setOptimizing(true);
+    setSelectedVisaForOptimization({ code: visaCode, name: visaName });
+    try {
+      const result = await base44.functions.invoke('optimizeCVForVisa', {
+        cvData: extracted,
+        visaCode,
+        visaName,
+      });
+      setOptimizationData(result.data);
+    } catch (error) {
+      console.error('Error optimizing CV:', error);
+    } finally {
+      setOptimizing(false);
+    }
+  };
+
+  const handleSaveOptimizedCV = async (optimizedData) => {
+    setExtracted(optimizedData);
+    setOptimizationData(null);
+    setSelectedVisaForOptimization(null);
   };
 
   const exportForms = () => {
@@ -297,10 +325,22 @@ export default function CVUpload() {
               </button>
             )}
 
-            {visaAnalysis && (
+            {optimizationData && selectedVisaForOptimization ? (
               <>
                 <div className="pt-6 border-t border-gray-100">
-                  <VisaPathwayRecommendation analysis={visaAnalysis} />
+                  <CVOptimizer 
+                    cvData={extracted} 
+                    optimization={optimizationData}
+                    visaCode={selectedVisaForOptimization.code}
+                    visaName={selectedVisaForOptimization.name}
+                    onSave={handleSaveOptimizedCV}
+                  />
+                </div>
+              </>
+            ) : visaAnalysis && !optimizing ? (
+              <>
+                <div className="pt-6 border-t border-gray-100">
+                  <VisaPathwayRecommendation analysis={visaAnalysis} onOptimize={handleOptimizeCV} />
                 </div>
                 <button
                   onClick={() => setVisaAnalysis(null)}
@@ -309,10 +349,22 @@ export default function CVUpload() {
                   ← Ẩn phân tích
                 </button>
               </>
-            )}
+            ) : optimizing ? (
+              <div className="pt-6 flex items-center justify-center gap-3 py-8">
+                <Loader2 className="w-5 h-5 animate-spin text-violet-600" />
+                <span className="text-gray-600 font-medium">AI đang tối ưu hóa CV...</span>
+              </div>
+            ) : null}
 
             <button
-              onClick={() => { setFile(null); setExtracted(null); setSavedProfile(false); setVisaAnalysis(null); }}
+              onClick={() => { 
+                setFile(null); 
+                setExtracted(null); 
+                setSavedProfile(false); 
+                setVisaAnalysis(null); 
+                setOptimizationData(null);
+                setSelectedVisaForOptimization(null);
+              }}
               className="w-full text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors pt-4"
             >
               ↺ Upload CV khác để phân tích
