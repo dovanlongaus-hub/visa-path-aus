@@ -235,7 +235,7 @@ export default function Checklist() {
             const isRelevant = relevantStageIds.includes(stage.id);
 
             return (
-              <div key={stage.id} className={`bg-white rounded-2xl border ${c.border} overflow-hidden shadow-sm`}>
+              <div key={stage.id} className={`rounded-2xl border overflow-hidden shadow-sm ${isRelevant ? `bg-white ${c.border} ring-2 ring-offset-1` : "bg-white border-gray-200 opacity-80"}`} style={isRelevant ? { "--tw-ring-color": "rgba(59,130,246,0.2)" } : {}}>
                 <button
                   className="w-full px-5 py-4 flex items-center gap-4 text-left"
                   onClick={() => setExpanded((p) => ({ ...p, [stage.id]: !p[stage.id] }))}
