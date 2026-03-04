@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import PremiumGate from "@/components/PremiumGate";
 import { base44 } from "@/api/base44Client";
 import { FileText, Loader2, CheckCircle, Download, RefreshCw, User, Sparkles, Briefcase, GraduationCap, Globe, AlertTriangle } from "lucide-react";
 import { Link } from "react-router-dom";

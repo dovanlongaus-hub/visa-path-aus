@@ -47,36 +47,36 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import AdminActivate from './pages/AdminActivate';
 import CVUpload from './pages/CVUpload';
 import Chat from './pages/Chat';
 import Checklist from './pages/Checklist';
+import EOIGenerator from './pages/EOIGenerator';
 import Forms from './pages/Forms';
 import Home from './pages/Home';
+import MyPlan from './pages/MyPlan';
+import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
 import Roadmap from './pages/Roadmap';
 import Visa482 from './pages/Visa482';
 import Visa858 from './pages/Visa858';
-import EOIGenerator from './pages/EOIGenerator';
-import MyPlan from './pages/MyPlan';
-import Pricing from './pages/Pricing';
-import AdminActivate from './pages/AdminActivate';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "AdminActivate": AdminActivate,
     "CVUpload": CVUpload,
     "Chat": Chat,
     "Checklist": Checklist,
+    "EOIGenerator": EOIGenerator,
     "Forms": Forms,
     "Home": Home,
+    "MyPlan": MyPlan,
+    "Pricing": Pricing,
     "Profile": Profile,
     "Roadmap": Roadmap,
     "Visa482": Visa482,
     "Visa858": Visa858,
-    "EOIGenerator": EOIGenerator,
-    "MyPlan": MyPlan,
-    "Pricing": Pricing,
-    "AdminActivate": AdminActivate,
 }
 
 export const pagesConfig = {
