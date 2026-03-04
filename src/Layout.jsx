@@ -5,8 +5,9 @@ import {
   Home, Map, CheckSquare, FileText, MessageCircle, Upload,
   User, Menu, X, Flag, Briefcase, Award, Sparkles,
   ChevronDown, Bot, ClipboardList, Target, Crown, Shield, Lightbulb, BookOpen,
-  HelpCircle, Bookmark, Download, Users, Bell, Settings as SettingsIcon
+  HelpCircle, Bookmark, Download, Users, Bell, Settings as SettingsIcon, Search
 } from "lucide-react";
+import GlobalSearch from "./GlobalSearch";
 
 // ── Nav structure ──────────────────────────────────────────────
 // Priority items shown always; grouped items in dropdown
@@ -114,6 +115,7 @@ function NavDropdown({ group, currentPageName, onClose }) {
 export default function Layout({ children, currentPageName }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openGroup, setOpenGroup] = useState(null);
+  const [searchOpen, setSearchOpen] = useState(false);
   const navRef = useRef(null);
 
   // Close dropdown on outside click
@@ -163,6 +165,16 @@ export default function Layout({ children, currentPageName }) {
               <span className="text-[9px] text-gray-400 font-medium tracking-widest uppercase">by Genetic AI</span>
             </div>
           </Link>
+
+          {/* Global Search */}
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="hidden md:flex items-center gap-2 px-3 py-2 rounded-lg text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+            title="Tìm kiếm (Ctrl+K)"
+          >
+            <Search className="w-4 h-4" />
+            <span className="text-sm">Tìm kiếm</span>
+          </button>
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-1 flex-1 justify-center">
@@ -401,6 +413,9 @@ export default function Layout({ children, currentPageName }) {
           </div>
         )}
       </nav>
+
+      {/* Global Search Modal */}
+      <GlobalSearch isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
 
       {/* Page content */}
       <main>{children}</main>
