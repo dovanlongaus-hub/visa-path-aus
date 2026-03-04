@@ -480,7 +480,7 @@ export default function MyPlan() {
 
   return (
     <PremiumGate featureName="Kế hoạch cá nhân">
-    <div className="min-h-screen bg-[#f8f9fc]">
+      <div className="min-h-screen bg-[#f8f9fc]">
       <div className="max-w-3xl mx-auto px-4 py-10">
 
         {/* Header */}
