@@ -8,6 +8,7 @@ import NewsWidget from "../components/home/NewsWidget";
 import SmartAlerts from "../components/home/SmartAlerts";
 import DashboardSummary from "../components/home/DashboardSummary";
 import RecommendedContent from "../components/home/RecommendedContent";
+import AdminFeedbackSummary from "../components/home/AdminFeedbackSummary";
 
 export default function Home() {
   const [user, setUser] = useState(null);
@@ -175,6 +176,9 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* Admin Feedback Summary – Only for admin */}
+      <AdminFeedbackSummary />
 
       {/* Dashboard Summary – Only for logged in users */}
       {user && (
