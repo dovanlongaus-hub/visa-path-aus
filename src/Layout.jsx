@@ -4,7 +4,7 @@ import { createPageUrl } from "@/utils";
 import {
   Home, Map, CheckSquare, FileText, MessageCircle, Upload,
   User, Menu, X, Flag, Briefcase, Award, Sparkles,
-  ChevronDown, Bot, ClipboardList, Target, Crown, Shield
+  ChevronDown, Bot, ClipboardList, Target, Crown, Shield, Lightbulb
 } from "lucide-react";
 
 // ── Nav structure ──────────────────────────────────────────────
@@ -14,6 +14,7 @@ const primaryItems = [
   { label: "Tư vấn AI", icon: Bot, page: "Chat", emoji: "🤖", highlight: true },
   { label: "Lộ trình PR", icon: Map, page: "Roadmap", emoji: "🗺️" },
   { label: "Hồ sơ", icon: User, page: "Profile", emoji: "👤" },
+  { label: "Góp ý", icon: MessageCircle, page: "Feedback", emoji: "💬" },
 ];
 
 const groups = [
@@ -205,6 +206,16 @@ export default function Layout({ children, currentPageName }) {
               <User className="w-4 h-4" /> Hồ sơ
             </Link>
 
+            {/* Feedback */}
+            <Link
+              to={createPageUrl("Feedback")}
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                currentPageName === "Feedback" ? "bg-[#0f2347] text-white" : "text-gray-600 hover:text-[#0f2347] hover:bg-gray-100"
+              }`}
+            >
+              <Lightbulb className="w-4 h-4" /> Góp ý
+            </Link>
+
             {/* Pricing CTA */}
             <Link
               to={createPageUrl("Pricing")}
@@ -224,6 +235,17 @@ export default function Layout({ children, currentPageName }) {
               title="Admin – Kích hoạt Premium"
             >
               <Shield className="w-4 h-4" />
+            </Link>
+
+            {/* Admin Feedback */}
+            <Link
+              to={createPageUrl("AdminFeedback")}
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                currentPageName === "AdminFeedback" ? "bg-gray-800 text-white" : "text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+              }`}
+              title="Admin – Quản lý Feedback"
+            >
+              <Lightbulb className="w-4 h-4" />
             </Link>
           </div>
 
@@ -297,10 +319,11 @@ export default function Layout({ children, currentPageName }) {
               </div>
             </Link>
 
-            {/* Home & Profile */}
+            {/* Home & Profile & Feedback */}
             {[
               { label: "Trang chủ", icon: Home, page: "Home" },
               { label: "Hồ sơ cá nhân", icon: User, page: "Profile" },
+              { label: "Góp ý", icon: Lightbulb, page: "Feedback" },
             ].map(item => {
               const Icon = item.icon;
               const isActive = currentPageName === item.page;
