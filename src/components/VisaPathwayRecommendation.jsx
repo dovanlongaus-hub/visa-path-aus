@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { AlertCircle, CheckCircle2, Clock, Target, TrendingUp, ArrowRight, ChevronDown, ChevronUp, Lightbulb } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Clock, Target, TrendingUp, ArrowRight, ChevronDown, ChevronUp, Lightbulb, Sparkles } from 'lucide-react';
 
 const visaColors = {
   '189': 'emerald',
@@ -17,7 +17,7 @@ const successRateConfig = {
   low: { label: '🔴 Thấp', color: 'bg-red-100 text-red-800', badge: 'border-red-300 bg-red-50' },
 };
 
-function VisaCard({ visa, index }) {
+function VisaCard({ visa, index, onOptimize }) {
   const [expanded, setExpanded] = useState(index === 0);
   const config = successRateConfig[visa.successRate] || successRateConfig.medium;
 
@@ -103,13 +103,24 @@ function VisaCard({ visa, index }) {
               <p className="text-xs text-gray-700">{visa.notes}</p>
             </div>
           )}
+
+          {/* Optimize Button */}
+          {onOptimize && (
+            <button
+              onClick={() => onOptimize(visa.code, visa.visa)}
+              className="w-full mt-3 bg-gradient-to-r from-violet-600 to-purple-600 text-white py-2.5 rounded-lg font-semibold text-sm hover:shadow-lg transition-all flex items-center justify-center gap-2"
+            >
+              <Sparkles className="w-4 h-4" />
+              ✨ Tối ưu hóa CV cho Visa {visa.code}
+            </button>
+          )}
         </div>
       )}
     </div>
   );
 }
 
-export default function VisaPathwayRecommendation({ analysis }) {
+export default function VisaPathwayRecommendation({ analysis, onOptimize }) {
   if (!analysis) return null;
 
   return (
@@ -168,7 +179,7 @@ export default function VisaPathwayRecommendation({ analysis }) {
           </div>
           <div className="space-y-3">
             {analysis.recommendations.map((visa, i) => (
-              <VisaCard key={i} visa={visa} index={i} />
+              <VisaCard key={i} visa={visa} index={i} onOptimize={onOptimize} />
             ))}
           </div>
         </div>
