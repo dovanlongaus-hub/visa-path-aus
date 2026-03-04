@@ -139,23 +139,77 @@ const colorMap = {
   rose: { bg: "bg-rose-50", border: "border-rose-200", badge: "bg-rose-100 text-rose-700", dot: "bg-rose-500", icon: "text-rose-600", line: "bg-rose-300" },
 };
 
+// Maps visa type to stage ids that are "completed" or "current"
+const stageOrder = ["student", "graduate", "skills", "eoi", "state", "pr"];
+
+function getStageStatus(stageId, currentVisa) {
+  const stageMap = { "500": "student", "485": "graduate", "189": "pr", "190": "pr", "491": "pr" };
+  const currentIdx = stageOrder.indexOf(stageMap[currentVisa] || "student");
+  const thisIdx = stageOrder.indexOf(stageId);
+  if (thisIdx < currentIdx) return "done";
+  if (thisIdx === currentIdx) return "current";
+  return "upcoming";
+}
+
 export default function Roadmap() {
-  const [expanded, setExpanded] = useState("student");
+  const { profile, loading, getCurrentStage, getEnglishLevel } = useUserProfile();
+  const currentStage = profile ? (getCurrentStage() || "student") : null;
+  const [expanded, setExpanded] = useState(null);
+
+  // Auto-expand the current stage when profile loads
+  useState(() => { if (currentStage) setExpanded(currentStage); });
+
+  const englishLevel = getEnglishLevel();
+  const needsEnglish = englishLevel === "below" || englishLevel === null;
 
   return (
     <div className="min-h-screen bg-[#f8f9fc]">
       <div className="max-w-4xl mx-auto px-4 py-10">
         {/* Header */}
-        <div className="mb-10">
+        <div className="mb-8">
           <h1 className="text-3xl font-bold text-[#0a1628] mb-3">Lộ trình đến PR tại Úc</h1>
           <p className="text-gray-500 text-lg">Từng bước từ visa sinh viên đến Thường trú nhân – dành riêng cho sinh viên Việt tại Úc</p>
         </div>
+
+        {/* Personalized banner */}
+        {profile ? (
+          <div className="bg-gradient-to-r from-[#0f2347] to-[#1a3a6e] rounded-2xl p-5 mb-8 text-white flex flex-col md:flex-row md:items-center gap-4">
+            <div className="flex items-center gap-3 flex-1">
+              <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Zap className="w-5 h-5 text-yellow-300" />
+              </div>
+              <div>
+                <div className="font-semibold">Lộ trình được cá nhân hóa cho bạn</div>
+                <div className="text-blue-200 text-sm mt-0.5">
+                  {profile.full_name && <span>Xin chào {profile.full_name}! • </span>}
+                  Visa hiện tại: <span className="text-white font-medium">Visa {profile.current_visa_type}</span>
+                  {profile.english_score && <span> • IELTS/PTE: <span className="text-white font-medium">{profile.english_score}</span></span>}
+                </div>
+              </div>
+            </div>
+            {needsEnglish && (
+              <div className="bg-amber-400/20 border border-amber-400/30 rounded-xl px-4 py-2 text-sm text-amber-200 flex-shrink-0">
+                ⚠️ Cần cải thiện tiếng Anh để đạt điểm EOI cao hơn
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-8 flex items-center gap-3">
+            <User className="w-5 h-5 text-blue-500 flex-shrink-0" />
+            <p className="text-sm text-blue-700">
+              <Link to={createPageUrl("Profile")} className="font-semibold underline">Điền hồ sơ cá nhân</Link> để lộ trình được cá nhân hóa theo visa và điểm tiếng Anh của bạn.
+            </p>
+          </div>
+        )}
 
         {/* Timeline */}
         <div className="relative">
           {stages.map((stage, idx) => {
             const c = colorMap[stage.color];
             const isOpen = expanded === stage.id;
+            const status = profile ? getStageStatus(stage.id, profile.current_visa_type) : "upcoming";
+            const isCurrent = status === "current";
+            const isDone = status === "done";
             return (
               <div key={stage.id} className="relative flex gap-6 mb-4">
                 {/* Line */}
