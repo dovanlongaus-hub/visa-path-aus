@@ -86,6 +86,8 @@ const BANKS = [
       { label: "Số tài khoản", value: "1154 7224", copy: "11547224" },
       { label: "Tên tài khoản", value: "Van Long DO" },
     ],
+    // PayID / BSB+Account QR for Australian banks
+    qr: (plan) => `BSB: 067873\nAccount: 11547224\nName: Van Long DO\nAmount: AUD ${plan?.amount || ""}\nReference: Email + Plan`,
   },
   {
     flag: "🇻🇳",
@@ -96,6 +98,8 @@ const BANKS = [
       { label: "Số tài khoản", value: "0071000985789", copy: "0071000985789" },
       { label: "Tên tài khoản", value: "Đỗ Văn Long" },
     ],
+    // VietQR standard format: bank|account|name|amount|description
+    qr: (plan) => `https://img.vietqr.io/image/VCB-0071000985789-compact2.png?amount=${plan?.amount ? plan.amount * 16000 : ""}&addInfo=DitruAI ${plan?.id || ""}&accountName=Do Van Long`,
   },
 ];
 
