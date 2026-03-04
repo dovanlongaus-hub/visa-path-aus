@@ -184,11 +184,13 @@ export default function CVUpload() {
         {/* Results */}
          {extracted && (
           <div className="space-y-5">
-            <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex items-center gap-3">
-              <CheckCircle className="w-6 h-6 text-emerald-500 flex-shrink-0" />
+            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-200 rounded-2xl p-5 flex items-center gap-4 shadow-sm">
+              <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                <CheckCircle className="w-6 h-6 text-white" />
+              </div>
               <div>
-                <div className="font-semibold text-emerald-800">Trích xuất thành công!</div>
-                <div className="text-sm text-emerald-600">AI đã phân tích CV và điền thông tin vào hồ sơ</div>
+                <div className="font-bold text-emerald-800 text-lg">✨ Trích xuất thành công!</div>
+                <div className="text-sm text-emerald-600">AI đã phân tích CV. Bạn có thể lưu, xuất hoặc tạo lại CV tối ưu cho di trú Úc.</div>
               </div>
             </div>
 
