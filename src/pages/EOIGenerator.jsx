@@ -152,6 +152,7 @@ Yêu cầu:
   const { total, items } = profile ? calcEOIPoints(profile) : { total: 0, items: [] };
 
   return (
+    <PremiumGate featureName="EOI & CV Generator">
     <div className="min-h-screen bg-[#f8f9fc]">
       <div className="max-w-4xl mx-auto px-4 py-10">
 
