@@ -1,5 +1,4 @@
 import { useState, useRef } from "react";
-import PremiumGate from "@/components/PremiumGate";
 import { base44 } from "@/api/base44Client";
 import { Upload, FileText, Loader2, CheckCircle, User, Briefcase, GraduationCap, Globe, Download } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -111,8 +110,7 @@ export default function CVUpload() {
   };
 
   return (
-    <PremiumGate featureName="Upload CV">
-      <div className="min-h-screen bg-[#f8f9fc]">
+    <div className="min-h-screen bg-[#f8f9fc]">
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-700 text-white py-16">
         <div className="absolute inset-0 opacity-10">
@@ -267,8 +265,7 @@ export default function CVUpload() {
           </div>
         )}
       </div>
-      </div>
-    </PremiumGate>
+    </div>
   );
 }
 

@@ -29,9 +29,9 @@ const PLANS = [
   },
   {
     id: "monthly",
-    name: "Cơ bản",
-    price: "29",
-    unit: "AUD / tháng",
+    name: "Tư vấn cơ bản",
+    price: "99.000",
+    unit: "VND / tháng",
     badge: "Phổ biến nhất",
     color: "blue",
     features: [
@@ -41,20 +41,20 @@ const PLANS = [
       "Tạo EOI & CV tự động",
       "Biểu mẫu di trú đầy đủ",
       "Cảnh báo & nhắc nhở thông minh",
-      "Upload & phân tích CV",
+      "Upload & phân tích CV miễn phí",
       "Lịch sử hội thoại lưu trữ",
     ],
     locked: [],
     cta: "Đăng ký ngay",
     ctaLink: "Checkout",
-    amount: 29,
+    amount: 99000,
     disabled: false,
   },
   {
     id: "oneoff",
     name: "Tư vấn chuyên sâu",
-    price: "99",
-    unit: "AUD / 1 lần",
+    price: "299.000",
+    unit: "VND / 1 lần",
     badge: "Tốt nhất",
     color: "violet",
     features: [
@@ -69,7 +69,7 @@ const PLANS = [
     locked: [],
     cta: "Mua ngay",
     ctaLink: "Checkout",
-    amount: 99,
+    amount: 299000,
     disabled: false,
   },
 ];
@@ -249,7 +249,7 @@ export default function Pricing() {
                 <div className={`px-6 pt-6 pb-4 ${c.header}`}>
                   <div className="text-sm font-semibold text-gray-500 mb-1">{plan.name}</div>
                   <div className="flex items-end gap-1">
-                    <span className="text-4xl font-black text-[#0a1628]">{plan.price === "0" ? "Miễn phí" : `$${plan.price}`}</span>
+                    <span className="text-4xl font-black text-[#0a1628]">{plan.price === "0" ? "Miễn phí" : `₫${plan.price}`}</span>
                     {plan.unit && <span className="text-sm text-gray-400 mb-1">{plan.unit}</span>}
                   </div>
                 </div>
