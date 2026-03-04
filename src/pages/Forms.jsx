@@ -247,38 +247,93 @@ function FormModal({ form, onClose, initialData = {} }) {
 }
 
 export default function Forms() {
+  const { profile } = useUserProfile();
   const [activeForm, setActiveForm] = useState(null);
-  const [expandedGroup, setExpandedGroup] = useState("Visa Sinh viên (500)");
+  const [profileData, setProfileData] = useState({});
+
+  // Auto-set expanded group and pre-fill data from profile
+  const recommendedGroup = profile?.current_visa_type ? visaToFormGroup[profile.current_visa_type] : "Visa Sinh viên (500)";
+  const [expandedGroup, setExpandedGroup] = useState(null);
+
+  useEffect(() => {
+    if (profile) {
+      setExpandedGroup(visaToFormGroup[profile.current_visa_type] || "Visa Sinh viên (500)");
+      // Pre-fill form data from profile
+      setProfileData({
+        full_name: profile.full_name || "",
+        email: profile.email || "",
+        phone: profile.phone || "",
+        date_of_birth: profile.date_of_birth || "",
+        nationality: profile.nationality || "",
+        passport_number: profile.passport_number || "",
+        passport_expiry: profile.passport_expiry || "",
+        university: profile.university || "",
+        course: profile.course || "",
+        english_test_type: profile.english_test_type || "",
+        english_score: profile.english_score || "",
+        occupation_code: profile.occupation_code || "",
+        points_score: profile.points_score || "",
+      });
+    } else {
+      setExpandedGroup("Visa Sinh viên (500)");
+    }
+  }, [profile]);
+
+  // Sort groups: recommended first
+  const sortedGroups = [...formGroups].sort((a, b) => {
+    if (a.category === recommendedGroup) return -1;
+    if (b.category === recommendedGroup) return 1;
+    return 0;
+  });
 
   return (
     <div className="min-h-screen bg-[#f8f9fc]">
-      {activeForm && <FormModal form={activeForm} onClose={() => setActiveForm(null)} />}
+      {activeForm && <FormModal form={activeForm} onClose={() => setActiveForm(null)} initialData={profileData} />}
 
       <div className="max-w-4xl mx-auto px-4 py-10">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-[#0a1628] mb-3">Biểu mẫu Di trú Úc</h1>
           <p className="text-gray-500">Các form chính thức của Bộ Nội vụ Úc. Điền trực tiếp tại đây hoặc upload CV để điền tự động.</p>
 
-          <Link
-            to={createPageUrl("CVUpload")}
-            className="inline-flex items-center gap-2 mt-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:opacity-90 transition-opacity"
-          >
-            ✨ Upload CV để điền tự động
-          </Link>
+          <div className="flex flex-wrap gap-3 mt-4">
+            <Link
+              to={createPageUrl("CVUpload")}
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:opacity-90 transition-opacity"
+            >
+              ✨ Upload CV để điền tự động
+            </Link>
+            {profile && (
+              <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-2.5 rounded-xl text-sm font-medium">
+                <Zap className="w-4 h-4" />
+                Form tự động điền từ hồ sơ Visa {profile.current_visa_type} của bạn
+              </div>
+            )}
+          </div>
         </div>
 
+        {!profile && (
+          <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-6 flex items-center gap-3">
+            <User className="w-5 h-5 text-blue-500 flex-shrink-0" />
+            <p className="text-sm text-blue-700">
+              <Link to={createPageUrl("Profile")} className="font-semibold underline">Điền hồ sơ cá nhân</Link> để form được tự động điền thông tin và gợi ý các form phù hợp với visa của bạn.
+            </p>
+          </div>
+        )}
+
         <div className="space-y-4">
-          {formGroups.map((group) => {
+          {sortedGroups.map((group) => {
             const c = colorMap[group.color];
             const isOpen = expandedGroup === group.category;
+            const isRecommended = group.category === recommendedGroup && !!profile;
             return (
-              <div key={group.category} className={`bg-white rounded-2xl border ${c.border} overflow-hidden shadow-sm`}>
+              <div key={group.category} className={`bg-white rounded-2xl border overflow-hidden shadow-sm ${isRecommended ? "border-blue-300 ring-2 ring-blue-100" : c.border}`}>
                 <button
                   className={`w-full px-6 py-4 flex items-center justify-between ${c.header}`}
                   onClick={() => setExpandedGroup(isOpen ? null : group.category)}
                 >
                   <div className="flex items-center gap-3">
                     <span className={`text-xs font-bold px-2 py-1 rounded-full ${c.badge}`}>{group.forms.length} form</span>
+                    {isRecommended && <span className="text-xs font-bold px-2 py-1 rounded-full bg-blue-600 text-white">⭐ Phù hợp với bạn</span>}
                     <span className="font-semibold text-[#0a1628]">{group.category}</span>
                   </div>
                   {isOpen ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
