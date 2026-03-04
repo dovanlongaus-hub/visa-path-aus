@@ -287,6 +287,98 @@ export default function PersonalizedPathway({ pathway, loading }) {
         </div>
       )}
 
+      {/* Skill Improvement */}
+      {pathway.skill_improvement && (
+        <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-200 rounded-2xl p-6">
+          <div className="font-bold text-[#0a1628] text-lg mb-4 flex items-center gap-2">
+            🎓 Cải thiện kỹ năng - Khóa học gợi ý
+          </div>
+
+          {pathway.skill_improvement.missing_skills && pathway.skill_improvement.missing_skills.length > 0 && (
+            <div className="mb-5">
+              <div className="font-semibold text-gray-900 mb-2">Kỹ năng cần bổ sung:</div>
+              <div className="flex flex-wrap gap-2">
+                {pathway.skill_improvement.missing_skills.map((skill, i) => (
+                  <span key={i} className="bg-white px-3 py-1 rounded-full text-sm border border-indigo-200 text-indigo-700 font-medium">
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {pathway.skill_improvement.recommended_courses && pathway.skill_improvement.recommended_courses.length > 0 && (
+            <div>
+              <div className="font-semibold text-gray-900 mb-3">Khóa học được đề xuất:</div>
+              <div className="space-y-3">
+                {pathway.skill_improvement.recommended_courses.map((course, i) => (
+                  <div key={i} className="bg-white rounded-lg p-4 border-l-4 border-indigo-600">
+                    <div className="font-semibold text-[#0a1628]">{course.course_title}</div>
+                    <div className="flex flex-wrap gap-2 mt-2 text-xs">
+                      <span className="bg-indigo-100 text-indigo-700 px-2 py-1 rounded">📍 {course.platform}</span>
+                      <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded">⏱️ {course.duration}</span>
+                      <span className="bg-emerald-100 text-emerald-700 px-2 py-1 rounded">💰 {course.estimated_cost}</span>
+                    </div>
+                    <div className="text-gray-700 text-sm mt-2">
+                      <div><strong>Mục tiêu:</strong> {course.skill_target}</div>
+                      <div className="text-gray-600 mt-1">{course.relevance}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Job Opportunities */}
+      {pathway.job_opportunities && (
+        <div className="bg-gradient-to-r from-orange-50 to-rose-50 border-2 border-orange-200 rounded-2xl p-6">
+          <div className="font-bold text-[#0a1628] text-lg mb-4 flex items-center gap-2">
+            💼 Cơ hội việc làm tại Úc
+          </div>
+
+          {pathway.job_opportunities.current_role_analysis && (
+            <div className="mb-5 p-4 bg-white rounded-lg">
+              <div className="font-semibold text-gray-900 mb-2">Phân tích kinh nghiệm hiện tại</div>
+              <p className="text-gray-700 text-sm">{pathway.job_opportunities.current_role_analysis}</p>
+            </div>
+          )}
+
+          {pathway.job_opportunities.suggested_positions && pathway.job_opportunities.suggested_positions.length > 0 && (
+            <div>
+              <div className="font-semibold text-gray-900 mb-3">Vị trí công việc được gợi ý:</div>
+              <div className="space-y-3">
+                {pathway.job_opportunities.suggested_positions.map((job, i) => (
+                  <div key={i} className="bg-white rounded-lg p-4 border-l-4 border-orange-600">
+                    <div className="font-semibold text-[#0a1628]">{job.job_title}</div>
+                    <div className="flex flex-wrap gap-2 mt-2 text-xs">
+                      <span className="bg-orange-100 text-orange-700 px-2 py-1 rounded">🏢 {job.industry}</span>
+                      <span className="bg-rose-100 text-rose-700 px-2 py-1 rounded">📍 {job.location}</span>
+                      <span className="bg-emerald-100 text-emerald-700 px-2 py-1 rounded">💵 {job.salary_range}</span>
+                    </div>
+                    <div className="text-gray-700 text-sm mt-3 space-y-2">
+                      <div><strong>Kỹ năng cần:</strong> {job.required_skills?.join(', ')}</div>
+                      <div>
+                        <strong>Khả năng sponsorship:</strong>{' '}
+                        <span className={`inline-block px-2 py-0.5 rounded text-xs font-semibold ${
+                          job.visa_sponsorship_potential === 'High' ? 'bg-emerald-100 text-emerald-700' :
+                          job.visa_sponsorship_potential === 'Medium' ? 'bg-amber-100 text-amber-700' :
+                          'bg-red-100 text-red-700'
+                        }`}>
+                          {job.visa_sponsorship_potential}
+                        </span>
+                      </div>
+                      <div className="text-gray-600">💡 {job.tips_for_landing}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Questions to Clarify */}
       {pathway.questions_to_clarify && pathway.questions_to_clarify.length > 0 && (
         <div className="bg-white border-2 border-gray-200 rounded-2xl p-6">
