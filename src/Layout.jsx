@@ -34,10 +34,13 @@ export default function Layout({ children, currentPageName }) {
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           {/* Logo */}
           <Link to={createPageUrl("Home")} className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-lg flex items-center justify-center">
-              <Flag className="w-4 h-4 text-white" />
+            <div className="w-9 h-9 bg-gradient-to-br from-blue-500 via-indigo-600 to-violet-700 rounded-xl flex items-center justify-center shadow-md">
+              <span className="text-white font-black text-sm tracking-tight">ÚC</span>
             </div>
-            <span className="font-bold text-[#0f2347] text-lg">Úc Di Trú AI</span>
+            <div className="flex flex-col leading-tight">
+              <span className="font-black text-[#0f2347] text-base tracking-tight">Di Trú <span className="text-blue-600">AI</span></span>
+              <span className="text-[9px] text-gray-400 font-medium tracking-widest uppercase">by Genetic AI</span>
+            </div>
           </Link>
 
           {/* Desktop nav */}
