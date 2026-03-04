@@ -228,10 +228,11 @@ export default function Checklist() {
 
         {/* Stages */}
         <div className="space-y-4">
-          {defaultStages.map((stage) => {
+          {sortedStages.map((stage) => {
             const c = colorMap[stage.color];
             const { done, total, pct } = getProgress(stage);
             const isOpen = expanded[stage.id];
+            const isRelevant = relevantStageIds.includes(stage.id);
 
             return (
               <div key={stage.id} className={`bg-white rounded-2xl border ${c.border} overflow-hidden shadow-sm`}>
