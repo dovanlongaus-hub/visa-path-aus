@@ -115,6 +115,11 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Smart Alerts */}
+      <section className="max-w-5xl mx-auto px-6 pt-8 pb-4">
+        <SmartAlerts />
+      </section>
+
       {/* Pathway Cards */}
       <section className="max-w-5xl mx-auto px-6 pb-10">
         <PathwayCards />
