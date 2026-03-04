@@ -564,6 +564,7 @@ export default function MyPlan() {
           </Link>
         </div>
       </div>
-    </div>
+      </div>
+    </PremiumGate>
   );
 }
