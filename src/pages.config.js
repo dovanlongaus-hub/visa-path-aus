@@ -56,6 +56,7 @@ import Profile from './pages/Profile';
 import Roadmap from './pages/Roadmap';
 import Visa482 from './pages/Visa482';
 import Visa858 from './pages/Visa858';
+import EOIGenerator from './pages/EOIGenerator';
 import __Layout from './Layout.jsx';
 
 
@@ -69,6 +70,7 @@ export const PAGES = {
     "Roadmap": Roadmap,
     "Visa482": Visa482,
     "Visa858": Visa858,
+    "EOIGenerator": EOIGenerator,
 }
 
 export const pagesConfig = {

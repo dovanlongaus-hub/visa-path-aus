@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Home, Map, CheckSquare, FileText, MessageCircle, Upload, User, Menu, X, Flag, Briefcase, Award } from "lucide-react";
+import { Home, Map, CheckSquare, FileText, MessageCircle, Upload, User, Menu, X, Briefcase, Award, Sparkles } from "lucide-react";
 
 const navItems = [
   { label: "Trang chủ", icon: Home, page: "Home" },
