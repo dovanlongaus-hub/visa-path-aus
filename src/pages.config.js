@@ -47,26 +47,28 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
-import Home from './pages/Home';
-import Roadmap from './pages/Roadmap';
+import CVUpload from './pages/CVUpload';
 import Chat from './pages/Chat';
 import Checklist from './pages/Checklist';
 import Forms from './pages/Forms';
-import CVUpload from './pages/CVUpload';
+import Home from './pages/Home';
 import Profile from './pages/Profile';
+import Roadmap from './pages/Roadmap';
 import Visa482 from './pages/Visa482';
+import Visa858 from './pages/Visa858';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "Home": Home,
-    "Roadmap": Roadmap,
+    "CVUpload": CVUpload,
     "Chat": Chat,
     "Checklist": Checklist,
     "Forms": Forms,
-    "CVUpload": CVUpload,
+    "Home": Home,
     "Profile": Profile,
+    "Roadmap": Roadmap,
     "Visa482": Visa482,
+    "Visa858": Visa858,
 }
 
 export const pagesConfig = {
