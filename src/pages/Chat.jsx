@@ -204,9 +204,9 @@ Hãy cá nhân hoá câu trả lời dựa trên thông tin này khi phù hợp.
       base44.entities.ChatMessage.create({ role: "assistant", content: result, session_id: sessionId }).catch(() => {});
     }
 
-    // Show upgrade banner after BASIC_LIMIT messages for logged-in free users
+    // Show upgrade banner after BASIC_LIMIT messages for logged-in non-premium users
     const newCount = allMessages.filter(m => m.role === "user").length;
-    if (user && newCount >= BASIC_LIMIT && !showUpgrade) {
+    if (user && !isPremium && newCount >= BASIC_LIMIT && !showUpgrade) {
       setShowUpgrade(true);
     }
 
