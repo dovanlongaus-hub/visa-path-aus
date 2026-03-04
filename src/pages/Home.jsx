@@ -80,22 +80,31 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#f8f9fc]">
       {/* Hero */}
-      <section className="relative overflow-hidden text-white" style={{minHeight: "560px"}}>
-        {/* Background image – Sydney Opera House */}
+      <section className="relative overflow-hidden text-white" style={{minHeight: "580px"}}>
+        {/* Background image – Sydney Opera House at golden hour */}
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=80"
+            src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1800&q=85"
             alt="Australia"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-[#0a1628]/90 via-[#0f2347]/80 to-[#1a3a6e]/70" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#050e1f]/95 via-[#0f2347]/85 to-[#0f2347]/40" />
         </div>
 
-        {/* Floating image strips */}
-        <div className="absolute right-0 top-0 bottom-0 w-1/3 hidden lg:flex flex-col gap-1 overflow-hidden opacity-30">
-          <img src="https://images.unsplash.com/photo-1529108190281-9a4f620bc2d8?w=400&q=60" alt="" className="h-1/3 w-full object-cover" />
-          <img src="https://images.unsplash.com/photo-1574068468668-a05a11f871da?w=400&q=60" alt="" className="h-1/3 w-full object-cover" />
-          <img src="https://images.unsplash.com/photo-1527004013197-933c4bb611b3?w=400&q=60" alt="" className="h-1/3 w-full object-cover" />
+        {/* Floating image mosaic – right side */}
+        <div className="absolute right-0 top-0 bottom-0 w-[38%] hidden lg:grid grid-rows-3 gap-0.5 overflow-hidden">
+          <div className="relative overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1624138784614-87fd1b6528f8?w=500&q=75" alt="Melbourne CBD" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-[#0f2347]/40" />
+          </div>
+          <div className="relative overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1545158535-c3f7168c28b6?w=500&q=75" alt="Sydney Opera House close-up" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-[#0f2347]/30" />
+          </div>
+          <div className="relative overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1529108190281-9a4f620bc2d8?w=500&q=75" alt="Australia landmark" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-[#0f2347]/40" />
+          </div>
         </div>
 
         <div className="relative max-w-5xl mx-auto px-6 py-20">
