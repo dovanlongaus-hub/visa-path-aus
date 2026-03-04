@@ -243,7 +243,12 @@ Hãy cá nhân hoá câu trả lời dựa trên thông tin này khi phù hợp.
                 <span className="flex items-center gap-1 text-emerald-600">
                   <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" /> Đang hoạt động
                 </span>
-                {profile && (
+                {isPremium && (
+                  <span className="text-violet-600 flex items-center gap-1">
+                    <Crown className="w-3 h-3" /> Premium · Không giới hạn
+                  </span>
+                )}
+                {profile && !isPremium && (
                   <span className="text-violet-600 flex items-center gap-1">
                     <Sparkles className="w-3 h-3" /> Đã cá nhân hoá
                   </span>
