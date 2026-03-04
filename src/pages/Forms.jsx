@@ -136,6 +136,15 @@ const colorMap = {
   rose: { badge: "bg-rose-100 text-rose-700", border: "border-rose-200", header: "bg-rose-50" },
 };
 
+// Maps visa type → relevant form group category
+const visaToFormGroup = {
+  "500": "Visa Sinh viên (500)",
+  "485": "Visa Tốt nghiệp (485)",
+  "189": "Visa PR (189/190/491)",
+  "190": "Visa PR (189/190/491)",
+  "491": "Visa PR (189/190/491)",
+};
+
 function FormModal({ form, onClose, initialData = {} }) {
   const [data, setData] = useState(initialData);
   const [saved, setSaved] = useState(false);
