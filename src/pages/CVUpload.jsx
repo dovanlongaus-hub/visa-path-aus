@@ -182,8 +182,8 @@ export default function CVUpload() {
         )}
 
         {/* Results */}
-        {extracted && (
-          <div className="space-y-4">
+         {extracted && (
+          <div className="space-y-5">
             <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex items-center gap-3">
               <CheckCircle className="w-6 h-6 text-emerald-500 flex-shrink-0" />
               <div>
