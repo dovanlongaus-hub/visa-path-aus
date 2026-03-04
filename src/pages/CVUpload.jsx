@@ -1,8 +1,9 @@
 import { useState, useRef } from "react";
 import { base44 } from "@/api/base44Client";
-import { Upload, FileText, Loader2, CheckCircle, User, Briefcase, GraduationCap, Globe, Download } from "lucide-react";
+import { Upload, FileText, Loader2, CheckCircle, User, Briefcase, GraduationCap, Globe, Download, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import VisaPathwayRecommendation from "@/components/VisaPathwayRecommendation";
 
 const EXTRACT_SCHEMA = {
   type: "object",
@@ -33,6 +34,8 @@ export default function CVUpload() {
   const [extracting, setExtracting] = useState(false);
   const [extracted, setExtracted] = useState(null);
   const [savedProfile, setSavedProfile] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [visaAnalysis, setVisaAnalysis] = useState(null);
   const fileRef = useRef();
 
   const handleFile = (f) => {
@@ -69,6 +72,24 @@ export default function CVUpload() {
     if (!extracted) return;
     await base44.entities.UserProfile.create(extracted);
     setSavedProfile(true);
+  };
+
+  const analyzeVisaPathway = async () => {
+    if (!extracted) return;
+    setAnalyzing(true);
+    try {
+      const result = await base44.functions.invoke('analyzeVisaPathway', {
+        profileData: {
+          ...extracted,
+          age: extracted.date_of_birth ? new Date().getFullYear() - new Date(extracted.date_of_birth).getFullYear() : null,
+        },
+      });
+      setVisaAnalysis(result.data);
+    } catch (error) {
+      console.error('Error analyzing visa pathway:', error);
+    } finally {
+      setAnalyzing(false);
+    }
   };
 
   const exportForms = () => {
@@ -256,8 +277,42 @@ export default function CVUpload() {
               </Link>
             </div>
 
+            {!visaAnalysis && (
+              <button
+                onClick={analyzeVisaPathway}
+                disabled={analyzing}
+                className="w-full bg-gradient-to-r from-violet-600 to-purple-600 text-white py-3.5 rounded-xl font-semibold hover:shadow-lg disabled:opacity-60 transition-all flex items-center justify-center gap-2 mt-4"
+              >
+                {analyzing ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    AI đang phân tích visa pathway...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-5 h-5" />
+                    🎯 Phân tích & Đề xuất Visa Pathway
+                  </>
+                )}
+              </button>
+            )}
+
+            {visaAnalysis && (
+              <>
+                <div className="pt-6 border-t border-gray-100">
+                  <VisaPathwayRecommendation analysis={visaAnalysis} />
+                </div>
+                <button
+                  onClick={() => setVisaAnalysis(null)}
+                  className="w-full text-sm text-gray-500 hover:text-gray-700 font-medium transition-colors pt-4"
+                >
+                  ← Ẩn phân tích
+                </button>
+              </>
+            )}
+
             <button
-              onClick={() => { setFile(null); setExtracted(null); setSavedProfile(false); }}
+              onClick={() => { setFile(null); setExtracted(null); setSavedProfile(false); setVisaAnalysis(null); }}
               className="w-full text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors pt-4"
             >
               ↺ Upload CV khác để phân tích
