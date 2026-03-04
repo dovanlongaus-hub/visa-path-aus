@@ -214,16 +214,16 @@ export default function Roadmap() {
               <div key={stage.id} className="relative flex gap-6 mb-4">
                 {/* Line */}
                 {idx < stages.length - 1 && (
-                  <div className={`absolute left-5 top-12 w-0.5 h-[calc(100%+8px)] ${c.line} opacity-40`} />
+                  <div className={`absolute left-5 top-12 w-0.5 h-[calc(100%+8px)] ${isDone ? "bg-emerald-400" : c.line} opacity-40`} />
                 )}
                 {/* Dot */}
                 <div className="flex-shrink-0 mt-4">
-                  <div className={`w-10 h-10 rounded-full ${c.dot} flex items-center justify-center text-white font-bold text-sm shadow-md`}>
-                    {idx + 1}
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md ${isDone ? "bg-emerald-500" : isCurrent ? c.dot + " ring-4 ring-offset-2 ring-blue-300" : "bg-gray-300"}`}>
+                    {isDone ? "✓" : idx + 1}
                   </div>
                 </div>
                 {/* Card */}
-                <div className={`flex-1 bg-white rounded-2xl border ${c.border} shadow-sm overflow-hidden mb-2`}>
+                <div className={`flex-1 rounded-2xl border shadow-sm overflow-hidden mb-2 ${isCurrent ? "bg-white border-blue-300 ring-2 ring-blue-100" : isDone ? "bg-white border-emerald-200" : "bg-gray-50 border-gray-200"}`}>
                   <button
                     className="w-full px-6 py-4 flex items-start justify-between gap-4 text-left"
                     onClick={() => setExpanded(isOpen ? null : stage.id)}
@@ -233,11 +233,13 @@ export default function Roadmap() {
                         {stage.code && (
                           <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${c.badge}`}>{stage.code}</span>
                         )}
+                        {isCurrent && <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-blue-600 text-white animate-pulse">▶ Giai đoạn hiện tại</span>}
+                        {isDone && <span className="text-xs font-medium text-emerald-600">✓ Đã hoàn thành</span>}
                         <span className={`text-xs flex items-center gap-1 ${c.icon}`}>
                           <Clock className="w-3 h-3" />{stage.duration}
                         </span>
                       </div>
-                      <h3 className="font-bold text-[#0a1628] text-lg">{stage.title}</h3>
+                      <h3 className={`font-bold text-lg ${isDone ? "text-gray-400" : "text-[#0a1628]"}`}>{stage.title}</h3>
                       <p className="text-gray-400 text-sm">{stage.subtitle}</p>
                     </div>
                     {isOpen ? <ChevronUp className="w-5 h-5 text-gray-400 flex-shrink-0 mt-1" /> : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0 mt-1" />}
