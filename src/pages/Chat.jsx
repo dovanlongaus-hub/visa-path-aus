@@ -160,6 +160,9 @@ export default function Chat() {
       return;
     }
 
+    // ── Premium users: no limits at all – skip all other gates
+    // (isPremium computed from profile)
+
     const newMsg = { role: "user", content: userMsg };
     setMessages(prev => [...prev, newMsg]);
     setInput("");
