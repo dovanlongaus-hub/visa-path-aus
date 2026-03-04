@@ -10,6 +10,10 @@ Deno.serve(async (req) => {
     }
 
     const { cvData } = await req.json();
+    
+    // Fetch all articles and documents for recommendations
+    const articles = await base44.asServiceRole.entities.Article.list('-created_date', 100).catch(() => []);
+    const documents = await base44.asServiceRole.entities.Document.list('-created_date', 100).catch(() => []);
 
     if (!cvData) {
       return Response.json({ error: 'Missing CV data' }, { status: 400 });
@@ -25,9 +29,18 @@ CV ANALYSIS DATA:
 - Languages: ${cvData.languages?.join(', ') || 'Not provided'}
 `;
 
-    const prompt = `Bạn là chuyên gia tư vấn di trú Úc. Phân tích CV người dùng và tạo lộ trình di trú cá nhân chi tiết.
+    const articlesContext = articles.map(a => `- "${a.title}" (${a.category}): ${a.summary || a.content?.substring(0, 100)}`).join('\n');
+    const documentsContext = documents.map(d => `- "${d.title}" (${d.category}, visa: ${d.visa_code || 'all'})`).join('\n');
+
+    const prompt = `Bạn là chuyên gia tư vấn di trú Úc. Phân tích CV người dùng và tạo lộ trình di trú cá nhân chi tiết kèm theo gợi ý tài liệu và bài viết.
 
 ${profileContext}
+
+AVAILABLE ARTICLES:
+${articlesContext}
+
+AVAILABLE DOCUMENTS:
+${documentsContext}
 
 NHIỆM VỤ:
 Dựa trên CV, hãy:
@@ -36,6 +49,7 @@ Dựa trên CV, hãy:
 3. Đánh giá điểm mạnh & yếu
 4. Cung cấp lộ trình cụ thể (timeline & bước)
 5. Các hành động ngay lập tức cần làm
+6. Gợi ý bài viết và tài liệu liên quan cho từng giai đoạn
 
 ĐỊNH DẠNG JSON TRẢ VỀ:
 {
@@ -143,6 +157,8 @@ Dựa trên CV, hãy:
                 properties: {
                   title: { type: 'string' },
                   steps: { type: 'array', items: { type: 'string' } },
+                  recommended_articles: { type: 'array', items: { type: 'string' } },
+                  recommended_documents: { type: 'array', items: { type: 'string' } },
                 },
               },
               phase_2: {
@@ -150,6 +166,8 @@ Dựa trên CV, hãy:
                 properties: {
                   title: { type: 'string' },
                   steps: { type: 'array', items: { type: 'string' } },
+                  recommended_articles: { type: 'array', items: { type: 'string' } },
+                  recommended_documents: { type: 'array', items: { type: 'string' } },
                 },
               },
               phase_3: {
@@ -157,6 +175,8 @@ Dựa trên CV, hãy:
                 properties: {
                   title: { type: 'string' },
                   steps: { type: 'array', items: { type: 'string' } },
+                  recommended_articles: { type: 'array', items: { type: 'string' } },
+                  recommended_documents: { type: 'array', items: { type: 'string' } },
                 },
               },
             },
