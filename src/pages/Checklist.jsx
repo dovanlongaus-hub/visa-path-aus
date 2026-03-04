@@ -245,6 +245,7 @@ export default function Checklist() {
                       <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${c.badge}`}>
                         {done}/{total}
                       </span>
+                      {isRelevant && <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-blue-600 text-white">⭐ Ưu tiên</span>}
                       {done === total && <span className="text-xs text-emerald-600 font-medium">✓ Hoàn thành</span>}
                     </div>
                     <div className="font-semibold text-[#0a1628] text-sm">{stage.title}</div>
