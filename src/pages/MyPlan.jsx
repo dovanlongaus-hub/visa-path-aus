@@ -427,6 +427,7 @@ function EOIScoreBadge({ profile }) {
         <span>{score >= 65 ? "✅ Đủ nộp EOI" : "⚠️ Cần thêm điểm"}</span>
       </div>
     </div>
+    </PremiumGate>
   );
 }
 
@@ -479,6 +480,7 @@ export default function MyPlan() {
   const progress = Math.round((doneCount / allTasks.length) * 100);
 
   return (
+    <PremiumGate featureName="Kế hoạch cá nhân">
     <div className="min-h-screen bg-[#f8f9fc]">
       <div className="max-w-3xl mx-auto px-4 py-10">
 
