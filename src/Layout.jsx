@@ -7,7 +7,7 @@ import {
   ChevronDown, Bot, ClipboardList, Target, Crown, Shield, Lightbulb, BookOpen,
   HelpCircle, Bookmark, Download, Users, Bell, Settings as SettingsIcon, Search
 } from "lucide-react";
-import GlobalSearch from "./GlobalSearch";
+import GlobalSearch from "./components/GlobalSearch";
 
 // ── Nav structure ──────────────────────────────────────────────
 // Priority items shown always; grouped items in dropdown
