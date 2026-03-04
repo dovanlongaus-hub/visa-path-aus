@@ -169,7 +169,7 @@ function BankCard({ bank, plan }) {
             <div className="flex items-center gap-2 bg-white border border-blue-200 rounded-lg px-4 py-2">
               <span className="text-xs text-gray-500">Số tiền:</span>
               <span className="text-sm font-black text-blue-600">
-                {bank.flag === "🇦🇺" ? `AUD ${plan.amount}` : `VND (tương đương AUD ${plan.amount})`}
+                {bank.flag === "🇦🇺" ? `AUD ${(plan.amount / 25000).toFixed(0)}` : `₫${plan.amount.toLocaleString('vi-VN')}`}
               </span>
             </div>
           )}
