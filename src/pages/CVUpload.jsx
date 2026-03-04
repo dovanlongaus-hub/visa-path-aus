@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import VisaPathwayRecommendation from "@/components/VisaPathwayRecommendation";
 import CVOptimizer from "@/components/CVOptimizer";
+import PersonalizedPathway from "@/components/PersonalizedPathway";
 
 const EXTRACT_SCHEMA = {
   type: "object",
@@ -40,6 +41,8 @@ export default function CVUpload() {
   const [optimizing, setOptimizing] = useState(false);
   const [selectedVisaForOptimization, setSelectedVisaForOptimization] = useState(null);
   const [optimizationData, setOptimizationData] = useState(null);
+  const [generatingPathway, setGeneratingPathway] = useState(false);
+  const [personalizedPathway, setPersonalizedPathway] = useState(null);
   const fileRef = useRef();
 
   const handleFile = (f) => {
@@ -118,6 +121,21 @@ export default function CVUpload() {
     setExtracted(optimizedData);
     setOptimizationData(null);
     setSelectedVisaForOptimization(null);
+  };
+
+  const generatePersonalizedPathway = async () => {
+    if (!extracted) return;
+    setGeneratingPathway(true);
+    try {
+      const result = await base44.functions.invoke('generatePersonalizedPathway', {
+        cvData: extracted,
+      });
+      setPersonalizedPathway(result.data);
+    } catch (error) {
+      console.error('Error generating pathway:', error);
+    } finally {
+      setGeneratingPathway(false);
+    }
   };
 
   const exportForms = () => {
@@ -325,7 +343,22 @@ export default function CVUpload() {
               </button>
             )}
 
-            {optimizationData && selectedVisaForOptimization ? (
+            {personalizedPathway ? (
+              <>
+                <div className="pt-6 border-t border-gray-100">
+                  <div className="mb-6 flex items-center justify-between">
+                    <h3 className="text-xl font-bold text-[#0a1628]">🎯 Lộ trình di trú cá nhân của bạn</h3>
+                    <button
+                      onClick={() => setPersonalizedPathway(null)}
+                      className="text-sm text-gray-500 hover:text-gray-700"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  <PersonalizedPathway pathway={personalizedPathway} loading={false} />
+                </div>
+              </>
+            ) : optimizationData && selectedVisaForOptimization ? (
               <>
                 <div className="pt-6 border-t border-gray-100">
                   <CVOptimizer 
@@ -356,6 +389,26 @@ export default function CVUpload() {
               </div>
             ) : null}
 
+            {extracted && !personalizedPathway && !visaAnalysis && (
+              <button
+                onClick={generatePersonalizedPathway}
+                disabled={generatingPathway}
+                className="w-full mt-6 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-xl font-bold hover:shadow-lg disabled:opacity-60 flex items-center justify-center gap-2 transition-all"
+              >
+                {generatingPathway ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Đang tạo lộ trình cá nhân...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4" />
+                    Tạo lộ trình di trú cá nhân
+                  </>
+                )}
+              </button>
+            )}
+
             <button
               onClick={() => { 
                 setFile(null); 
@@ -364,6 +417,7 @@ export default function CVUpload() {
                 setVisaAnalysis(null); 
                 setOptimizationData(null);
                 setSelectedVisaForOptimization(null);
+                setPersonalizedPathway(null);
               }}
               className="w-full text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors pt-4"
             >
