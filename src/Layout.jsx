@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Home, Map, CheckSquare, FileText, MessageCircle, Upload, User, Menu, X, Flag } from "lucide-react";
+import { Home, Map, CheckSquare, FileText, MessageCircle, Upload, User, Menu, X, Flag, Briefcase } from "lucide-react";
 
 const navItems = [
   { label: "Trang chủ", icon: Home, page: "Home" },
   { label: "Lộ trình PR", icon: Map, page: "Roadmap" },
+  { label: "Visa 482", icon: Briefcase, page: "Visa482" },
   { label: "Checklist", icon: CheckSquare, page: "Checklist" },
   { label: "Biểu mẫu", icon: FileText, page: "Forms" },
   { label: "Upload CV", icon: Upload, page: "CVUpload" },
