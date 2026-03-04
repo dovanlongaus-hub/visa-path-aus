@@ -2,6 +2,7 @@ import { useState } from "react";
 import { CheckCircle, ChevronDown, ChevronUp, ArrowRight, Building2, DollarSign, Briefcase, GraduationCap, AlertCircle, Star, Clock, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import CareerAdvisor from "../components/visa482/CareerAdvisor";
 
 // ─── DATA ────────────────────────────────────────────────────────────────────
 
