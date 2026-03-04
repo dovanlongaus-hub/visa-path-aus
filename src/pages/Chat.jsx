@@ -116,7 +116,8 @@ export default function Chat() {
 
       if (u) {
         const profiles = await base44.entities.UserProfile.list("-created_date", 1).catch(() => []);
-        setProfile(profiles[0] || null);
+        const p = profiles[0] || null;
+        setProfile(p);
 
         const history = await base44.entities.ChatMessage.filter({ session_id: sid }, "created_date", 50).catch(() => []);
         if (history.length > 0) {
@@ -131,6 +132,8 @@ export default function Chat() {
     };
     init();
   }, []);
+
+  const isPremium = profile?.is_premium === true;
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
