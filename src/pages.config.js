@@ -62,6 +62,9 @@ import Visa482 from './pages/Visa482';
 import Visa858 from './pages/Visa858';
 import Feedback from './pages/Feedback';
 import AdminFeedback from './pages/AdminFeedback';
+import Guide from './pages/Guide';
+import Article from './pages/Article';
+import AdminGuide from './pages/AdminGuide';
 import __Layout from './Layout.jsx';
 
 
@@ -81,6 +84,9 @@ export const PAGES = {
     "Visa858": Visa858,
     "Feedback": Feedback,
     "AdminFeedback": AdminFeedback,
+    "Guide": Guide,
+    "Article": Article,
+    "AdminGuide": AdminGuide,
 }
 
 export const pagesConfig = {
