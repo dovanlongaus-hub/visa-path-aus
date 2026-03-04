@@ -113,59 +113,46 @@ function CopyButton({ text }) {
   );
 }
 
-function BankTransferCard({ plan }) {
+function BankCard({ bank }) {
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
-      <div className="flex items-center gap-2 mb-4">
-        <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
-          <span className="text-lg">🏦</span>
-        </div>
+    <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
+      <div className="flex items-center gap-2 mb-3">
+        <span className="text-2xl">{bank.flag}</span>
         <div>
-          <div className="font-bold text-[#0a1628]">Chuyển khoản ngân hàng</div>
-          <div className="text-xs text-gray-400">Úc – Bank Transfer</div>
+          <div className="font-bold text-[#0a1628] text-sm">{bank.label}</div>
+          <div className="text-xs text-gray-400">{bank.bank}</div>
         </div>
       </div>
+      <div className="space-y-2">
+        {bank.fields.map((f, i) => (
+          <div key={i} className="flex items-center justify-between py-1.5 border-b border-gray-100 last:border-0">
+            <span className="text-xs text-gray-500">{f.label}</span>
+            <div className="flex items-center gap-1">
+              <span className="text-sm font-semibold text-[#0a1628] font-mono">{f.value}</span>
+              {f.copy && <CopyButton text={f.copy} />}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
-      <div className="space-y-3">
-        <div className="flex items-center justify-between py-2 border-b border-gray-100">
-          <span className="text-sm text-gray-500">Ngân hàng</span>
-          <div className="flex items-center">
-            <span className="text-sm font-semibold text-[#0a1628]">{BANK.bank}</span>
-          </div>
+function BankTransferCard({ plan }) {
+  return (
+    <div className="space-y-4">
+      {BANKS.map((bank, i) => <BankCard key={i} bank={bank} />)}
+      {plan && (
+        <div className="bg-white rounded-2xl border border-gray-200 p-4 flex items-center justify-between">
+          <span className="text-sm text-gray-500">Số tiền thanh toán</span>
+          <span className="text-xl font-black text-blue-600">AUD {plan.amount}</span>
         </div>
-        <div className="flex items-center justify-between py-2 border-b border-gray-100">
-          <span className="text-sm text-gray-500">BSB</span>
-          <div className="flex items-center">
-            <span className="text-sm font-semibold text-[#0a1628] font-mono">{BANK.bsb}</span>
-            <CopyButton text={BANK.bsb.replace(/\s/g, "")} />
-          </div>
-        </div>
-        <div className="flex items-center justify-between py-2 border-b border-gray-100">
-          <span className="text-sm text-gray-500">Số tài khoản</span>
-          <div className="flex items-center">
-            <span className="text-sm font-semibold text-[#0a1628] font-mono">{BANK.account}</span>
-            <CopyButton text={BANK.account.replace(/\s/g, "")} />
-          </div>
-        </div>
-        <div className="flex items-center justify-between py-2 border-b border-gray-100">
-          <span className="text-sm text-gray-500">Tên tài khoản</span>
-          <div className="flex items-center">
-            <span className="text-sm font-semibold text-[#0a1628]">{BANK.name}</span>
-            <CopyButton text={BANK.name} />
-          </div>
-        </div>
-        {plan && (
-          <div className="flex items-center justify-between py-2 border-b border-gray-100">
-            <span className="text-sm text-gray-500">Số tiền</span>
-            <span className="text-lg font-black text-blue-600">AUD {plan.amount}</span>
-          </div>
-        )}
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 mt-2">
-          <p className="text-xs text-amber-700">
-            <strong>Nội dung chuyển khoản:</strong> Ghi email + gói dịch vụ (ví dụ: <em>nguyenvana@email.com Monthly</em>).
-            Tài khoản được kích hoạt trong vòng <strong>2–4 giờ</strong> sau khi nhận thanh toán.
-          </p>
-        </div>
+      )}
+      <div className="bg-amber-50 border border-amber-200 rounded-xl p-3">
+        <p className="text-xs text-amber-700">
+          <strong>Nội dung chuyển khoản:</strong> Ghi email + gói dịch vụ (ví dụ: <em>nguyenvana@email.com Monthly</em>).
+          Tài khoản được kích hoạt trong vòng <strong>2–4 giờ</strong> sau khi nhận thanh toán.
+        </p>
       </div>
     </div>
   );
