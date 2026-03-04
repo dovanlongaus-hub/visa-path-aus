@@ -214,6 +214,17 @@ export default function Layout({ children, currentPageName }) {
             >
               <Crown className="w-4 h-4" /> Nâng cấp
             </Link>
+
+            {/* Admin only */}
+            <Link
+              to={createPageUrl("AdminActivate")}
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                currentPageName === "AdminActivate" ? "bg-gray-800 text-white" : "text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+              }`}
+              title="Admin – Kích hoạt Premium"
+            >
+              <Shield className="w-4 h-4" />
+            </Link>
           </div>
 
           {/* Mobile hamburger */}
