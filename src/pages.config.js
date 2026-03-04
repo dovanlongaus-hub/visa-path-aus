@@ -59,6 +59,7 @@ import Visa858 from './pages/Visa858';
 import EOIGenerator from './pages/EOIGenerator';
 import MyPlan from './pages/MyPlan';
 import Pricing from './pages/Pricing';
+import AdminActivate from './pages/AdminActivate';
 import __Layout from './Layout.jsx';
 
 
@@ -75,6 +76,7 @@ export const PAGES = {
     "EOIGenerator": EOIGenerator,
     "MyPlan": MyPlan,
     "Pricing": Pricing,
+    "AdminActivate": AdminActivate,
 }
 
 export const pagesConfig = {
