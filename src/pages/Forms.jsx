@@ -353,7 +353,10 @@ export default function Forms() {
                           </div>
                         </div>
                         <p className="text-xs text-gray-500 mb-3">{form.desc}</p>
-                        <p className="text-xs text-gray-400 mb-3">{form.fields.length} trường thông tin</p>
+                        <div className="flex items-center gap-2 mb-3">
+                          <p className="text-xs text-gray-400">{form.fields.length} trường thông tin</p>
+                          {profile && isRecommended && <span className="text-xs text-emerald-600 font-medium">✓ Đã điền sẵn từ hồ sơ</span>}
+                        </div>
                         <button
                           onClick={() => setActiveForm(form)}
                           className="w-full bg-[#0f2347] text-white py-2 rounded-lg text-xs font-medium hover:bg-[#1a3a6e] transition-colors flex items-center justify-center gap-1"
