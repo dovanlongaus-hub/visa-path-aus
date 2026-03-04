@@ -204,6 +204,16 @@ export default function Layout({ children, currentPageName }) {
             >
               <User className="w-4 h-4" /> Hồ sơ
             </Link>
+
+            {/* Pricing CTA */}
+            <Link
+              to={createPageUrl("Pricing")}
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                currentPageName === "Pricing" ? "bg-violet-700 text-white" : "text-violet-600 hover:text-violet-700 hover:bg-violet-50"
+              }`}
+            >
+              <Crown className="w-4 h-4" /> Nâng cấp
+            </Link>
           </div>
 
           {/* Mobile hamburger */}
