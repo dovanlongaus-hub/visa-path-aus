@@ -54,6 +54,7 @@ import Checklist from './pages/Checklist';
 import Forms from './pages/Forms';
 import CVUpload from './pages/CVUpload';
 import Profile from './pages/Profile';
+import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
@@ -69,4 +70,5 @@ export const PAGES = {
 export const pagesConfig = {
     mainPage: "Home",
     Pages: PAGES,
+    Layout: __Layout,
 };
