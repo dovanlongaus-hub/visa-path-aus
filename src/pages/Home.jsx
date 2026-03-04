@@ -62,38 +62,69 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#f8f9fc]">
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#0a1628] via-[#0f2347] to-[#1a3a6e] text-white">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400 rounded-full blur-3xl" />
-          <div className="absolute bottom-10 right-10 w-96 h-96 bg-indigo-400 rounded-full blur-3xl" />
+      <section className="relative overflow-hidden text-white" style={{minHeight: "560px"}}>
+        {/* Background image – Sydney Opera House */}
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=80"
+            alt="Australia"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#0a1628]/90 via-[#0f2347]/80 to-[#1a3a6e]/70" />
         </div>
-        <div className="relative max-w-5xl mx-auto px-6 py-20 text-center">
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 text-sm mb-8">
-            <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-            Nền tảng tư vấn di trú Úc số 1 cho sinh viên
-          </div>
-          <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
-            Con đường đến
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-300 mt-2">
-              Thường Trú Nhân Úc
-            </span>
-          </h1>
-          <p className="text-xl text-blue-100 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Hướng dẫn chi tiết từng bước từ visa sinh viên (500) đến PR, với checklist điều kiện, biểu mẫu tự động và tư vấn AI 24/7.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to={createPageUrl("Roadmap")}
-              className="inline-flex items-center gap-2 bg-white text-[#0f2347] font-semibold px-8 py-4 rounded-2xl hover:bg-blue-50 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-            >
-              Xem lộ trình PR <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link
-              to={createPageUrl("Chat")}
-              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/30 text-white font-semibold px-8 py-4 rounded-2xl hover:bg-white/20 transition-all"
-            >
-              <MessageCircle className="w-5 h-5" /> Hỏi tư vấn AI
-            </Link>
+
+        {/* Floating image strips */}
+        <div className="absolute right-0 top-0 bottom-0 w-1/3 hidden lg:flex flex-col gap-1 overflow-hidden opacity-30">
+          <img src="https://images.unsplash.com/photo-1529108190281-9a4f620bc2d8?w=400&q=60" alt="" className="h-1/3 w-full object-cover" />
+          <img src="https://images.unsplash.com/photo-1574068468668-a05a11f871da?w=400&q=60" alt="" className="h-1/3 w-full object-cover" />
+          <img src="https://images.unsplash.com/photo-1527004013197-933c4bb611b3?w=400&q=60" alt="" className="h-1/3 w-full object-cover" />
+        </div>
+
+        <div className="relative max-w-5xl mx-auto px-6 py-20">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 text-sm mb-8">
+              <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+              Nền tảng tư vấn di trú Úc số 1 cho người Việt
+            </div>
+            <h1 className="text-4xl md:text-5xl font-black leading-tight mb-4">
+              Con đường đến
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-violet-300 mt-1">
+                Thường Trú Nhân Úc 🦘
+              </span>
+            </h1>
+            <p className="text-lg text-blue-100 mb-8 leading-relaxed">
+              Hướng dẫn chi tiết từng bước từ visa sinh viên → Visa 485 → PR 189/190/491. Biểu mẫu tự động, EOI & CV AI, tư vấn 24/7.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 mb-10">
+              <Link
+                to={createPageUrl("Roadmap")}
+                className="inline-flex items-center gap-2 bg-white text-[#0f2347] font-bold px-7 py-3.5 rounded-2xl hover:bg-blue-50 transition-all shadow-lg hover:-translate-y-0.5"
+              >
+                Xem lộ trình PR <ArrowRight className="w-5 h-5" />
+              </Link>
+              <Link
+                to={createPageUrl("Chat")}
+                className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/30 text-white font-semibold px-7 py-3.5 rounded-2xl hover:bg-white/20 transition-all"
+              >
+                <MessageCircle className="w-5 h-5" /> Hỏi tư vấn AI
+              </Link>
+            </div>
+
+            {/* Benefits chips */}
+            <div className="flex flex-wrap gap-2">
+              {[
+                "🎓 Bằng cấp được công nhận quốc tế",
+                "💰 Lương trung bình AUD 85,000+/năm",
+                "🏥 Medicare & phúc lợi xã hội",
+                "🌏 Môi trường đa văn hóa",
+                "🏠 Chất lượng sống top 5 thế giới",
+                "👨‍👩‍👧 Gia đình được bảo lãnh PR",
+              ].map((b, i) => (
+                <span key={i} className="bg-white/10 backdrop-blur-sm border border-white/20 text-white text-xs px-3 py-1.5 rounded-full font-medium">
+                  {b}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </section>
