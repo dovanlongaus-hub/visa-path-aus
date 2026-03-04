@@ -82,15 +82,21 @@ Dựa trên CV, hãy:
     ],
     "phase_1": {
       "title": "Chuẩn bị (1-2 tháng)",
-      "steps": ["Step 1", "Step 2"]
+      "steps": ["Step 1", "Step 2"],
+      "recommended_articles": ["Article title 1"],
+      "recommended_documents": ["Document title 1"]
     },
     "phase_2": {
       "title": "Nộp EOI (2-3 tháng)",
-      "steps": ["Step 1", "Step 2"]
+      "steps": ["Step 1", "Step 2"],
+      "recommended_articles": ["Article title"],
+      "recommended_documents": ["Document title 1"]
     },
     "phase_3": {
       "title": "Nhận Invite & Nộp (3-6 tháng)",
-      "steps": ["Step 1", "Step 2"]
+      "steps": ["Step 1", "Step 2"],
+      "recommended_articles": ["Article title"],
+      "recommended_documents": ["Document title"]
     }
   },
   "personalized_tips": [
