@@ -173,6 +173,16 @@ export default function Checklist() {
   };
 
   const overall = totalProgress();
+  const relevantStageIds = profile?.current_visa_type ? (visaRelevantStages[profile.current_visa_type] || []) : [];
+
+  // Sort stages: relevant first, then the rest
+  const sortedStages = [...defaultStages].sort((a, b) => {
+    const aRelevant = relevantStageIds.includes(a.id);
+    const bRelevant = relevantStageIds.includes(b.id);
+    if (aRelevant && !bRelevant) return -1;
+    if (!aRelevant && bRelevant) return 1;
+    return 0;
+  });
 
   return (
     <div className="min-h-screen bg-[#f8f9fc]">
@@ -182,6 +192,24 @@ export default function Checklist() {
           <h1 className="text-3xl font-bold text-[#0a1628] mb-2">Checklist Lộ trình PR</h1>
           <p className="text-gray-500">Theo dõi tiến trình của bạn từng bước một</p>
         </div>
+
+        {/* Personalized hint */}
+        {profile ? (
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-4 mb-6 text-white flex items-center gap-3">
+            <Zap className="w-5 h-5 text-yellow-300 flex-shrink-0" />
+            <div className="text-sm">
+              <span className="font-semibold">Cá nhân hóa theo Visa {profile.current_visa_type}:</span>{" "}
+              Các giai đoạn quan trọng nhất với bạn hiện tại được hiển thị đầu tiên.
+            </div>
+          </div>
+        ) : (
+          <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-6 flex items-center gap-3">
+            <User className="w-5 h-5 text-blue-500 flex-shrink-0" />
+            <p className="text-sm text-blue-700">
+              <Link to={createPageUrl("Profile")} className="font-semibold underline">Điền hồ sơ cá nhân</Link> để checklist được sắp xếp theo visa và giai đoạn của bạn.
+            </p>
+          </div>
+        )}
 
         {/* Overall progress */}
         <div className="bg-[#0f2347] rounded-2xl p-6 mb-8 text-white">
