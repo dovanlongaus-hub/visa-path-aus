@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronUp, Zap, Target, AlertCircle, CheckCircle, Clock, TrendingUp } from 'lucide-react';
+import RecommendedResources from './RecommendedResources';
 
 const visaColors = {
   '189': 'from-blue-500 to-cyan-500',
@@ -200,13 +201,17 @@ export default function PersonalizedPathway({ pathway, loading }) {
               {expandedPhase === 'phase_1' ? <ChevronUp /> : <ChevronDown />}
             </button>
             {expandedPhase === 'phase_1' && (
-              <div className="p-5 bg-white space-y-2">
+              <div className="p-5 bg-white space-y-3">
                 {pathway.roadmap.phase_1.steps?.map((step, i) => (
                   <div key={i} className="flex gap-3 text-gray-700">
                     <span className="font-bold text-blue-600">{i + 1}.</span>
                     <span>{step}</span>
                   </div>
                 ))}
+                <RecommendedResources 
+                  articles={pathway.roadmap.phase_1.recommended_articles}
+                  documents={pathway.roadmap.phase_1.recommended_documents}
+                />
               </div>
             )}
           </div>
@@ -223,13 +228,17 @@ export default function PersonalizedPathway({ pathway, loading }) {
               {expandedPhase === 'phase_2' ? <ChevronUp /> : <ChevronDown />}
             </button>
             {expandedPhase === 'phase_2' && (
-              <div className="p-5 bg-white space-y-2">
+              <div className="p-5 bg-white space-y-3">
                 {pathway.roadmap.phase_2.steps?.map((step, i) => (
                   <div key={i} className="flex gap-3 text-gray-700">
                     <span className="font-bold text-purple-600">{i + 1}.</span>
                     <span>{step}</span>
                   </div>
                 ))}
+                <RecommendedResources 
+                  articles={pathway.roadmap.phase_2.recommended_articles}
+                  documents={pathway.roadmap.phase_2.recommended_documents}
+                />
               </div>
             )}
           </div>
@@ -246,13 +255,17 @@ export default function PersonalizedPathway({ pathway, loading }) {
               {expandedPhase === 'phase_3' ? <ChevronUp /> : <ChevronDown />}
             </button>
             {expandedPhase === 'phase_3' && (
-              <div className="p-5 bg-white space-y-2">
+              <div className="p-5 bg-white space-y-3">
                 {pathway.roadmap.phase_3.steps?.map((step, i) => (
                   <div key={i} className="flex gap-3 text-gray-700">
                     <span className="font-bold text-emerald-600">{i + 1}.</span>
                     <span>{step}</span>
                   </div>
                 ))}
+                <RecommendedResources 
+                  articles={pathway.roadmap.phase_3.recommended_articles}
+                  documents={pathway.roadmap.phase_3.recommended_documents}
+                />
               </div>
             )}
           </div>
