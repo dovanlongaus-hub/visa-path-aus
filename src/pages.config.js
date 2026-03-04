@@ -58,6 +58,7 @@ import Visa482 from './pages/Visa482';
 import Visa858 from './pages/Visa858';
 import EOIGenerator from './pages/EOIGenerator';
 import MyPlan from './pages/MyPlan';
+import Pricing from './pages/Pricing';
 import __Layout from './Layout.jsx';
 
 
@@ -73,6 +74,7 @@ export const PAGES = {
     "Visa858": Visa858,
     "EOIGenerator": EOIGenerator,
     "MyPlan": MyPlan,
+    "Pricing": Pricing,
 }
 
 export const pagesConfig = {
