@@ -11,6 +11,7 @@ const navItems = [
   { label: "Checklist", icon: CheckSquare, page: "Checklist" },
   { label: "Biểu mẫu", icon: FileText, page: "Forms" },
   { label: "Upload CV", icon: Upload, page: "CVUpload" },
+  { label: "EOI & CV", icon: Sparkles, page: "EOIGenerator" },
   { label: "Tư vấn AI", icon: MessageCircle, page: "Chat" },
   { label: "Hồ sơ", icon: User, page: "Profile" },
 ];
