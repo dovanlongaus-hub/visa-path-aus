@@ -75,12 +75,29 @@ const PLANS = [
 ];
 
 // ── Bank Transfer Details ──────────────────────────────────────
-const BANK = {
-  bank: "Commonwealth Bank (CBA)",
-  bsb: "067 873",
-  account: "1154 7224",
-  name: "Van Long DO",
-};
+const BANKS = [
+  {
+    flag: "🇦🇺",
+    label: "Tài khoản Úc",
+    bank: "Commonwealth Bank (CBA)",
+    fields: [
+      { label: "Ngân hàng", value: "Commonwealth Bank (CBA)" },
+      { label: "BSB", value: "067 873", copy: "067873" },
+      { label: "Số tài khoản", value: "1154 7224", copy: "11547224" },
+      { label: "Tên tài khoản", value: "Van Long DO" },
+    ],
+  },
+  {
+    flag: "🇻🇳",
+    label: "Tài khoản Việt Nam",
+    bank: "Vietcombank (VCB)",
+    fields: [
+      { label: "Ngân hàng", value: "Vietcombank (VCB)" },
+      { label: "Số tài khoản", value: "0071000985789", copy: "0071000985789" },
+      { label: "Tên tài khoản", value: "Đỗ Văn Long" },
+    ],
+  },
+];
 
 function CopyButton({ text }) {
   const [copied, setCopied] = useState(false);
