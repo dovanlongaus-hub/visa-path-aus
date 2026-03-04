@@ -50,6 +50,8 @@ Dựa trên CV, hãy:
 4. Cung cấp lộ trình cụ thể (timeline & bước)
 5. Các hành động ngay lập tức cần làm
 6. Gợi ý bài viết và tài liệu liên quan cho từng giai đoạn
+7. Phân tích kỹ năng còn thiếu và gợi ý các khóa học online (Coursera, LinkedIn Learning, edX, Udemy) để bổ sung
+8. Dựa trên kinh nghiệm làm việc, gợi ý các vị trí công việc tiềm năng tại Úc
 
 ĐỊNH DẠNG JSON TRẢ VỀ:
 {
@@ -103,6 +105,33 @@ Dựa trên CV, hãy:
     "Tip 1 dựa trên profile",
     "Tip 2 dựa trên profile"
   ],
+  "skill_improvement": {
+    "missing_skills": ["Skill 1", "Skill 2"],
+    "recommended_courses": [
+      {
+        "course_title": "Course name",
+        "platform": "Coursera/LinkedIn Learning/edX/Udemy",
+        "duration": "4-6 weeks",
+        "skill_target": "Skill addressed",
+        "estimated_cost": "$50-200",
+        "relevance": "Directly improves visa score/job prospects"
+      }
+    ]
+  },
+  "job_opportunities": {
+    "current_role_analysis": "Analysis of current experience",
+    "suggested_positions": [
+      {
+        "job_title": "Position title",
+        "industry": "Industry/sector",
+        "salary_range": "AUD 70,000-90,000/year",
+        "location": "Melbourne/Sydney/Brisbane",
+        "required_skills": ["Skill 1", "Skill 2"],
+        "visa_sponsorship_potential": "High/Medium/Low",
+        "tips_for_landing": "Specific advice to get hired"
+      }
+    ]
+  },
   "questions_to_clarify": ["Question 1", "Question 2"]
 }`;
 
@@ -188,6 +217,47 @@ Dựa trên CV, hãy:
             },
           },
           personalized_tips: { type: 'array', items: { type: 'string' } },
+          skill_improvement: {
+            type: 'object',
+            properties: {
+              missing_skills: { type: 'array', items: { type: 'string' } },
+              recommended_courses: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    course_title: { type: 'string' },
+                    platform: { type: 'string' },
+                    duration: { type: 'string' },
+                    skill_target: { type: 'string' },
+                    estimated_cost: { type: 'string' },
+                    relevance: { type: 'string' },
+                  },
+                },
+              },
+            },
+          },
+          job_opportunities: {
+            type: 'object',
+            properties: {
+              current_role_analysis: { type: 'string' },
+              suggested_positions: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    job_title: { type: 'string' },
+                    industry: { type: 'string' },
+                    salary_range: { type: 'string' },
+                    location: { type: 'string' },
+                    required_skills: { type: 'array', items: { type: 'string' } },
+                    visa_sponsorship_potential: { type: 'string' },
+                    tips_for_landing: { type: 'string' },
+                  },
+                },
+              },
+            },
+          },
           questions_to_clarify: { type: 'array', items: { type: 'string' } },
         },
       },
