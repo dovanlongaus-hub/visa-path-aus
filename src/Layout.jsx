@@ -33,6 +33,7 @@ const groups = [
     color: "violet",
     items: [
       { label: "Hồ sơ cá nhân", icon: User, page: "Profile", desc: "Lưu thông tin cá nhân" },
+      { label: "Kế hoạch cá nhân", icon: Target, page: "MyPlan", desc: "Task list & lộ trình AI" },
       { label: "Checklist", icon: CheckSquare, page: "Checklist", desc: "Theo dõi tiến trình" },
       { label: "Upload CV", icon: Upload, page: "CVUpload", desc: "Trích xuất bằng AI" },
     ],
