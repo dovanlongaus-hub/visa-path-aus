@@ -107,13 +107,31 @@ const colorMap = {
   rose: { header: "bg-rose-600", badge: "bg-rose-100 text-rose-700", check: "text-rose-500", border: "border-rose-200" },
 };
 
+// Maps visa type → checklist stage id to auto-expand
+const visaToChecklistStage = { "500": "visa500", "485": "visa485", "189": "eoi", "190": "eoi", "491": "eoi" };
+
+// Priority order per visa type - which stages are most relevant
+const visaRelevantStages = {
+  "500": ["visa500", "studying"],
+  "485": ["visa485", "skills"],
+  "189": ["eoi", "pr"],
+  "190": ["eoi", "pr"],
+  "491": ["eoi", "pr"],
+};
+
 export default function Checklist() {
+  const { profile, loading: profileLoading } = useUserProfile();
   const [checked, setChecked] = useState({});
   const [expanded, setExpanded] = useState({ visa500: true });
-  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    // Load saved checklist from entity
+    if (profile?.current_visa_type) {
+      const stage = visaToChecklistStage[profile.current_visa_type];
+      if (stage) setExpanded({ [stage]: true });
+    }
+  }, [profile]);
+
+  useEffect(() => {
     base44.entities.Checklist.list().then((records) => {
       const state = {};
       records.forEach((r) => {
