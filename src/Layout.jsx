@@ -4,7 +4,8 @@ import { createPageUrl } from "@/utils";
 import {
   Home, Map, CheckSquare, FileText, MessageCircle, Upload,
   User, Menu, X, Flag, Briefcase, Award, Sparkles,
-  ChevronDown, Bot, ClipboardList, Target, Crown, Shield, Lightbulb, BookOpen
+  ChevronDown, Bot, ClipboardList, Target, Crown, Shield, Lightbulb, BookOpen,
+  HelpCircle, Bookmark, Download, Users, Bell, Settings as SettingsIcon
 } from "lucide-react";
 
 // ── Nav structure ──────────────────────────────────────────────
@@ -49,11 +50,23 @@ const groups = [
     ],
   },
   {
-    label: "Hướng dẫn",
+    label: "Hướng dẫn & Hỗ trợ",
     emoji: "📚",
     color: "indigo",
     items: [
       { label: "Knowledge Base", icon: BookOpen, page: "Guide", desc: "Bài viết hướng dẫn chi tiết" },
+      { label: "FAQ", icon: HelpCircle, page: "FAQ", desc: "Câu hỏi thường gặp" },
+      { label: "Liên hệ", icon: MessageCircle, page: "Contact", desc: "Gửi tin nhắn hỗ trợ" },
+    ],
+  },
+  {
+    label: "Tài liệu & Yêu thích",
+    emoji: "⭐",
+    color: "rose",
+    items: [
+      { label: "Bookmarks", icon: Bookmark, page: "Bookmarks", desc: "Lưu bài viết yêu thích" },
+      { label: "Tải xuống", icon: Download, page: "Downloads", desc: "Templates & guides" },
+      { label: "Câu chuyện thành công", icon: Users, page: "Testimonials", desc: "Chia sẻ kinh nghiệm" },
     ],
   },
 ];
@@ -224,6 +237,28 @@ export default function Layout({ children, currentPageName }) {
               <Lightbulb className="w-4 h-4" /> Góp ý
             </Link>
 
+            {/* Notifications */}
+            <Link
+              to={createPageUrl("Notifications")}
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors relative ${
+                currentPageName === "Notifications" ? "bg-blue-600 text-white" : "text-gray-600 hover:text-blue-600 hover:bg-blue-50"
+              }`}
+            >
+              <Bell className="w-4 h-4" />
+              <span className="hidden md:inline">Thông báo</span>
+            </Link>
+
+            {/* Settings */}
+            <Link
+              to={createPageUrl("Settings")}
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                currentPageName === "Settings" ? "bg-blue-600 text-white" : "text-gray-600 hover:text-blue-600 hover:bg-blue-50"
+              }`}
+            >
+              <SettingsIcon className="w-4 h-4" />
+              <span className="hidden md:inline">Cài đặt</span>
+            </Link>
+
             {/* Pricing CTA */}
             <Link
               to={createPageUrl("Pricing")}
@@ -338,11 +373,14 @@ export default function Layout({ children, currentPageName }) {
               </div>
             </Link>
 
-            {/* Home & Profile & Feedback & Guide */}
+            {/* Home & Other quick links */}
             {[
               { label: "Trang chủ", icon: Home, page: "Home" },
               { label: "Knowledge Base", icon: BookOpen, page: "Guide" },
+              { label: "FAQ", icon: HelpCircle, page: "FAQ" },
               { label: "Hồ sơ cá nhân", icon: User, page: "Profile" },
+              { label: "Thông báo", icon: Bell, page: "Notifications" },
+              { label: "Cài đặt", icon: SettingsIcon, page: "Settings" },
               { label: "Góp ý", icon: Lightbulb, page: "Feedback" },
             ].map(item => {
               const Icon = item.icon;
