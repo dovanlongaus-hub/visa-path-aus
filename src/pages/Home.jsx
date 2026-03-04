@@ -158,16 +158,17 @@ export default function Home() {
 
       {/* Stats */}
       <section className="max-w-5xl mx-auto px-6 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
           {[
-            { num: "6+", label: "Loại visa được hỗ trợ" },
-            { num: "50+", label: "Biểu mẫu di trú" },
-            { num: "24/7", label: "Tư vấn AI" },
-            { num: "100%", label: "Miễn phí sử dụng" },
+            { num: "6+", label: "Loại visa được hỗ trợ", emoji: "🛂", bg: "from-blue-50 to-indigo-50", border: "border-blue-100" },
+            { num: "50+", label: "Biểu mẫu di trú", emoji: "📋", bg: "from-violet-50 to-purple-50", border: "border-violet-100" },
+            { num: "24/7", label: "Tư vấn AI", emoji: "🤖", bg: "from-amber-50 to-orange-50", border: "border-amber-100" },
+            { num: "100%", label: "Miễn phí cơ bản", emoji: "✨", bg: "from-emerald-50 to-teal-50", border: "border-emerald-100" },
           ].map((s, i) => (
-            <div key={i} className="bg-white rounded-2xl p-6 text-center shadow-sm border border-gray-100">
-              <div className="text-3xl font-bold text-[#0f2347]">{s.num}</div>
-              <div className="text-sm text-gray-500 mt-1">{s.label}</div>
+            <div key={i} className={`bg-gradient-to-br ${s.bg} rounded-2xl p-5 text-center border ${s.border} shadow-sm`}>
+              <div className="text-2xl mb-1">{s.emoji}</div>
+              <div className="text-3xl font-black text-[#0f2347]">{s.num}</div>
+              <div className="text-xs text-gray-500 mt-1 font-medium">{s.label}</div>
             </div>
           ))}
         </div>
