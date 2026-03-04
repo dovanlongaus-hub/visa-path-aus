@@ -153,7 +153,7 @@ Yêu cầu:
 
   return (
     <PremiumGate featureName="EOI & CV Generator">
-    <div className="min-h-screen bg-[#f8f9fc]">
+      <div className="min-h-screen bg-[#f8f9fc]">
       <div className="max-w-4xl mx-auto px-4 py-10">
 
         {/* Header */}
