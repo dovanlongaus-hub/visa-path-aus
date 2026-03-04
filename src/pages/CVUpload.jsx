@@ -113,11 +113,19 @@ export default function CVUpload() {
   return (
     <PremiumGate featureName="Upload CV">
       <div className="min-h-screen bg-[#f8f9fc]">
-      <div className="max-w-3xl mx-auto px-4 py-10">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#0a1628] mb-3">Upload CV & Điền form tự động</h1>
-          <p className="text-gray-500">Tải lên CV hoặc bất kỳ tài liệu nào (PDF, Word, ảnh) – AI sẽ tự động trích xuất thông tin để điền vào các biểu mẫu di trú.</p>
+      {/* Hero */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-700 text-white py-16">
+        <div className="absolute inset-0 opacity-10">
+          <img src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&q=80" alt="" className="w-full h-full object-cover" />
         </div>
+        <div className="relative max-w-4xl mx-auto px-4 text-center">
+          <h1 className="text-4xl md:text-5xl font-black mb-4">Upload CV & Nhận Tư Vấn Chuyên Sâu</h1>
+          <p className="text-lg text-blue-100 max-w-2xl mx-auto">AI phân tích CV → Trích xuất thông tin → Đề xuất tạo lại CV phù hợp visa pathway của bạn</p>
+        </div>
+      </section>
+
+      <div className="max-w-4xl mx-auto px-4 py-12">
+        <div className="mb-10"></div>
 
         {/* Upload Zone */}
         {!extracted && (
