@@ -256,6 +256,7 @@ export default function CVUpload() {
         )}
       </div>
     </div>
+    </PremiumGate>
   );
 }
 
