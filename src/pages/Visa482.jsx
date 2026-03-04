@@ -425,6 +425,8 @@ export default function Visa482() {
         </div>
 
         {/* Tab Content */}
+        {activeTab === "advisor" && <CareerAdvisor />}
+
         {activeTab === "streams" && (
           <div className="space-y-4">
             <p className="text-sm text-gray-500 mb-2">Visa 482 có 3 luồng. Phần lớn sinh viên Việt tốt nghiệp tại Úc sẽ đi theo <strong>Core Skills Stream</strong>.</p>
