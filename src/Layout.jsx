@@ -4,7 +4,7 @@ import { createPageUrl } from "@/utils";
 import {
   Home, Map, CheckSquare, FileText, MessageCircle, Upload,
   User, Menu, X, Flag, Briefcase, Award, Sparkles,
-  ChevronDown, Bot, ClipboardList, Target, Crown, Shield, Lightbulb
+  ChevronDown, Bot, ClipboardList, Target, Crown, Shield, Lightbulb, BookOpen
 } from "lucide-react";
 
 // ── Nav structure ──────────────────────────────────────────────
@@ -46,6 +46,14 @@ const groups = [
     items: [
       { label: "Biểu mẫu di trú", icon: FileText, page: "Forms", desc: "Form chính thức DIBP" },
       { label: "EOI & CV AI", icon: Sparkles, page: "EOIGenerator", desc: "Tạo EOI/CV tự động" },
+    ],
+  },
+  {
+    label: "Hướng dẫn",
+    emoji: "📚",
+    color: "indigo",
+    items: [
+      { label: "Knowledge Base", icon: BookOpen, page: "Guide", desc: "Bài viết hướng dẫn chi tiết" },
     ],
   },
 ];
@@ -247,6 +255,17 @@ export default function Layout({ children, currentPageName }) {
             >
               <Lightbulb className="w-4 h-4" />
             </Link>
+
+            {/* Admin Guide */}
+            <Link
+              to={createPageUrl("AdminGuide")}
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                currentPageName === "AdminGuide" ? "bg-gray-800 text-white" : "text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+              }`}
+              title="Admin – Knowledge Base"
+            >
+              <BookOpen className="w-4 h-4" />
+            </Link>
           </div>
 
           {/* Mobile hamburger */}
@@ -319,9 +338,10 @@ export default function Layout({ children, currentPageName }) {
               </div>
             </Link>
 
-            {/* Home & Profile & Feedback */}
+            {/* Home & Profile & Feedback & Guide */}
             {[
               { label: "Trang chủ", icon: Home, page: "Home" },
+              { label: "Knowledge Base", icon: BookOpen, page: "Guide" },
               { label: "Hồ sơ cá nhân", icon: User, page: "Profile" },
               { label: "Góp ý", icon: Lightbulb, page: "Feedback" },
             ].map(item => {
