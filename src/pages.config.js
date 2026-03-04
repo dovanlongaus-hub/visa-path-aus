@@ -50,12 +50,20 @@
 import Home from './pages/Home';
 import Roadmap from './pages/Roadmap';
 import Chat from './pages/Chat';
+import Checklist from './pages/Checklist';
+import Forms from './pages/Forms';
+import CVUpload from './pages/CVUpload';
+import Profile from './pages/Profile';
 
 
 export const PAGES = {
     "Home": Home,
     "Roadmap": Roadmap,
     "Chat": Chat,
+    "Checklist": Checklist,
+    "Forms": Forms,
+    "CVUpload": CVUpload,
+    "Profile": Profile,
 }
 
 export const pagesConfig = {
