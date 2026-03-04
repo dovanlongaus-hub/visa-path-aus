@@ -274,27 +274,27 @@ export default function CVUpload() {
 
 function InfoSection({ icon: Icon, title, color, fields }) {
   const colorMap = {
-    blue: { bg: "bg-blue-50", border: "border-blue-100", icon: "bg-blue-100 text-blue-600" },
-    violet: { bg: "bg-violet-50", border: "border-violet-100", icon: "bg-violet-100 text-violet-600" },
-    amber: { bg: "bg-amber-50", border: "border-amber-100", icon: "bg-amber-100 text-amber-600" },
+    blue: { bg: "bg-gradient-to-br from-blue-50 to-cyan-50", border: "border-blue-200", icon: "bg-blue-100 text-blue-600", titleColor: "text-blue-800" },
+    violet: { bg: "bg-gradient-to-br from-violet-50 to-purple-50", border: "border-violet-200", icon: "bg-violet-100 text-violet-600", titleColor: "text-violet-800" },
+    amber: { bg: "bg-gradient-to-br from-amber-50 to-orange-50", border: "border-amber-200", icon: "bg-amber-100 text-amber-600", titleColor: "text-amber-800" },
   };
   const c = colorMap[color];
   const hasData = fields.some((f) => f.val);
   if (!hasData) return null;
 
   return (
-    <div className={`${c.bg} border ${c.border} rounded-2xl p-5`}>
-      <div className="flex items-center gap-2 mb-4">
-        <div className={`w-8 h-8 rounded-lg ${c.icon} flex items-center justify-center`}>
-          <Icon className="w-4 h-4" />
+    <div className={`${c.bg} border-2 ${c.border} rounded-2xl p-6 shadow-sm`}>
+      <div className="flex items-center gap-3 mb-5">
+        <div className={`w-10 h-10 rounded-xl ${c.icon} flex items-center justify-center`}>
+          <Icon className="w-5 h-5" />
         </div>
-        <span className="font-semibold text-[#0a1628]">{title}</span>
+        <span className={`font-bold text-lg ${c.titleColor}`}>{title}</span>
       </div>
-      <div className="grid md:grid-cols-2 gap-3">
+      <div className="grid md:grid-cols-2 gap-4">
         {fields.filter((f) => f.val).map((f, i) => (
           <div key={i}>
-            <div className="text-xs text-gray-500 mb-0.5">{f.label}</div>
-            <div className="text-sm text-gray-800 font-medium break-words">{f.val}</div>
+            <div className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1">{f.label}</div>
+            <div className="text-sm text-gray-900 font-medium break-words leading-relaxed">{f.val}</div>
           </div>
         ))}
       </div>
