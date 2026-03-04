@@ -6,8 +6,8 @@ import ReactMarkdown from "react-markdown";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
-const FREE_LIMIT = 3;      // Hỏi tự do không cần login
-const BASIC_LIMIT = 10;    // Login free – sau đó gợi ý upgrade
+const FREE_LIMIT = 999999;      // Tạm thời không giới hạn
+const BASIC_LIMIT = 999999;    // Tạm thời không giới hạn
 
 const SYSTEM_PROMPT = `Bạn là chuyên gia tư vấn luật di trú Úc, chuyên hỗ trợ sinh viên và người Việt Nam tại Úc. 
 Bạn có kiến thức chuyên sâu về:
