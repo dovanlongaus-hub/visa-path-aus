@@ -301,5 +301,6 @@ Yêu cầu:
         )}
       </div>
     </div>
+    </PremiumGate>
   );
 }
