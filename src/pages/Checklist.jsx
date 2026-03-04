@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { CheckSquare, Square, Loader2, ChevronDown, ChevronUp } from "lucide-react";
+import { CheckSquare, Square, Loader2, ChevronDown, ChevronUp, Zap, User } from "lucide-react";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
+import { useUserProfile } from "../components/useUserProfile";
 
 const defaultStages = [
   {

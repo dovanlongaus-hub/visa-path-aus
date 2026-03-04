@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { CheckCircle, Circle, ChevronDown, ChevronUp, Clock, ArrowRight } from "lucide-react";
+import { CheckCircle, Circle, ChevronDown, ChevronUp, Clock, ArrowRight, User, Zap } from "lucide-react";
 import { createPageUrl } from "@/utils";
 import { Link } from "react-router-dom";
+import { useUserProfile } from "../components/useUserProfile";
 
 const stages = [
   {

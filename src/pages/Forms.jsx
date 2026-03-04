@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { FileText, Download, Eye, ChevronDown, ChevronUp, Loader2, CheckCircle } from "lucide-react";
+import { FileText, Download, Eye, ChevronDown, ChevronUp, Loader2, CheckCircle, Zap, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { useUserProfile } from "../components/useUserProfile";
 
 const formGroups = [
   {
