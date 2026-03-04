@@ -273,6 +273,19 @@ export default function Layout({ children, currentPageName }) {
               );
             })}
 
+            {/* Pricing mobile */}
+            <Link
+              to={createPageUrl("Pricing")}
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold mb-3"
+            >
+              <Crown className="w-4 h-4" />
+              <div>
+                <div className="text-sm font-bold">👑 Nâng cấp gói dịch vụ</div>
+                <div className="text-xs text-violet-200">Mở khóa AI chuyên sâu từ $29/tháng</div>
+              </div>
+            </Link>
+
             {/* Home & Profile */}
             {[
               { label: "Trang chủ", icon: Home, page: "Home" },
