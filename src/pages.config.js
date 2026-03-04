@@ -65,6 +65,11 @@ import AdminFeedback from './pages/AdminFeedback';
 import Guide from './pages/Guide';
 import Article from './pages/Article';
 import AdminGuide from './pages/AdminGuide';
+import Contact from './pages/Contact';
+import FAQ from './pages/FAQ';
+import Bookmarks from './pages/Bookmarks';
+import Downloads from './pages/Downloads';
+import Testimonials from './pages/Testimonials';
 import __Layout from './Layout.jsx';
 
 
@@ -87,6 +92,11 @@ export const PAGES = {
     "Guide": Guide,
     "Article": Article,
     "AdminGuide": AdminGuide,
+    "Contact": Contact,
+    "FAQ": FAQ,
+    "Bookmarks": Bookmarks,
+    "Downloads": Downloads,
+    "Testimonials": Testimonials,
 }
 
 export const pagesConfig = {
