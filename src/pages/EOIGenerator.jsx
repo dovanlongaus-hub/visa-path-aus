@@ -300,7 +300,7 @@ Yêu cầu:
           </div>
         )}
       </div>
-    </div>
+      </div>
     </PremiumGate>
   );
 }
