@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, FileText, Map, MessageCircle, CheckSquare, Upload, Star } from "lucide-react";
 import PathwayCards from "../components/home/PathwayCards";
 import NewsWidget from "../components/home/NewsWidget";
+import SmartAlerts from "../components/home/SmartAlerts";
 
 export default function Home() {
   const [user, setUser] = useState(null);
