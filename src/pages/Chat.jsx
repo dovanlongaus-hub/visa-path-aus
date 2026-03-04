@@ -284,8 +284,8 @@ Hãy cá nhân hoá câu trả lời dựa trên thông tin này khi phù hợp.
         </div>
       </div>
 
-      {/* Upgrade banner */}
-      {showUpgrade && <UpgradeBanner onDismiss={() => setShowUpgrade(false)} />}
+      {/* Upgrade banner – only for non-premium */}
+      {showUpgrade && !isPremium && <UpgradeBanner onDismiss={() => setShowUpgrade(false)} />}
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-6">
