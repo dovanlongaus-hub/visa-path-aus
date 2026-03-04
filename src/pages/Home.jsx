@@ -201,15 +201,32 @@ export default function Home() {
               <Link
                 key={i}
                 to={f.link}
-                className="group bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-1 transition-all duration-200"
+                className="group bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300"
               >
-                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${f.color} flex items-center justify-center mb-4`}>
-                  <Icon className="w-6 h-6 text-white" />
+                {/* Card image */}
+                <div className="relative h-40 overflow-hidden">
+                  <img
+                    src={f.img}
+                    alt={f.imgAlt}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className={`absolute inset-0 bg-gradient-to-br ${f.color} opacity-50 group-hover:opacity-40 transition-opacity`} />
+                  {/* Tag pill */}
+                  <span className="absolute top-3 left-3 bg-white/20 backdrop-blur-sm border border-white/30 text-white text-[10px] font-semibold px-2.5 py-1 rounded-full">
+                    {f.tag}
+                  </span>
+                  {/* Icon badge */}
+                  <div className={`absolute bottom-3 right-3 w-10 h-10 rounded-xl bg-gradient-to-br ${f.color} shadow-lg flex items-center justify-center`}>
+                    <Icon className="w-5 h-5 text-white" />
+                  </div>
                 </div>
-                <h3 className="font-semibold text-[#0a1628] text-lg mb-2">{f.title}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">{f.desc}</p>
-                <div className="flex items-center gap-1 mt-4 text-blue-600 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                  Khám phá <ArrowRight className="w-4 h-4" />
+                {/* Card body */}
+                <div className="p-5">
+                  <h3 className="font-bold text-[#0a1628] text-base mb-1.5">{f.title}</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed">{f.desc}</p>
+                  <div className="flex items-center gap-1 mt-3 text-blue-600 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                    Khám phá <ArrowRight className="w-4 h-4" />
+                  </div>
                 </div>
               </Link>
             );
