@@ -4,7 +4,7 @@ import { createPageUrl } from "@/utils";
 import {
   Home, Map, CheckSquare, FileText, MessageCircle, Upload,
   User, Menu, X, Flag, Briefcase, Award, Sparkles,
-  ChevronDown, Bot, ClipboardList, Target, Crown
+  ChevronDown, Bot, ClipboardList, Target, Crown, Shield
 } from "lucide-react";
 
 // ── Nav structure ──────────────────────────────────────────────
