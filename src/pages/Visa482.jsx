@@ -363,7 +363,7 @@ function SponsorSection({ req }) {
 // ─── PAGE ─────────────────────────────────────────────────────────────────────
 
 export default function Visa482() {
-  const [activeTab, setActiveTab] = useState("streams");
+  const [activeTab, setActiveTab] = useState("advisor");
 
   const tabs = [
     { id: "advisor", label: "🎓 Tư vấn theo ngành học" },
