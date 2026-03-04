@@ -6,6 +6,8 @@ import { ArrowRight, FileText, Map, MessageCircle, CheckSquare, Upload, Star, Sp
 import PathwayCards from "../components/home/PathwayCards";
 import NewsWidget from "../components/home/NewsWidget";
 import SmartAlerts from "../components/home/SmartAlerts";
+import DashboardSummary from "../components/home/DashboardSummary";
+import RecommendedContent from "../components/home/RecommendedContent";
 
 export default function Home() {
   const [user, setUser] = useState(null);
@@ -174,10 +176,24 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Dashboard Summary – Only for logged in users */}
+      {user && (
+        <section className="max-w-5xl mx-auto px-6 py-12">
+          <DashboardSummary />
+        </section>
+      )}
+
       {/* Smart Alerts */}
       {user && (
-        <section className="max-w-5xl mx-auto px-6 pt-8 pb-4">
+        <section className="max-w-5xl mx-auto px-6 pt-0 pb-4">
           <SmartAlerts />
+        </section>
+      )}
+
+      {/* Recommended Content – Only for logged in users */}
+      {user && (
+        <section className="max-w-5xl mx-auto px-6 py-12">
+          <RecommendedContent />
         </section>
       )}
 
