@@ -128,37 +128,39 @@ export default function CVUpload() {
         <div className="mb-10"></div>
 
         {/* Upload Zone */}
-        {!extracted && (
-          <div
-            className="border-2 border-dashed border-gray-200 rounded-2xl bg-white p-10 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/30 transition-all"
-            onDrop={handleDrop}
-            onDragOver={(e) => e.preventDefault()}
-            onClick={() => fileRef.current.click()}
-          >
-            <input
-              ref={fileRef}
-              type="file"
-              accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png"
-              className="hidden"
-              onChange={(e) => handleFile(e.target.files[0])}
-            />
-            <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <Upload className="w-8 h-8 text-blue-600" />
-            </div>
-            {file ? (
-              <div>
-                <div className="flex items-center justify-center gap-2 text-[#0a1628] font-semibold mb-1">
-                  <FileText className="w-5 h-5 text-blue-600" />
-                  {file.name}
+         {!extracted && (
+          <div className="bg-white rounded-3xl border-2 border-gray-100 p-8 md:p-12 shadow-lg">
+            <div
+              className="border-3 border-dashed border-blue-200 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 p-12 text-center cursor-pointer hover:border-blue-400 hover:from-blue-100 hover:to-indigo-100 transition-all"
+              onDrop={handleDrop}
+              onDragOver={(e) => e.preventDefault()}
+              onClick={() => fileRef.current.click()}
+            >
+              <input
+                ref={fileRef}
+                type="file"
+                accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png"
+                className="hidden"
+                onChange={(e) => handleFile(e.target.files[0])}
+              />
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-lg">
+                <Upload className="w-10 h-10 text-white" />
+              </div>
+              {file ? (
+                <div>
+                  <div className="flex items-center justify-center gap-2 text-[#0a1628] font-bold text-lg mb-2">
+                    <FileText className="w-6 h-6 text-blue-600" />
+                    {file.name}
+                  </div>
+                  <p className="text-sm text-gray-400">📁 {(file.size / 1024).toFixed(0)} KB • Sẵn sàng phân tích</p>
                 </div>
-                <p className="text-sm text-gray-400">{(file.size / 1024).toFixed(0)} KB</p>
-              </div>
-            ) : (
-              <div>
-                <p className="font-semibold text-[#0a1628] mb-1">Kéo thả hoặc click để chọn file</p>
-                <p className="text-sm text-gray-400">Hỗ trợ: PDF, Word, JPG, PNG, TXT</p>
-              </div>
-            )}
+              ) : (
+                <div>
+                  <p className="font-bold text-[#0a1628] text-lg mb-2">📄 Kéo thả hoặc click để chọn CV</p>
+                  <p className="text-sm text-gray-500">Hỗ trợ PDF, Word, JPG, PNG, TXT</p>
+                </div>
+              )}
+            </div>
           </div>
         )}
 
