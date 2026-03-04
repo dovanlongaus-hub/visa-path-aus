@@ -114,6 +114,16 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Pathway Cards */}
+      <section className="max-w-5xl mx-auto px-6 pb-10">
+        <PathwayCards />
+      </section>
+
+      {/* News */}
+      <section className="max-w-5xl mx-auto px-6 pb-12">
+        <NewsWidget />
+      </section>
+
       {/* Features */}
       <section className="max-w-5xl mx-auto px-6 pb-20">
         <div className="text-center mb-12">
