@@ -70,6 +70,8 @@ import FAQ from './pages/FAQ';
 import Bookmarks from './pages/Bookmarks';
 import Downloads from './pages/Downloads';
 import Testimonials from './pages/Testimonials';
+import Settings from './pages/Settings';
+import Notifications from './pages/Notifications';
 import __Layout from './Layout.jsx';
 
 
@@ -97,6 +99,8 @@ export const PAGES = {
     "Bookmarks": Bookmarks,
     "Downloads": Downloads,
     "Testimonials": Testimonials,
+    "Settings": Settings,
+    "Notifications": Notifications,
 }
 
 export const pagesConfig = {
