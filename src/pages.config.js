@@ -54,6 +54,7 @@ import Checklist from './pages/Checklist';
 import Forms from './pages/Forms';
 import CVUpload from './pages/CVUpload';
 import Profile from './pages/Profile';
+import Visa482 from './pages/Visa482';
 import __Layout from './Layout.jsx';
 
 
@@ -65,6 +66,7 @@ export const PAGES = {
     "Forms": Forms,
     "CVUpload": CVUpload,
     "Profile": Profile,
+    "Visa482": Visa482,
 }
 
 export const pagesConfig = {
