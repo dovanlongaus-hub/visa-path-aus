@@ -102,14 +102,19 @@ export default function Layout({ children, currentPageName }) {
       <footer className="bg-white border-t border-gray-100 mt-16">
         <div className="max-w-6xl mx-auto px-4 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-md flex items-center justify-center">
-              <Flag className="w-3 h-3 text-white" />
+            <div className="w-7 h-7 bg-gradient-to-br from-blue-500 via-indigo-600 to-violet-700 rounded-lg flex items-center justify-center shadow-sm">
+              <span className="text-white font-black text-xs tracking-tight">ÚC</span>
             </div>
-            <span className="text-sm font-medium text-gray-700">Úc Di Trú AI</span>
+            <div>
+              <span className="text-sm font-bold text-gray-800">Úc Di Trú <span className="text-blue-600">AI</span></span>
+            </div>
           </div>
           <p className="text-xs text-gray-400 text-center">
             Thông tin mang tính tham khảo. Luôn tham vấn MARA agent được đăng ký cho các quyết định di trú quan trọng.
           </p>
+          <div className="text-xs text-gray-400 text-center">
+            Tạo bởi <span className="font-semibold text-gray-500">DVLong</span> &amp; <span className="font-semibold text-violet-500">Genetic AI</span>
+          </div>
         </div>
       </footer>
     </div>
