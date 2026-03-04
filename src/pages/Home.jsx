@@ -175,8 +175,54 @@ export default function Home() {
       </section>
 
       {/* Smart Alerts */}
-      <section className="max-w-5xl mx-auto px-6 pt-8 pb-4">
-        <SmartAlerts />
+      {user && (
+        <section className="max-w-5xl mx-auto px-6 pt-8 pb-4">
+          <SmartAlerts />
+        </section>
+      )}
+
+      {/* Upload CV & Get Advice */}
+      <section className="max-w-5xl mx-auto px-6 py-12">
+        <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-violet-50 rounded-3xl border-2 border-blue-100 p-8 md:p-10 shadow-lg">
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            {/* Left: Content */}
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
+                  <FileUp className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-xs font-bold text-blue-700 uppercase tracking-wider">Bước tiếp theo</span>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-black text-[#0a1628] mb-4 leading-tight">
+                Upload CV và nhận tư vấn chuyên sâu
+              </h2>
+              <p className="text-gray-600 text-base leading-relaxed mb-2">
+                AI sẽ phân tích CV của bạn, trích xuất thông tin, và đề xuất điều chỉnh phù hợp nhất cho từng visa pathway. Tạo CV chuyên nghiệp tối ưu hóa cho di trú Úc.
+              </p>
+              <p className="text-sm text-gray-500 mb-6">
+                ✅ Tự động trích xuất dữ liệu • ✅ Gợi ý cải thiện • ✅ Tạo CV chuyên sâu
+              </p>
+              <Link
+                to={createPageUrl("CVUpload")}
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold px-7 py-3.5 rounded-2xl hover:shadow-xl hover:-translate-y-0.5 transition-all shadow-lg"
+              >
+                <Sparkles className="w-5 h-5" /> Tải CV lên ngay
+              </Link>
+            </div>
+            {/* Right: Visual */}
+            <div className="relative hidden md:flex items-center justify-center">
+              <img
+                src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=600&q=85"
+                alt="CV and resume documents"
+                className="rounded-2xl shadow-lg w-full max-w-sm object-cover h-72"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-blue-600/20 to-transparent rounded-2xl" />
+              <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm border border-white/50 rounded-xl px-4 py-2 shadow-md flex items-center gap-2">
+                <span className="text-xs font-bold text-blue-700">⚡ AI Tự động phân tích</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Pathway Cards */}
