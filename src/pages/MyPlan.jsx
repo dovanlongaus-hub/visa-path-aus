@@ -427,7 +427,6 @@ function EOIScoreBadge({ profile }) {
         <span>{score >= 65 ? "✅ Đủ nộp EOI" : "⚠️ Cần thêm điểm"}</span>
       </div>
     </div>
-    </PremiumGate>
   );
 }
 
