@@ -235,34 +235,34 @@ export default function CVUpload() {
               ]}
             />
 
-            <div className="grid md:grid-cols-3 gap-3 pt-2">
+            <div className="grid md:grid-cols-3 gap-3 pt-6 border-t border-gray-100">
               <button
                 onClick={saveProfile}
                 disabled={savedProfile}
-                className="bg-[#0f2347] text-white py-3 rounded-xl font-medium hover:bg-[#1a3a6e] disabled:opacity-60 transition-colors flex items-center justify-center gap-2"
+                className="bg-gradient-to-r from-[#0f2347] to-[#1a3a6e] text-white py-3 rounded-xl font-semibold hover:shadow-lg disabled:opacity-60 transition-all flex items-center justify-center gap-2"
               >
-                {savedProfile ? <CheckCircle className="w-4 h-4" /> : <User className="w-4 h-4" />}
-                {savedProfile ? "Đã lưu hồ sơ!" : "Lưu vào hồ sơ"}
+                {savedProfile ? <CheckCircle className="w-5 h-5" /> : <User className="w-5 h-5" />}
+                {savedProfile ? "✓ Đã lưu hồ sơ" : "Lưu vào hồ sơ"}
               </button>
               <button
                 onClick={exportForms}
-                className="border border-gray-200 text-gray-700 py-3 rounded-xl font-medium hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
+                className="border-2 border-gray-200 text-gray-700 py-3 rounded-xl font-semibold hover:border-blue-300 hover:bg-blue-50 transition-all flex items-center justify-center gap-2"
               >
-                <Download className="w-4 h-4" /> Xuất file TXT
+                <Download className="w-5 h-5" /> Xuất TXT
               </button>
               <Link
                 to={createPageUrl("Forms")}
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2 text-center"
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2 text-center"
               >
-                <FileText className="w-4 h-4" /> Mở & điền form
+                <FileText className="w-5 h-5" /> Mở biểu mẫu
               </Link>
             </div>
 
             <button
               onClick={() => { setFile(null); setExtracted(null); setSavedProfile(false); }}
-              className="w-full text-sm text-gray-400 hover:text-gray-600 transition-colors pt-2"
+              className="w-full text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors pt-4"
             >
-              Upload CV khác
+              ↺ Upload CV khác để phân tích
             </button>
           </div>
         )}
