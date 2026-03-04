@@ -111,6 +111,7 @@ export default function CVUpload() {
   };
 
   return (
+    <PremiumGate featureName="Upload CV">
     <div className="min-h-screen bg-[#f8f9fc]">
       <div className="max-w-3xl mx-auto px-4 py-10">
         <div className="mb-8">
