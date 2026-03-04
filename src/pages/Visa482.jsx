@@ -366,6 +366,7 @@ export default function Visa482() {
   const [activeTab, setActiveTab] = useState("streams");
 
   const tabs = [
+    { id: "advisor", label: "🎓 Tư vấn theo ngành học" },
     { id: "streams", label: "3 Luồng Visa" },
     { id: "occupations", label: "Ngành nghề & Lương" },
     { id: "sponsor", label: "Yêu cầu Sponsor" },
