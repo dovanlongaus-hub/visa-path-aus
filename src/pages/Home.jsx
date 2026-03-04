@@ -3,6 +3,8 @@ import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 import { Link } from "react-router-dom";
 import { ArrowRight, FileText, Map, MessageCircle, CheckSquare, Upload, Star } from "lucide-react";
+import PathwayCards from "../components/home/PathwayCards";
+import NewsWidget from "../components/home/NewsWidget";
 
 export default function Home() {
   const [user, setUser] = useState(null);
