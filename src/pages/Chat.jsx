@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { Send, Bot, User, Loader2, Trash2, Sparkles, Lock, LogIn, Crown, X } from "lucide-react";
+
 import ReactMarkdown from "react-markdown";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
