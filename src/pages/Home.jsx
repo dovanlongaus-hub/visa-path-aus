@@ -21,6 +21,9 @@ export default function Home() {
       desc: "Hành trình từng bước từ visa sinh viên đến Thường trú nhân tại Úc",
       color: "from-blue-500 to-blue-600",
       link: createPageUrl("Roadmap"),
+      img: "https://images.unsplash.com/photo-1524820197278-540916411003?w=600&q=80",
+      imgAlt: "Sydney Harbour Bridge aerial view",
+      tag: "Bản đồ hành trình",
     },
     {
       icon: CheckSquare,
@@ -28,6 +31,9 @@ export default function Home() {
       desc: "Danh sách điều kiện cụ thể cho từng giai đoạn visa và di trú",
       color: "from-emerald-500 to-emerald-600",
       link: createPageUrl("Checklist"),
+      img: "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=600&q=80",
+      imgAlt: "Checklist planning notebook",
+      tag: "Tiến trình",
     },
     {
       icon: FileText,
@@ -35,6 +41,9 @@ export default function Home() {
       desc: "Các form chuẩn của Lãnh sự quán Úc, tự động điền từ hồ sơ của bạn",
       color: "from-violet-500 to-violet-600",
       link: createPageUrl("Forms"),
+      img: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&q=80",
+      imgAlt: "Official documents and forms",
+      tag: "Tài liệu",
     },
     {
       icon: MessageCircle,
@@ -42,6 +51,9 @@ export default function Home() {
       desc: "Tư vấn trực tuyến 24/7 về luật di trú, visa và các thủ tục liên quan",
       color: "from-amber-500 to-amber-600",
       link: createPageUrl("Chat"),
+      img: "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=600&q=80",
+      imgAlt: "AI chat assistant interface",
+      tag: "24/7 Trực tuyến",
     },
     {
       icon: Upload,
@@ -49,6 +61,9 @@ export default function Home() {
       desc: "Tải CV lên để AI tự động điền các biểu mẫu di trú cho bạn",
       color: "from-rose-500 to-rose-600",
       link: createPageUrl("CVUpload"),
+      img: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=600&q=80",
+      imgAlt: "Resume and CV documents",
+      tag: "AI Tự động",
     },
     {
       icon: Star,
@@ -56,6 +71,9 @@ export default function Home() {
       desc: "Quản lý thông tin cá nhân, visa, điểm EOI và tiến trình di trú",
       color: "from-sky-500 to-sky-600",
       link: createPageUrl("Profile"),
+      img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80",
+      imgAlt: "Personal profile portrait",
+      tag: "Hồ sơ",
     },
   ];
 
