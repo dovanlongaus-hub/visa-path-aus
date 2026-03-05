@@ -25,9 +25,16 @@ export default function Settings() {
       const u = await base44.auth.me().catch(() => null);
       setUser(u);
 
-      const savedSettings = await base44.auth.me().catch(() => ({}));
-      if (savedSettings.settings) {
-        setSettings(savedSettings.settings);
+      if (u?.settings) setSettings(u.settings);
+
+      const profiles = await base44.entities.UserProfile.list('-created_date', 1).catch(() => []);
+      if (profiles[0]) {
+        setProfile(profiles[0]);
+        setNotifPrefs({
+          email_notifications: profiles[0].email_notifications || false,
+          notify_sol_changes: profiles[0].notify_sol_changes !== false,
+          notify_visa_updates: profiles[0].notify_visa_updates !== false,
+        });
       }
       setLoading(false);
     };
