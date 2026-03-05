@@ -181,6 +181,9 @@ export default function Home() {
       {/* Admin Feedback Summary – Only for admin */}
       <AdminFeedbackSummary />
 
+      {/* Guest Onboarding – shown to non-logged-in users */}
+      {!user && <GuestOnboarding />}
+
       {/* Dashboard Summary – Only for logged in users */}
       {user && (
         <section className="max-w-5xl mx-auto px-6 py-12">
