@@ -4,11 +4,17 @@ import { Settings as SettingsIcon, Save, Loader2, CheckCircle, Mail, Bell, FileT
 
 export default function Settings() {
   const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState(null);
   const [settings, setSettings] = useState({
     language: 'vi',
     notifications_email: true,
     notifications_push: true,
     theme: 'light',
+  });
+  const [notifPrefs, setNotifPrefs] = useState({
+    email_notifications: false,
+    notify_sol_changes: true,
+    notify_visa_updates: true,
   });
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
