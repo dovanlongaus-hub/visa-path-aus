@@ -43,17 +43,16 @@ export default function Settings() {
 
   const handleSave = async () => {
     setSaving(true);
-    try {
-      await base44.auth.updateMe({
-        settings,
-      });
-      setSaved(true);
-      setTimeout(() => setSaved(false), 3000);
-    } catch (error) {
-      console.error('Error saving settings:', error);
-    } finally {
-      setSaving(false);
+    await base44.auth.updateMe({ settings });
+    if (profile) {
+      await base44.entities.UserProfile.update(profile.id, notifPrefs);
+    } else {
+      const p = await base44.entities.UserProfile.create({ ...notifPrefs, email: user.email });
+      setProfile(p);
     }
+    setSaved(true);
+    setTimeout(() => setSaved(false), 3000);
+    setSaving(false);
   };
 
   if (loading) {
