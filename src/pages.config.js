@@ -48,59 +48,59 @@
  * The mainPage value must match a key in the PAGES object exactly.
  */
 import AdminActivate from './pages/AdminActivate';
+import AdminFeedback from './pages/AdminFeedback';
+import AdminGuide from './pages/AdminGuide';
+import Article from './pages/Article';
+import Bookmarks from './pages/Bookmarks';
 import CVUpload from './pages/CVUpload';
 import Chat from './pages/Chat';
 import Checklist from './pages/Checklist';
+import Contact from './pages/Contact';
+import Downloads from './pages/Downloads';
 import EOIGenerator from './pages/EOIGenerator';
+import FAQ from './pages/FAQ';
+import Feedback from './pages/Feedback';
 import Forms from './pages/Forms';
+import Guide from './pages/Guide';
 import Home from './pages/Home';
 import MyPlan from './pages/MyPlan';
+import Notifications from './pages/Notifications';
 import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
 import Roadmap from './pages/Roadmap';
+import Settings from './pages/Settings';
+import Testimonials from './pages/Testimonials';
 import Visa482 from './pages/Visa482';
 import Visa858 from './pages/Visa858';
-import Feedback from './pages/Feedback';
-import AdminFeedback from './pages/AdminFeedback';
-import Guide from './pages/Guide';
-import Article from './pages/Article';
-import AdminGuide from './pages/AdminGuide';
-import Contact from './pages/Contact';
-import FAQ from './pages/FAQ';
-import Bookmarks from './pages/Bookmarks';
-import Downloads from './pages/Downloads';
-import Testimonials from './pages/Testimonials';
-import Settings from './pages/Settings';
-import Notifications from './pages/Notifications';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "AdminActivate": AdminActivate,
+    "AdminFeedback": AdminFeedback,
+    "AdminGuide": AdminGuide,
+    "Article": Article,
+    "Bookmarks": Bookmarks,
     "CVUpload": CVUpload,
     "Chat": Chat,
     "Checklist": Checklist,
+    "Contact": Contact,
+    "Downloads": Downloads,
     "EOIGenerator": EOIGenerator,
+    "FAQ": FAQ,
+    "Feedback": Feedback,
     "Forms": Forms,
+    "Guide": Guide,
     "Home": Home,
     "MyPlan": MyPlan,
+    "Notifications": Notifications,
     "Pricing": Pricing,
     "Profile": Profile,
     "Roadmap": Roadmap,
+    "Settings": Settings,
+    "Testimonials": Testimonials,
     "Visa482": Visa482,
     "Visa858": Visa858,
-    "Feedback": Feedback,
-    "AdminFeedback": AdminFeedback,
-    "Guide": Guide,
-    "Article": Article,
-    "AdminGuide": AdminGuide,
-    "Contact": Contact,
-    "FAQ": FAQ,
-    "Bookmarks": Bookmarks,
-    "Downloads": Downloads,
-    "Testimonials": Testimonials,
-    "Settings": Settings,
-    "Notifications": Notifications,
 }
 
 export const pagesConfig = {
