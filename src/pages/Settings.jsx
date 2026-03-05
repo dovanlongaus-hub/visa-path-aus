@@ -142,27 +142,62 @@ export default function Settings() {
 
           {/* Notifications */}
           <div className="p-6">
-            <div className="font-bold text-lg text-[#0a1628] mb-4">🔔 Thông báo</div>
-            <div className="space-y-4">
-              <label className="flex items-center gap-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={settings.notifications_email}
-                  onChange={(e) => setSettings({ ...settings, notifications_email: e.target.checked })}
-                  className="w-5 h-5 rounded border-2 border-gray-300"
-                />
-                <span className="text-gray-700 font-medium">Nhận thông báo qua email</span>
-              </label>
+            <div className="font-bold text-lg text-[#0a1628] mb-1 flex items-center gap-2">
+              <Bell className="w-5 h-5 text-blue-600" /> Thông báo tự động
+            </div>
+            <p className="text-sm text-gray-500 mb-4">Hệ thống tự động kiểm tra tin tức di trú Úc mỗi ngày và thông báo cho bạn.</p>
 
-              <label className="flex items-center gap-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={settings.notifications_push}
-                  onChange={(e) => setSettings({ ...settings, notifications_push: e.target.checked })}
-                  className="w-5 h-5 rounded border-2 border-gray-300"
-                />
-                <span className="text-gray-700 font-medium">Nhận thông báo push</span>
-              </label>
+            <div className="space-y-4">
+              {/* Email toggle */}
+              <div className={`p-4 rounded-xl border-2 transition-all ${notifPrefs.email_notifications ? 'border-blue-300 bg-blue-50' : 'border-gray-200 bg-gray-50'}`}>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={notifPrefs.email_notifications}
+                    onChange={(e) => setNotifPrefs({ ...notifPrefs, email_notifications: e.target.checked })}
+                    className="w-5 h-5 rounded border-2 border-gray-300 accent-blue-600"
+                  />
+                  <div>
+                    <div className="flex items-center gap-2 font-semibold text-gray-800">
+                      <Mail className="w-4 h-4 text-blue-600" /> Nhận email thông báo
+                    </div>
+                    <p className="text-xs text-gray-500 mt-0.5">Gửi email khi có tin tức quan trọng về di trú, SOL, visa mới</p>
+                  </div>
+                </label>
+              </div>
+
+              {notifPrefs.email_notifications && (
+                <div className="ml-4 space-y-3 border-l-2 border-blue-200 pl-4">
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={notifPrefs.notify_sol_changes}
+                      onChange={(e) => setNotifPrefs({ ...notifPrefs, notify_sol_changes: e.target.checked })}
+                      className="w-4 h-4 accent-blue-600"
+                    />
+                    <div className="flex items-center gap-2 text-sm text-gray-700">
+                      <FileText className="w-4 h-4 text-emerald-600" />
+                      Thay đổi danh sách nghề nghiệp (SOL/CSOL)
+                    </div>
+                  </label>
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={notifPrefs.notify_visa_updates}
+                      onChange={(e) => setNotifPrefs({ ...notifPrefs, notify_visa_updates: e.target.checked })}
+                      className="w-4 h-4 accent-blue-600"
+                    />
+                    <div className="flex items-center gap-2 text-sm text-gray-700">
+                      <Bell className="w-4 h-4 text-indigo-600" />
+                      Cập nhật chính sách visa từ Home Affairs
+                    </div>
+                  </label>
+                </div>
+              )}
+
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-700">
+                📧 Email được gửi đến: <strong>{user?.email}</strong>. Hệ thống kiểm tra tin tức <strong>mỗi ngày lúc 8:00 sáng</strong> (giờ Sydney).
+              </div>
             </div>
           </div>
         </div>
