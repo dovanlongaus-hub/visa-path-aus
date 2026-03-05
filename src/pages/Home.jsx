@@ -9,6 +9,7 @@ import SmartAlerts from "../components/home/SmartAlerts";
 import DashboardSummary from "../components/home/DashboardSummary";
 import RecommendedContent from "../components/home/RecommendedContent";
 import AdminFeedbackSummary from "../components/home/AdminFeedbackSummary";
+import GuestOnboarding from "../components/home/GuestOnboarding";
 
 export default function Home() {
   const [user, setUser] = useState(null);
