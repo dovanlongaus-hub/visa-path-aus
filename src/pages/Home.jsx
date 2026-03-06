@@ -256,7 +256,7 @@ export default function Home() {
 
       {/* News */}
       <section className="max-w-5xl mx-auto px-6 pb-12">
-        <NewsWidget />
+        <AINewsWidget />
       </section>
 
       {/* Features */}
