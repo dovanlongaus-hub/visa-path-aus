@@ -143,7 +143,7 @@ function QRCode({ data, size = 160 }) {
 }
 
 function BankCard({ bank, totalAmount }) {
-  const [showQR, setShowQR] = useState(false);
+  const [showQR, setShowQR] = useState(true);
   const qrData = bank.qr(totalAmount);
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
