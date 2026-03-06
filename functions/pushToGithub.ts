@@ -27,17 +27,23 @@ Deno.serve(async (req) => {
       'X-GitHub-Api-Version': '2022-11-28',
     };
 
-    // 1. Get latest commit SHA on the branch
+    // 1. Check if branch exists
     const branchRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/branches/${branch}`, {
       headers: baseHeaders,
     });
-    if (!branchRes.ok) {
-      const err = await branchRes.json();
-      return Response.json({ error: `Branch fetch failed: ${err.message}` }, { status: 400 });
+
+    let latestCommitSha = null;
+    let baseTreeSha = null;
+    let isNewRepo = false;
+
+    if (branchRes.ok) {
+      const branchData = await branchRes.json();
+      latestCommitSha = branchData.commit.sha;
+      baseTreeSha = branchData.commit.commit.tree.sha;
+    } else {
+      // Repo is empty - we'll create the initial commit
+      isNewRepo = true;
     }
-    const branchData = await branchRes.json();
-    const latestCommitSha = branchData.commit.sha;
-    const baseTreeSha = branchData.commit.commit.tree.sha;
 
     // 2. Create blobs for each file
     const blobShas = await Promise.all(files.map(async (file) => {
@@ -51,32 +57,49 @@ Deno.serve(async (req) => {
     }));
 
     // 3. Create new tree
+    const treeBody = isNewRepo
+      ? { tree: blobShas }
+      : { base_tree: baseTreeSha, tree: blobShas };
+
     const treeRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/trees`, {
       method: 'POST',
       headers: baseHeaders,
-      body: JSON.stringify({ base_tree: baseTreeSha, tree: blobShas }),
+      body: JSON.stringify(treeBody),
     });
     const treeData = await treeRes.json();
 
     // 4. Create commit
+    const commitBody = {
+      message,
+      tree: treeData.sha,
+      parents: isNewRepo ? [] : [latestCommitSha],
+    };
+
     const commitRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/commits`, {
       method: 'POST',
       headers: baseHeaders,
-      body: JSON.stringify({
-        message,
-        tree: treeData.sha,
-        parents: [latestCommitSha],
-      }),
+      body: JSON.stringify(commitBody),
     });
     const commitData = await commitRes.json();
 
-    // 5. Update branch ref
-    const refRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/refs/heads/${branch}`, {
-      method: 'PATCH',
-      headers: baseHeaders,
-      body: JSON.stringify({ sha: commitData.sha, force: false }),
-    });
-    const refData = await refRes.json();
+    // 5. Create or update branch ref
+    let refData;
+    if (isNewRepo) {
+      // Create new ref for empty repo
+      const refRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/refs`, {
+        method: 'POST',
+        headers: baseHeaders,
+        body: JSON.stringify({ ref: `refs/heads/${branch}`, sha: commitData.sha }),
+      });
+      refData = await refRes.json();
+    } else {
+      const refRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/refs/heads/${branch}`, {
+        method: 'PATCH',
+        headers: baseHeaders,
+        body: JSON.stringify({ sha: commitData.sha, force: false }),
+      });
+      refData = await refRes.json();
+    }
 
     return Response.json({
       success: true,
