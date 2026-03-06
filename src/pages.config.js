@@ -72,6 +72,7 @@ import Settings from './pages/Settings';
 import Testimonials from './pages/Testimonials';
 import Visa482 from './pages/Visa482';
 import Visa858 from './pages/Visa858';
+import ArrivalGuide from './pages/ArrivalGuide';
 import __Layout from './Layout.jsx';
 
 
@@ -101,6 +102,7 @@ export const PAGES = {
     "Testimonials": Testimonials,
     "Visa482": Visa482,
     "Visa858": Visa858,
+    "ArrivalGuide": ArrivalGuide,
 }
 
 export const pagesConfig = {
