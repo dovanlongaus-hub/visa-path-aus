@@ -5,7 +5,7 @@ import {
   Home, Map, CheckSquare, FileText, MessageCircle, Upload,
   User, Menu, X, Flag, Briefcase, Award, Sparkles,
   ChevronDown, Bot, ClipboardList, Target, Crown, Shield, Lightbulb, BookOpen,
-  HelpCircle, Bookmark, Download, Users, Bell, Settings as SettingsIcon, Search
+  HelpCircle, Bookmark, Download, Users, Bell, Settings as SettingsIcon, Search, Plane
 } from "lucide-react";
 import GlobalSearch from "./components/GlobalSearch";
 
