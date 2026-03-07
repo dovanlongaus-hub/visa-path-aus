@@ -427,8 +427,10 @@ export default function Layout({ children, currentPageName }) {
           <p className="text-xs text-slate-400 text-center max-w-sm">
             Thông tin mang tính tham khảo. Luôn tham vấn MARA agent được đăng ký cho các quyết định di trú quan trọng.
           </p>
-          <div className="text-xs text-slate-400">
-            Tạo bởi <span className="font-semibold text-slate-500">DVLong</span> &amp; <span className="font-semibold text-violet-500">Genetic AI</span>
+          <div className="text-xs text-slate-400 text-center sm:text-right">
+            Tạo bởi <span className="font-semibold text-slate-500">DVLong</span> &amp; <span className="font-semibold text-[#1a4b9b]">Agentic AI</span>
+            <span className="mx-2 text-slate-300">|</span>
+            <span className="font-semibold text-slate-600">Phiên bản mới v0.0.1</span>
           </div>
         </div>
       </footer>
