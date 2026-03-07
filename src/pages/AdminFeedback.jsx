@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { CheckCircle, X, Eye, Mail, Loader2, Filter } from 'lucide-react';
+import { Eye, Mail, Loader2, Filter } from 'lucide-react';
 
 const statusColors = {
   submitted: { bg: 'bg-gray-50', border: 'border-gray-300', text: 'text-gray-700', badge: 'bg-gray-100 text-gray-800' },

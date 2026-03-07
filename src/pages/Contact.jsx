@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Send, Loader2, CheckCircle, AlertCircle, MessageSquare } from 'lucide-react';
+import { Send, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 
 export default function Contact() {
   const [subject, setSubject] = useState('');

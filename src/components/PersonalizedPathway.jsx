@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronUp, Zap, Target, AlertCircle, CheckCircle, Clock, TrendingUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, Zap, AlertCircle, CheckCircle, Clock, TrendingUp } from 'lucide-react';
 import RecommendedResources from './RecommendedResources';
 
 const visaColors = {

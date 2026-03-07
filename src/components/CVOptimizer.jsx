@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronUp, Check, AlertCircle, Sparkles, Copy, X } from 'lucide-react';
+import { ChevronDown, ChevronUp, Check, AlertCircle, Sparkles, Copy } from 'lucide-react';
 
 const fieldLabels = {
   employment_history: 'Kinh nghiệm làm việc',

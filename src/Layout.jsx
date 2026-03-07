@@ -2,94 +2,84 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import {
-  Home, Map, CheckSquare, FileText, MessageCircle, Upload,
+  Home, Map, CheckSquare, FileText, Upload,
   User, Menu, X, Briefcase, Award, Sparkles,
   ChevronDown, Bot, Target, Crown, Shield, Lightbulb, BookOpen,
   HelpCircle, Bookmark, Download, Users, Bell, Settings as SettingsIcon,
-  Search, Plane, Star, Globe, ClipboardList, Headphones, ArrowLeft
+  Search, Plane, Globe, Headphones, ArrowLeft, FolderOpen, LifeBuoy
 } from "lucide-react";
 import GlobalSearch from "./components/GlobalSearch";
 
 // ── Navigation structure ──────────────────────────────────────
 const navGroups = [
   {
-    id: "visa",
-    label: "Visa & Lộ trình",
-    emoji: "🛂",
+    id: "pathways",
+    label: "Lộ trình & Visa",
     icon: Globe,
-    color: "blue",
+    color: "navy",
     items: [
-      { label: "Lộ trình PR", icon: Map, page: "Roadmap", desc: "500 → 485 → 189/190" },
+      { label: "Lộ trình PR", icon: Map, page: "Roadmap", desc: "Định hướng từng giai đoạn" },
       { label: "Visa 482", icon: Briefcase, page: "Visa482", desc: "Employer Sponsored" },
       { label: "Visa 858", icon: Award, page: "Visa858", desc: "National Innovation" },
+      { label: "Kế hoạch cá nhân", icon: Target, page: "MyPlan", desc: "Mục tiêu theo mốc thời gian" },
+      { label: "Checklist PR", icon: CheckSquare, page: "Checklist", desc: "Theo dõi tiến độ hồ sơ" },
+      { label: "Chuẩn bị qua Úc", icon: Plane, page: "ArrivalGuide", desc: "Việc cần làm trước khi đến Úc" },
     ],
   },
   {
-    id: "tools",
-    label: "Hồ sơ & Công cụ",
-    emoji: "📁",
-    icon: ClipboardList,
-    color: "violet",
+    id: "documents",
+    label: "Hồ sơ & Biểu mẫu",
+    icon: FolderOpen,
+    color: "teal",
     items: [
-      { label: "Hồ sơ cá nhân", icon: User, page: "Profile", desc: "Thông tin & điểm EOI" },
-      { label: "Kế hoạch cá nhân", icon: Target, page: "MyPlan", desc: "Task list AI" },
-      { label: "Checklist PR", icon: CheckSquare, page: "Checklist", desc: "Tiến trình PR" },
-      { label: "Chuẩn bị qua Úc", icon: Plane, page: "ArrivalGuide", desc: "Checklist khi đến Úc" },
-      { label: "Upload CV", icon: Upload, page: "CVUpload", desc: "Trích xuất bằng AI" },
-    ],
-  },
-  {
-    id: "forms",
-    label: "Biểu mẫu & EOI",
-    emoji: "📝",
-    icon: FileText,
-    color: "emerald",
-    items: [
+      { label: "Hồ sơ cá nhân", icon: User, page: "Profile", desc: "Thông tin nền tảng & điểm EOI" },
+      { label: "Upload CV", icon: Upload, page: "CVUpload", desc: "Chuẩn hóa dữ liệu bằng AI" },
       { label: "Biểu mẫu di trú", icon: FileText, page: "Forms", desc: "Form DIBP chính thức" },
-      { label: "EOI & CV AI", icon: Sparkles, page: "EOIGenerator", desc: "Tạo EOI tự động" },
+      { label: "EOI & CV AI", icon: Sparkles, page: "EOIGenerator", desc: "Tạo hồ sơ EOI tự động" },
     ],
   },
   {
     id: "knowledge",
-    label: "Kiến thức & Hỗ trợ",
-    emoji: "📚",
+    label: "Kiến thức & Tài nguyên",
     icon: BookOpen,
-    color: "indigo",
+    color: "sage",
     items: [
-      { label: "Knowledge Base", icon: BookOpen, page: "Guide", desc: "Hướng dẫn chi tiết" },
+      { label: "Knowledge Base", icon: BookOpen, page: "Guide", desc: "Hướng dẫn chính thức" },
       { label: "FAQ", icon: HelpCircle, page: "FAQ", desc: "Câu hỏi thường gặp" },
       { label: "Câu chuyện thành công", icon: Users, page: "Testimonials", desc: "Kinh nghiệm thực tế" },
-      { label: "Liên hệ", icon: Headphones, page: "Contact", desc: "Hỗ trợ trực tiếp" },
+      { label: "Bookmarks", icon: Bookmark, page: "Bookmarks", desc: "Lưu bài yêu thích" },
+      { label: "Tải xuống", icon: Download, page: "Downloads", desc: "Templates & guides" },
     ],
   },
   {
-    id: "library",
-    label: "Thư viện",
-    emoji: "⭐",
-    icon: Star,
-    color: "amber",
+    id: "support",
+    label: "Hỗ trợ & Hệ thống",
+    icon: LifeBuoy,
+    color: "stone",
     items: [
-      { label: "Bookmarks", icon: Bookmark, page: "Bookmarks", desc: "Lưu bài yêu thích" },
-      { label: "Tải xuống", icon: Download, page: "Downloads", desc: "Templates & guides" },
+      { label: "Liên hệ", icon: Headphones, page: "Contact", desc: "Hỗ trợ trực tiếp" },
+      { label: "Góp ý", icon: Lightbulb, page: "Feedback", desc: "Đề xuất cải tiến" },
+      { label: "Thông báo", icon: Bell, page: "Notifications", desc: "Cập nhật hệ thống" },
+      { label: "Cài đặt", icon: SettingsIcon, page: "Settings", desc: "Tùy chỉnh tài khoản" },
+      { label: "Nâng cấp Premium", icon: Crown, page: "Pricing", desc: "Mở khóa tính năng nâng cao" },
     ],
   },
 ];
 
 const colorConfig = {
-  blue:    { dot: "bg-blue-500",    badge: "bg-blue-50 text-blue-700 border-blue-200",    icon: "bg-blue-100 text-blue-600",    activeItem: "bg-blue-50 text-blue-800" },
-  violet:  { dot: "bg-violet-500",  badge: "bg-violet-50 text-violet-700 border-violet-200",  icon: "bg-violet-100 text-violet-600",  activeItem: "bg-violet-50 text-violet-800" },
-  emerald: { dot: "bg-emerald-500", badge: "bg-emerald-50 text-emerald-700 border-emerald-200", icon: "bg-emerald-100 text-emerald-600", activeItem: "bg-emerald-50 text-emerald-800" },
-  indigo:  { dot: "bg-indigo-500",  badge: "bg-indigo-50 text-indigo-700 border-indigo-200",  icon: "bg-indigo-100 text-indigo-600",  activeItem: "bg-indigo-50 text-indigo-800" },
-  amber:   { dot: "bg-amber-500",   badge: "bg-amber-50 text-amber-700 border-amber-200",   icon: "bg-amber-100 text-amber-600",   activeItem: "bg-amber-50 text-amber-800" },
+  navy:  { dot: "bg-[#18406e]", badge: "bg-[#e9f0f7] text-[#163a63] border-[#c7d8ea]", icon: "bg-[#dce8f4] text-[#163a63]", activeItem: "bg-[#e9f0f7] text-[#163a63]" },
+  teal:  { dot: "bg-[#0f6b6f]", badge: "bg-[#e8f4f4] text-[#0f5458] border-[#c7e3e4]", icon: "bg-[#d9eeef] text-[#0f5458]", activeItem: "bg-[#e8f4f4] text-[#0f5458]" },
+  sage:  { dot: "bg-[#2f6b4a]", badge: "bg-[#edf4ef] text-[#2a5a3f] border-[#cfe1d3]", icon: "bg-[#dfebe2] text-[#2a5a3f]", activeItem: "bg-[#edf4ef] text-[#2a5a3f]" },
+  stone: { dot: "bg-[#7a5f40]", badge: "bg-[#f6f1ea] text-[#654e36] border-[#e7dccf]", icon: "bg-[#efe6da] text-[#654e36]", activeItem: "bg-[#f6f1ea] text-[#654e36]" },
 };
 
 // Bottom tab bar items (mobile)
 const bottomTabs = [
-  { label: "Trang chủ", icon: Home, page: "Home" },
-  { label: "Tư vấn AI", icon: Bot, page: "Chat" },
-  { label: "Lộ trình", icon: Map, page: "Roadmap" },
-  { label: "Hồ sơ", icon: User, page: "Profile" },
-  { label: "Thêm", icon: Menu, page: "__more__" },
+  { label: "Trang chủ", icon: Home, page: "Home", color: "text-[#18406e] bg-[#e9f0f7]" },
+  { label: "Tư vấn AI", icon: Bot, page: "Chat", color: "text-[#0f6b6f] bg-[#e8f4f4]" },
+  { label: "Lộ trình", icon: Map, page: "Roadmap", color: "text-[#2f6b4a] bg-[#edf4ef]" },
+  { label: "Hồ sơ", icon: User, page: "Profile", color: "text-[#654e36] bg-[#f6f1ea]" },
+  { label: "Thêm", icon: Menu, page: "__more__", color: "text-[#49566b] bg-[#eff3f7]" },
 ];
 
 // Pages that show a Back button instead of full nav context
@@ -131,7 +121,7 @@ function NavDropdown({ group, currentPageName, onClose }) {
       style={{ boxShadow: "0 8px 40px rgba(15,35,71,0.12)" }}>
       <div className="px-4 pb-2 mb-1 border-b border-gray-50">
         <div className={`inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full border ${c.badge}`}>
-          <span>{group.emoji}</span> {group.label}
+          {group.label}
         </div>
       </div>
       {group.items.map(item => {
@@ -199,25 +189,6 @@ function MobileMoreSheet({ currentPageName, onClose }) {
           );
         })}
 
-        <div className="border-t border-slate-100 pt-3 grid grid-cols-2 gap-1.5">
-          {[
-            { label: "Nâng cấp", icon: Crown, page: "Pricing" },
-            { label: "Thông báo", icon: Bell, page: "Notifications" },
-            { label: "Góp ý", icon: Lightbulb, page: "Feedback" },
-            { label: "Cài đặt", icon: SettingsIcon, page: "Settings" },
-          ].map(item => {
-            const Icon = item.icon;
-            const isActive = currentPageName === item.page;
-            return (
-              <Link key={item.page} to={createPageUrl(item.page)} onClick={onClose}
-                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors cursor-pointer border ${
-                  isActive ? "bg-[#0f2347] text-white border-transparent" : "text-slate-700 hover:bg-slate-50 border-slate-100"
-                }`}>
-                <Icon className="w-4 h-4" /> {item.label}
-              </Link>
-            );
-          })}
-        </div>
       </div>
     </div>
   );
@@ -284,7 +255,7 @@ export default function Layout({ children, currentPageName }) {
     <div className="min-h-screen bg-slate-50">
       <style>{`
         :root { --color-primary: #0f2347; }
-        * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+        * { font-family: 'IBM Plex Sans', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; }
         .nav-dropdown-enter { animation: dropIn 0.15s ease-out; }
         @keyframes dropIn { from { opacity:0; transform:translateX(-50%) translateY(-6px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
         body { padding-bottom: 64px; }
@@ -335,7 +306,9 @@ export default function Layout({ children, currentPageName }) {
                     className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-150 cursor-pointer ${
                       isActive || isOpen ? "bg-slate-100 text-[#0f2347]" : "text-slate-600 hover:text-[#0f2347] hover:bg-slate-100"
                     }`}>
-                    <GroupIcon className="w-4 h-4" />
+                    <span className={`w-6 h-6 rounded-md inline-flex items-center justify-center ${colorConfig[group.color].icon}`}>
+                      <GroupIcon className="w-3.5 h-3.5" />
+                    </span>
                     <span>{group.label}</span>
                     <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
                     {isActive && !isOpen && <span className={`w-1.5 h-1.5 rounded-full ml-0.5 ${colorConfig[group.color].dot}`} />}
@@ -353,14 +326,14 @@ export default function Layout({ children, currentPageName }) {
           {/* Right actions */}
           <div className="flex items-center gap-1">
             <button onClick={() => setSearchOpen(true)}
-              className="p-2 rounded-lg text-slate-500 hover:text-[#0f2347] hover:bg-slate-100 transition-colors cursor-pointer" aria-label="Tìm kiếm">
+              className="p-2 rounded-lg text-[#18406e] hover:text-[#12375d] bg-[#e9f0f7] hover:bg-[#dce8f4] transition-colors cursor-pointer" aria-label="Tìm kiếm">
               <Search className="w-4 h-4" />
             </button>
             <Link to={createPageUrl("Notifications")}
-              className={`p-2 rounded-lg transition-colors cursor-pointer ${currentPageName === "Notifications" ? "bg-[#1a4b9b] text-white" : "text-slate-500 hover:text-[#0f2347] hover:bg-slate-100"}`}
+              className={`p-2 rounded-lg transition-colors cursor-pointer ${currentPageName === "Notifications" ? "bg-[#1a4b9b] text-white" : "text-[#0f6b6f] bg-[#e8f4f4] hover:bg-[#d9eeef]"}`}
               aria-label="Thông báo"><Bell className="w-4 h-4" /></Link>
             <Link to={createPageUrl("Settings")}
-              className={`p-2 rounded-lg transition-colors cursor-pointer ${currentPageName === "Settings" ? "bg-[#1a4b9b] text-white" : "text-slate-500 hover:text-[#0f2347] hover:bg-slate-100"}`}
+              className={`p-2 rounded-lg transition-colors cursor-pointer ${currentPageName === "Settings" ? "bg-[#1a4b9b] text-white" : "text-[#654e36] bg-[#f6f1ea] hover:bg-[#efe6da]"}`}
               aria-label="Cài đặt"><SettingsIcon className="w-4 h-4" /></Link>
             <Link to={createPageUrl("Profile")}
               className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
@@ -399,7 +372,7 @@ export default function Layout({ children, currentPageName }) {
             <span className="font-bold text-[#0f2347] text-base truncate flex-1">{pageTitle}</span>
             {/* Right: search + notifications */}
             <button onClick={() => setSearchOpen(true)} className="p-2 rounded-xl text-slate-400 hover:bg-slate-100 cursor-pointer"><Search className="w-4 h-4" /></button>
-            <Link to={createPageUrl("Notifications")} className={`p-2 rounded-xl cursor-pointer ${currentPageName === "Notifications" ? "text-[#1a4b9b]" : "text-slate-400 hover:bg-slate-100"}`}><Bell className="w-4 h-4" /></Link>
+            <Link to={createPageUrl("Notifications")} className={`p-2 rounded-xl cursor-pointer ${currentPageName === "Notifications" ? "text-[#1a4b9b]" : "text-[#0f6b6f] bg-[#e8f4f4] hover:bg-[#d9eeef]"}`}><Bell className="w-4 h-4" /></Link>
           </div>
         ) : currentPageName === "Chat" ? (
           /* Chat page: logo + status */
@@ -425,9 +398,9 @@ export default function Layout({ children, currentPageName }) {
               </div>
             </Link>
             <div className="flex items-center gap-1">
-              <button onClick={() => setSearchOpen(true)} className="p-2 rounded-xl text-slate-400 hover:bg-slate-100 cursor-pointer"><Search className="w-4 h-4" /></button>
-              <Link to={createPageUrl("Notifications")} className="p-2 rounded-xl text-slate-400 hover:bg-slate-100 cursor-pointer"><Bell className="w-4 h-4" /></Link>
-              <Link to={createPageUrl("Settings")} className="p-2 rounded-xl text-slate-400 hover:bg-slate-100 cursor-pointer"><SettingsIcon className="w-4 h-4" /></Link>
+              <button onClick={() => setSearchOpen(true)} className="p-2 rounded-xl text-[#18406e] bg-[#e9f0f7] hover:bg-[#dce8f4] cursor-pointer"><Search className="w-4 h-4" /></button>
+              <Link to={createPageUrl("Notifications")} className="p-2 rounded-xl text-[#0f6b6f] bg-[#e8f4f4] hover:bg-[#d9eeef] cursor-pointer"><Bell className="w-4 h-4" /></Link>
+              <Link to={createPageUrl("Settings")} className="p-2 rounded-xl text-[#654e36] bg-[#f6f1ea] hover:bg-[#efe6da] cursor-pointer"><SettingsIcon className="w-4 h-4" /></Link>
             </div>
           </div>
         )}
@@ -481,9 +454,9 @@ export default function Layout({ children, currentPageName }) {
                   }
                 }}
                 className={`flex-1 flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors ${
-                  isActive || isMoreActive ? "text-[#1a4b9b]" : "text-slate-400 hover:text-slate-600"
+                  isActive || isMoreActive ? "text-[#1a4b9b]" : "text-slate-500 hover:text-slate-700"
                 }`}>
-                <div className={`p-1.5 rounded-xl transition-colors ${isActive || isMoreActive ? "bg-blue-50" : ""}`}>
+                <div className={`p-1.5 rounded-xl transition-colors ${isActive || isMoreActive ? tab.color : "bg-transparent"}`}>
                   <Icon className="w-5 h-5" />
                 </div>
                 <span className="text-[10px] font-medium leading-none">{tab.label}</span>

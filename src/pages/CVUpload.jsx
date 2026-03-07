@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { base44 } from "@/api/base44Client";
-import { Upload, FileText, Loader2, CheckCircle, User, Briefcase, GraduationCap, Globe, Download, Sparkles } from "lucide-react";
+import { Upload, FileText, Loader2, CheckCircle, User, Briefcase, GraduationCap, Download, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import VisaPathwayRecommendation from "@/components/VisaPathwayRecommendation";

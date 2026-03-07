@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 import { Link } from "react-router-dom";
-import { ArrowRight, FileText, Map, MessageCircle, CheckSquare, Upload, Star, Sparkles, FileUp } from "lucide-react";
+import { ArrowRight, FileText, Map, MessageCircle, CheckSquare, Upload, Star, Sparkles, FileUp, Newspaper, ExternalLink } from "lucide-react";
 import PathwayCards from "../components/home/PathwayCards";
 import AINewsWidget from "../components/home/AINewsWidget";
 import SmartAlerts from "../components/home/SmartAlerts";
@@ -23,7 +23,7 @@ export default function Home() {
       icon: Map,
       title: "Lộ trình PR",
       desc: "Hành trình từng bước từ visa sinh viên đến Thường trú nhân tại Úc",
-      color: "from-blue-500 to-blue-600",
+      color: "from-[#1c4b82] to-[#163a63]",
       link: createPageUrl("Roadmap"),
       img: "https://images.unsplash.com/photo-1524820197278-540916411003?w=600&q=80",
       imgAlt: "Sydney Harbour Bridge aerial view",
@@ -33,7 +33,7 @@ export default function Home() {
       icon: CheckSquare,
       title: "Checklist điều kiện",
       desc: "Danh sách điều kiện cụ thể cho từng giai đoạn visa và di trú",
-      color: "from-emerald-500 to-emerald-600",
+      color: "from-[#2f6b4a] to-[#26563c]",
       link: createPageUrl("Checklist"),
       img: "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=600&q=80",
       imgAlt: "Checklist planning notebook",
@@ -43,7 +43,7 @@ export default function Home() {
       icon: FileText,
       title: "Biểu mẫu di trú",
       desc: "Các form chuẩn của Lãnh sự quán Úc, tự động điền từ hồ sơ của bạn",
-      color: "from-violet-500 to-violet-600",
+      color: "from-[#0f6b6f] to-[#0f5458]",
       link: createPageUrl("Forms"),
       img: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&q=80",
       imgAlt: "Official documents and forms",
@@ -53,7 +53,7 @@ export default function Home() {
       icon: MessageCircle,
       title: "Hỏi đáp AI",
       desc: "Tư vấn trực tuyến 24/7 về luật di trú, visa và các thủ tục liên quan",
-      color: "from-amber-500 to-amber-600",
+      color: "from-[#7a5f40] to-[#654e36]",
       link: createPageUrl("Chat"),
       img: "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=600&q=80",
       imgAlt: "AI chat assistant interface",
@@ -63,7 +63,7 @@ export default function Home() {
       icon: Upload,
       title: "Upload CV & Điền form",
       desc: "Tải CV lên để AI tự động điền các biểu mẫu di trú cho bạn",
-      color: "from-rose-500 to-rose-600",
+      color: "from-[#1f5f73] to-[#184a5a]",
       link: createPageUrl("CVUpload"),
       img: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=600&q=80",
       imgAlt: "Resume and CV documents",
@@ -73,7 +73,7 @@ export default function Home() {
       icon: Star,
       title: "Hồ sơ cá nhân",
       desc: "Quản lý thông tin cá nhân, visa, điểm EOI và tiến trình di trú",
-      color: "from-sky-500 to-sky-600",
+      color: "from-[#325a88] to-[#254466]",
       link: createPageUrl("Profile"),
       img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80",
       imgAlt: "Personal profile portrait",
@@ -160,14 +160,38 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Headline: Latest updates from Australian Home Affairs */}
+      <section className="max-w-5xl mx-auto px-6 pt-6">
+        <div className="rounded-2xl border border-[#c8d9ea] bg-gradient-to-r from-[#eaf1f8] via-[#f4f8fc] to-[#edf4fb] px-4 py-3 md:px-5 md:py-3.5 shadow-sm">
+          <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-start gap-2.5">
+              <div className="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-[#d9e7f5] text-[#123a67]">
+                <Newspaper className="h-4 w-4" />
+              </div>
+              <p className="text-sm md:text-[15px] font-semibold text-[#102f52] leading-relaxed">
+                Tin mới nhất từ Bộ Di trú Úc (Home Affairs): chính sách visa và lệ phí có thể thay đổi theo từng đợt công bố. Vui lòng theo dõi mục Tin tức để cập nhật kịp thời.
+              </p>
+            </div>
+            <a
+              href="https://immi.homeaffairs.gov.au/news-media/archive"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs md:text-sm font-semibold text-[#174a7e] hover:text-[#123a67]"
+            >
+              Xem thông báo chính thức <ExternalLink className="h-3.5 w-3.5" />
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* Stats */}
       <section className="max-w-5xl mx-auto px-6 py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
           {[
-            { num: "6+", label: "Loại visa được hỗ trợ", emoji: "🛂", bg: "from-blue-50 to-indigo-50", border: "border-blue-100" },
-            { num: "50+", label: "Biểu mẫu di trú", emoji: "📋", bg: "from-violet-50 to-purple-50", border: "border-violet-100" },
-            { num: "24/7", label: "Tư vấn AI", emoji: "🤖", bg: "from-amber-50 to-orange-50", border: "border-amber-100" },
-            { num: "100%", label: "Miễn phí cơ bản", emoji: "✨", bg: "from-emerald-50 to-teal-50", border: "border-emerald-100" },
+            { num: "6+", label: "Loại visa được hỗ trợ", emoji: "🛂", bg: "from-[#eaf1f8] to-[#edf4fb]", border: "border-[#c8d9ea]" },
+            { num: "50+", label: "Biểu mẫu di trú", emoji: "📋", bg: "from-[#e8f4f4] to-[#eff7f7]", border: "border-[#c7e3e4]" },
+            { num: "24/7", label: "Tư vấn AI", emoji: "🤖", bg: "from-[#f6f1ea] to-[#faf6f1]", border: "border-[#e7dccf]" },
+            { num: "100%", label: "Miễn phí cơ bản", emoji: "✨", bg: "from-[#edf4ef] to-[#f3f8f4]", border: "border-[#cfe1d3]" },
           ].map((s, i) => (
             <div key={i} className={`bg-gradient-to-br ${s.bg} rounded-2xl p-5 text-center border ${s.border} shadow-sm`}>
               <div className="text-2xl mb-1">{s.emoji}</div>

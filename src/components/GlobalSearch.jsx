@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Search, Loader2, X, Sparkles, ExternalLink } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
+import { Search, Loader2, X, Sparkles } from 'lucide-react';
 
 const typeIcons = {
   article: '📄',

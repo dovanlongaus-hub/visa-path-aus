@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Search, Filter, Loader2, BookOpen, Eye, ThumbsUp, Clock, ChevronRight } from 'lucide-react';
+import { Search, Filter, Loader2, BookOpen, Eye, ThumbsUp, Clock } from 'lucide-react';
 
 const categoryLabels = {
   visa_types: { label: '🛂 Loại Visa', color: 'blue' },

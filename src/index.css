@@ -86,3 +86,38 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  /* Global icon standard: clearer stroke and slightly larger default size. */
+  svg.lucide {
+    stroke-width: 2.15;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    shape-rendering: geometricPrecision;
+  }
+
+  /* Upscale commonly used Tailwind icon sizes for better readability. */
+  svg.lucide.w-3,
+  svg.lucide.h-3 {
+    width: 0.95rem;
+    height: 0.95rem;
+  }
+
+  svg.lucide.w-3\.5,
+  svg.lucide.h-3\.5 {
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+
+  svg.lucide.w-4,
+  svg.lucide.h-4 {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  svg.lucide.w-5,
+  svg.lucide.h-5 {
+    width: 1.35rem;
+    height: 1.35rem;
+  }
+}

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { AlertCircle, CheckCircle2, Clock, Target, TrendingUp, ArrowRight, ChevronDown, ChevronUp, Lightbulb, Sparkles } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Target, TrendingUp, ChevronDown, ChevronUp, Lightbulb, Sparkles } from 'lucide-react';
 
 const visaColors = {
   '189': 'emerald',

@@ -3,8 +3,7 @@ import PremiumGate from "@/components/PremiumGate";
 import { base44 } from "@/api/base44Client";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import {
-  CheckCircle, Circle, Clock, AlertTriangle, Zap, Sparkles,
+import { Clock, AlertTriangle, Zap, Sparkles,
   ChevronDown, ChevronUp, ArrowRight, User, Loader2, RefreshCw,
   Target, BookOpen, Award, Briefcase, FileText, Calendar, Star
 } from "lucide-react";

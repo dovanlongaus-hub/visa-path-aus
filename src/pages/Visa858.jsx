@@ -1,7 +1,5 @@
 import { useState } from "react";
-import { CheckCircle, XCircle, AlertCircle, ChevronDown, ChevronUp, ExternalLink, Star, Zap, Award, Lightbulb, Globe, Microscope, Music, Trophy, ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
+import { CheckCircle, XCircle, AlertCircle, ChevronDown, ChevronUp, ExternalLink, Star, Zap, Award, Globe, Microscope, Music, Trophy, ArrowRight } from "lucide-react";
 
 // ──────────────────────────────────────────────
 // DATA

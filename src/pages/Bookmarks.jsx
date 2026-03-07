@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Bookmark, Trash2, ExternalLink, Loader2, Search, Filter } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Bookmark, Trash2, ExternalLink, Loader2, Search } from 'lucide-react';
 
 export default function Bookmarks() {
   const [bookmarks, setBookmarks] = useState([]);

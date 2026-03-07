@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Crown, Lock, Loader2, LogIn } from "lucide-react";
-import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
+import { Loader2 } from "lucide-react";
 
 /**
  * Wraps premium-only content.

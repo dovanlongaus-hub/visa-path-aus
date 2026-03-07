@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Check, Copy, CheckCircle, ArrowRight, Shield, MessageCircle, FileText, Sparkles, Target, Crown, Zap } from "lucide-react";
+import { Check, Copy, CheckCircle, ArrowRight, Shield, MessageCircle, FileText, Sparkles, Target, Crown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
