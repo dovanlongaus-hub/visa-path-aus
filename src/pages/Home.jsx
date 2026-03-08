@@ -87,6 +87,95 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Magic Moment ──────────────────────────────────────── */}
+      <section className="bg-gray-950 py-16 px-4">
+        <div className="max-w-3xl mx-auto text-center mb-10">
+          <Badge className="mb-4 bg-white/10 text-white border-white/20">
+            ✨ Khoảnh Khắc Kỳ Diệu
+          </Badge>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            Tương lai mù mờ bỗng trở nên rõ ràng
+          </h2>
+          <p className="text-gray-400 text-lg leading-relaxed">
+            Nhập thông tin của bạn — chúng tôi sẽ cho bạn biết ngay lộ trình visa
+            phù hợp nhất và các bang đang mở cửa cho ngành nghề của bạn.
+          </p>
+        </div>
+        <MagicMomentQuiz user={user} />
+      </section>
+
+      {/* ── Guest Onboarding / Dashboard ──────────────────────── */}
+      <div className="max-w-5xl mx-auto px-4 py-8">
+        {!isLoading && (
+          <>
+            {!user ? (
+              <GuestOnboarding />
+            ) : (
+              <div className="space-y-6">
+                <SmartAlerts user={user} />
+                <DashboardSummary user={user} />
+                <RecommendedContent />
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
+      {/* ── Pathway Cards ─────────────────────────────────────── */}
+      <section className="bg-gray-50 py-12 px-4">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+              Các Lộ Trình Phổ Biến
+            </h2>
+            <p className="text-gray-500 mt-2">Chọn con đường phù hợp với bạn</p>
+          </div>
+          <PathwayCards />
+        </div>
+      </section>
+
+      {/* ── AI News ────────────────────────────────────────────── */}
+      <div className="max-w-5xl mx-auto px-4 py-8">
+        <AINewsWidget />
+      </div>
+
+      {/* ── CV Upload CTA ──────────────────────────────────────── */}
+      <section className="bg-white py-12 px-4 border-y border-gray-100">
+        <div className="max-w-3xl mx-auto text-center">
+          <div className="text-4xl mb-4">📄</div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-3">
+            Upload CV để nhận phân tích AI
+          </h2>
+          <p className="text-gray-600 mb-6">
+            AI sẽ phân tích CV của bạn và đề xuất các cải tiến để tối ưu hoá cơ hội
+            được chấp nhận visa.
+          </p>
+          <Link to={createPageUrl("CVUpload")}>
+            <Button size="lg" className="bg-gray-900 hover:bg-gray-800 text-white px-8">
+              Upload CV Ngay <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+      </section>
+
+      {/* ── Stats ─────────────────────────────────────────────── */}
+      <section className="bg-white py-12 px-4 border-b border-gray-100">
+        <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+          {[
+            { value: "6+", label: "Loại Visa", icon: "🛂" },
+            { value: "50+", label: "Biểu Mẫu", icon: "📄" },
+            { value: "24/7", label: "Tư Vấn AI", icon: "🤖" },
+            { value: "100%", label: "Miễn Phí", icon: "✅" },
+          ].map((stat, i) => (
+            <div key={i} className="p-4">
+              <div className="text-3xl mb-2">{stat.icon}</div>
+              <div className="text-3xl font-bold text-gray-900">{stat.value}</div>
+              <div className="text-sm text-gray-500 mt-1">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* ── Who & Why ─────────────────────────────────────────── */}
       <section className="bg-gray-50 py-16 px-4">
         <div className="max-w-4xl mx-auto">
@@ -147,104 +236,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Stats ─────────────────────────────────────────────── */}
-      <section className="bg-white py-12 px-4 border-b border-gray-100">
-        <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          {[
-            { value: "6+", label: "Loại Visa", icon: "🛂" },
-            { value: "50+", label: "Biểu Mẫu", icon: "📄" },
-            { value: "24/7", label: "Tư Vấn AI", icon: "🤖" },
-            { value: "100%", label: "Miễn Phí", icon: "✅" },
-          ].map((stat, i) => (
-            <div key={i} className="p-4">
-              <div className="text-3xl mb-2">{stat.icon}</div>
-              <div className="text-3xl font-bold text-gray-900">{stat.value}</div>
-              <div className="text-sm text-gray-500 mt-1">{stat.label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── Admin Feedback Summary ─────────────────────────────── */}
-      {isAdmin && (
-        <div className="max-w-5xl mx-auto px-4 py-6">
-          <AdminFeedbackSummary />
-        </div>
-      )}
-
-      {/* ── Magic Moment ──────────────────────────────────────── */}
-      <section className="bg-gray-950 py-16 px-4">
-        <div className="max-w-3xl mx-auto text-center mb-10">
-          <Badge className="mb-4 bg-white/10 text-white border-white/20">
-            ✨ Khoảnh Khắc Kỳ Diệu
-          </Badge>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Tương lai mù mờ bỗng trở nên rõ ràng
-          </h2>
-          <p className="text-gray-400 text-lg leading-relaxed">
-            Nhập thông tin của bạn — chúng tôi sẽ cho bạn biết ngay lộ trình visa
-            phù hợp nhất và các bang đang mở cửa cho ngành nghề của bạn.
-          </p>
-        </div>
-        <MagicMomentQuiz user={user} />
-      </section>
-
-      {/* ── Guest Onboarding / Dashboard ──────────────────────── */}
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        {!isLoading && (
-          <>
-            {!user ? (
-              <GuestOnboarding />
-            ) : (
-              <div className="space-y-6">
-                <SmartAlerts user={user} />
-                <DashboardSummary user={user} />
-                <RecommendedContent />
-              </div>
-            )}
-          </>
-        )}
-      </div>
-
-      {/* ── Pathway Cards ─────────────────────────────────────── */}
-      <section className="bg-gray-50 py-12 px-4">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-              Các Lộ Trình Phổ Biến
-            </h2>
-            <p className="text-gray-500 mt-2">Chọn con đường phù hợp với bạn</p>
-          </div>
-          <PathwayCards />
-        </div>
-      </section>
-
-      {/* ── CV Upload CTA ──────────────────────────────────────── */}
-      <section className="bg-white py-12 px-4 border-y border-gray-100">
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="text-4xl mb-4">📄</div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-3">
-            Upload CV để nhận phân tích AI
-          </h2>
-          <p className="text-gray-600 mb-6">
-            AI sẽ phân tích CV của bạn và đề xuất các cải tiến để tối ưu hoá cơ hội
-            được chấp nhận visa.
-          </p>
-          <Link to={createPageUrl("CVUpload")}>
-            <Button size="lg" className="bg-gray-900 hover:bg-gray-800 text-white px-8">
-              Upload CV Ngay <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
-        </div>
-      </section>
-
-      {/* ── AI News ────────────────────────────────────────────── */}
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        <AINewsWidget />
-      </div>
-
       {/* ── Features Grid ──────────────────────────────────────── */}
-      <section className="bg-gray-50 py-16 px-4">
+      <section className="bg-white py-16 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
@@ -306,6 +299,13 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ── Admin Feedback Summary ─────────────────────────────── */}
+      {isAdmin && (
+        <div className="max-w-5xl mx-auto px-4 py-6">
+          <AdminFeedbackSummary />
+        </div>
+      )}
     </div>
   );
 }
