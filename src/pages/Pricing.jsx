@@ -190,7 +190,10 @@ const BANK_ACCOUNTS = [
   },
 ];
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+/** Credits consumed per action type */
+const CREDITS_PER_QUESTION = 1;
+const CREDITS_PER_PATHWAY_ANALYSIS = 5;
+const CREDITS_PER_CV_OPTIMIZATION = 8;
 function calcSubscriptionPrice(plan, period) {
   const base = plan.monthlyPrice * period.months;
   return Math.round(base * (1 - period.discount));
@@ -337,7 +340,7 @@ function CostCalculator() {
   const period = BILLING_PERIODS.find((p) => p.id === periodId);
 
   const creditsUsedPerMonth = useMemo(
-    () => questionsPerMonth * 1 + pathwayAnalyses * 5 + cvOptimizations * 8,
+    () => questionsPerMonth * CREDITS_PER_QUESTION + pathwayAnalyses * CREDITS_PER_PATHWAY_ANALYSIS + cvOptimizations * CREDITS_PER_CV_OPTIMIZATION,
     [questionsPerMonth, pathwayAnalyses, cvOptimizations]
   );
 
@@ -419,19 +422,19 @@ function CostCalculator() {
                   label: "Câu hỏi AI tư vấn",
                   value: questionsPerMonth,
                   setter: setQuestionsPerMonth,
-                  min: 0, max: 300, creditPer: 1,
+                  min: 0, max: 300, creditPer: CREDITS_PER_QUESTION,
                 },
                 {
                   label: "Phân tích lộ trình",
                   value: pathwayAnalyses,
                   setter: setPathwayAnalyses,
-                  min: 0, max: 20, creditPer: 5,
+                  min: 0, max: 20, creditPer: CREDITS_PER_PATHWAY_ANALYSIS,
                 },
                 {
                   label: "Tối ưu hóa CV",
                   value: cvOptimizations,
                   setter: setCvOptimizations,
-                  min: 0, max: 10, creditPer: 8,
+                  min: 0, max: 10, creditPer: CREDITS_PER_CV_OPTIMIZATION,
                 },
               ].map(({ label, value, setter, min, max, creditPer }) => (
                 <div key={label}>
@@ -527,7 +530,9 @@ function CostCalculator() {
               <p className="text-xs text-blue-700">
                 Bạn thường xuyên vượt mức? Hãy nâng lên{" "}
                 <strong>
-                  {SUBSCRIPTION_PLANS.find((p) => p.credits >= creditsUsedPerMonth)?.name || "gói cao hơn"}
+                  {SUBSCRIPTION_PLANS.find(
+                    (p) => p.credits > plan.credits && p.credits >= creditsUsedPerMonth
+                  )?.name || "gói tín dụng lẻ phù hợp"}
                 </strong>{" "}
                 để tiết kiệm hơn so với phí vượt mức.
               </p>
@@ -543,7 +548,7 @@ function PaymentModal({ item, onClose }) {
   const [bank, setBank] = useState("cba");
   const selected = BANK_ACCOUNTS.find((b) => b.id === bank);
   const ref = `VISA${Date.now().toString().slice(-6)}${Math.random().toString(36).slice(2, 5).toUpperCase()}`;
-  const displayPrice = item.totalPrice ?? item.price;
+  const displayPrice = item.totalPrice !== undefined && item.totalPrice !== null ? item.totalPrice : item.price;
   const isSubscription = !!item.monthlyPrice;
 
   return (
