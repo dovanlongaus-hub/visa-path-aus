@@ -13,6 +13,7 @@ import AINewsWidget from "../components/home/AINewsWidget";
 import RecommendedContent from "../components/home/RecommendedContent";
 import AdminFeedbackSummary from "../components/home/AdminFeedbackSummary";
 import MagicMomentQuiz from "../components/home/MagicMomentQuiz";
+import VisaStatsDashboard from "../components/home/VisaStatsDashboard";
 
 export default function Home() {
   const [user, setUser] = useState(null);
@@ -216,6 +217,22 @@ export default function Home() {
             <p className="text-gray-500 mt-2">Chọn con đường phù hợp với bạn</p>
           </div>
           <PathwayCards />
+        </div>
+      </section>
+
+      {/* ── Visa Statistics Dashboard ──────────────────────────── */}
+      <section className="bg-white py-12 px-4">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-8">
+            <Badge className="mb-4 bg-gray-900 text-white">📊 Dữ Liệu Hằng Ngày</Badge>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+              Thống Kê Visa Úc Theo Lứa Tuổi
+            </h2>
+            <p className="text-gray-500 mt-2">
+              Tỷ lệ người đang nộp visa offshore — cập nhật tự động hằng ngày từ DOHA
+            </p>
+          </div>
+          <VisaStatsDashboard />
         </div>
       </section>
 
