@@ -9,6 +9,9 @@ import {
 const FREE_LIMIT = 5; // questions per day for guests
 const MOCK_RESPONSE_DELAY_MS = 1200; // simulated AI thinking delay
 
+// Overage rate for users who exceed their plan credits (VND per credit)
+const OVERAGE_RATE_VND = 1000;
+
 const QUICK_QUESTIONS = [
   "Tôi đang học tại Úc, bước tiếp theo để xin PR là gì?",
   "Cần bao nhiêu điểm EOI để xin visa 189?",
@@ -62,7 +65,7 @@ function LoginGateModal({ onClose }) {
         </div>
         <h2 className="font-bold text-xl text-gray-900 mb-2">Hết lượt miễn phí</h2>
         <p className="text-gray-600 text-sm mb-6">
-          Bạn đã dùng hết 5 câu hỏi miễn phí hôm nay. Đăng nhập hoặc mua tín dụng để tiếp tục tư vấn không giới hạn.
+          Bạn đã dùng hết 5 câu hỏi miễn phí hôm nay. Đăng ký gói định kỳ hoặc mua tín dụng để tiếp tục tư vấn không giới hạn.
         </p>
         <div className="space-y-3">
           <button className="w-full py-3 bg-gray-900 text-white rounded-xl font-semibold hover:bg-gray-700 transition-colors">
@@ -73,7 +76,7 @@ function LoginGateModal({ onClose }) {
             className="w-full py-3 bg-emerald-500 text-white rounded-xl font-semibold hover:bg-emerald-600 transition-colors flex items-center justify-center gap-2"
           >
             <CreditCard className="w-4 h-4" />
-            Mua tín dụng từ 29,000₫
+            Xem gói đăng ký từ 49,000₫/tháng
           </a>
           <button
             onClick={onClose}
@@ -93,17 +96,17 @@ function UpgradeBanner() {
       <Sparkles className="w-5 h-5 text-indigo-500 flex-shrink-0" />
       <div className="flex-1 min-w-0">
         <p className="text-xs font-semibold text-indigo-900">
-          Mua tín dụng để tư vấn không giới hạn
+          Đăng ký gói định kỳ hoặc mua tín dụng để tư vấn không giới hạn
         </p>
         <p className="text-xs text-indigo-700">
-          Từ 29,000₫ · Phân tích lộ trình · MyPlan · EOI chi tiết
+          Từ 49,000₫/tháng · Gói tháng / quý / năm · Vượt mức chỉ trả thêm phần dùng
         </p>
       </div>
       <a
         href="/pricing"
         className="flex-shrink-0 text-xs bg-indigo-500 text-white px-3 py-1.5 rounded-lg font-semibold hover:bg-indigo-600 transition-colors flex items-center gap-1"
       >
-        Nạp <ChevronRight className="w-3.5 h-3.5" />
+        Xem gói <ChevronRight className="w-3.5 h-3.5" />
       </a>
     </div>
   );
@@ -289,10 +292,10 @@ export default function Chat() {
           <div className="flex items-center gap-2 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
             <AlertCircle className="w-4 h-4 flex-shrink-0" />
             <span>
-              Còn <strong>{freeRemaining} câu hỏi miễn phí</strong>. Mua tín dụng để tư vấn thêm.
+              Còn <strong>{freeRemaining} câu hỏi miễn phí</strong>. Đăng ký gói định kỳ hoặc mua tín dụng để tư vấn thêm.
             </span>
             <a href="/pricing" className="font-semibold underline whitespace-nowrap">
-              Nạp ngay
+              Xem gói
             </a>
           </div>
         </div>
@@ -319,7 +322,7 @@ export default function Chat() {
           </button>
         </div>
         <p className="text-xs text-gray-400 mt-1.5 text-center">
-          1 câu hỏi = 1 tín dụng · Miễn phí {FREE_LIMIT} câu/ngày
+          1 câu hỏi = 1 tín dụng · Miễn phí {FREE_LIMIT} câu/ngày · Vượt mức: {OVERAGE_RATE_VND.toLocaleString("vi-VN")}₫/tín dụng
         </p>
       </div>
 
