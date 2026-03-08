@@ -3,6 +3,7 @@ import { RefreshCw, TrendingUp, Users, Calendar, BarChart2 } from "lucide-react"
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { InvokeLLM } from "@/api/integrations";
+import { VisaStatistic } from "@/api/entities";
 
 const CACHE_KEY = "visaStatsDashboard_cache";
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24-hour rolling cache (refreshes ~once per day)
@@ -49,6 +50,7 @@ export default function VisaStatsDashboard() {
   }, []);
 
   const loadStats = async () => {
+    // 1. Check in-memory 24-hour cache first
     try {
       const cached = localStorage.getItem(CACHE_KEY);
       if (cached) {
@@ -60,6 +62,20 @@ export default function VisaStatsDashboard() {
         }
       }
     } catch {}
+
+    // 2. Try the backend-persisted "latest" VisaStatistic entity record
+    try {
+      const rows = await VisaStatistic.filter({ id: "latest" });
+      if (rows?.length && rows[0].totalOffshore && rows[0].ageGroups?.length) {
+        const entityData = rows[0];
+        setStats(entityData);
+        setLastUpdated(entityData.date ? new Date(entityData.date) : null);
+        localStorage.setItem(CACHE_KEY, JSON.stringify({ data: entityData, timestamp: Date.now() }));
+        return;
+      }
+    } catch {}
+
+    // 3. Fall back to LLM + internet
     await fetchStats();
   };
 
