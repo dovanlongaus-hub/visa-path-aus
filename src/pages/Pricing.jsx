@@ -185,7 +185,7 @@ function CreditPackCard({ pack, onSelect }) {
 function PaymentModal({ pack, onClose }) {
   const [bank, setBank] = useState("cba");
   const selected = BANK_ACCOUNTS.find((b) => b.id === bank);
-  const ref = `VISA${Date.now().toString().slice(-6)}`;
+  const ref = `VISA${Date.now().toString().slice(-6)}${Math.random().toString(36).slice(2, 5).toUpperCase()}`;
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">

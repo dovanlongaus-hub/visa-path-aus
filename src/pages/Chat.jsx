@@ -7,6 +7,7 @@ import {
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 const FREE_LIMIT = 5; // questions per day for guests
+const MOCK_RESPONSE_DELAY_MS = 1200; // simulated AI thinking delay
 
 const QUICK_QUESTIONS = [
   "Tôi đang học tại Úc, bước tiếp theo để xin PR là gì?",
@@ -190,7 +191,7 @@ export default function Chat() {
     setFreeRemaining((prev) => Math.max(0, prev - 1));
 
     // Simulate AI response
-    await new Promise((r) => setTimeout(r, 1200));
+    await new Promise((r) => setTimeout(r, MOCK_RESPONSE_DELAY_MS));
     const aiMsg = {
       id: Date.now() + 1,
       role: "assistant",

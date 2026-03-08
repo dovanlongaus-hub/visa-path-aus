@@ -161,7 +161,11 @@ function TaskCard({ task, onToggle, onExpand, isExpanded }) {
       className={`rounded-2xl border-2 transition-all duration-200 overflow-hidden ${
         task.done
           ? "border-gray-200 opacity-60"
-          : `border-${task.urgency === "high" ? "rose" : task.urgency === "medium" ? "amber" : "gray"}-200`
+          : task.urgency === "high"
+          ? "border-rose-200"
+          : task.urgency === "medium"
+          ? "border-amber-200"
+          : "border-gray-200"
       } bg-white`}
     >
       <div className="p-4">
@@ -295,7 +299,7 @@ Làm đúng ngành ANZSCO để mỗi năm kinh nghiệm được tính điểm.
           if (line.startsWith("**") && line.endsWith("**")) {
             return <p key={i} className="font-bold text-gray-900 mt-3 mb-1">{line.replace(/\*\*/g, "")}</p>;
           }
-          if (line.match(/^\*\*(.*)\*\*(.*)/) ) {
+          if (line.match(/^\*\*(.*)\*\*(.*)/)) {
             return <p key={i} className="text-gray-700 text-sm mb-1">{line.replace(/\*\*(.*?)\*\*/g, "$1")}</p>;
           }
           if (line.trim() === "") return <br key={i} />;
