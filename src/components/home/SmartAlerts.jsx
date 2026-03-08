@@ -1,4 +1,66 @@
-// SmartAlerts component
-// Rule-based alerts from profile: visa expiry, passport expiry, skills assessment reminder
-// Dismissible alerts stored in localStorage
-// AIReminders panel with LLM-generated 30-day action items
+import { useState } from "react";
+import { AlertCircle, Bell, X, CheckCircle2 } from "lucide-react";
+
+const DEFAULT_ALERTS = [
+  {
+    id: "skills_assessment",
+    type: "warning",
+    title: "Nhắc nhở: Skills Assessment",
+    message: "Hãy đảm bảo bạn đã nộp Skills Assessment trước khi nộp EOI vào SkillSelect.",
+  },
+  {
+    id: "skillselect_round",
+    type: "info",
+    title: "SkillSelect — Vòng mời mới",
+    message: "Vòng mời SkillSelect diễn ra hàng tháng. Theo dõi điểm cutoff để chuẩn bị.",
+  },
+];
+
+export default function SmartAlerts({ user }) {
+  const storageKey = `smartAlerts_dismissed_${user?.id || "guest"}`;
+  const getDismissed = () => {
+    try { return JSON.parse(localStorage.getItem(storageKey) || "[]"); } catch { return []; }
+  };
+
+  const [dismissed, setDismissed] = useState(getDismissed);
+
+  const dismiss = (id) => {
+    const next = [...dismissed, id];
+    setDismissed(next);
+    try { localStorage.setItem(storageKey, JSON.stringify(next)); } catch {}
+  };
+
+  const visible = DEFAULT_ALERTS.filter((a) => !dismissed.includes(a.id));
+  if (!visible.length) return null;
+
+  return (
+    <div className="space-y-3">
+      {visible.map((alert) => (
+        <div
+          key={alert.id}
+          className={`flex items-start gap-3 rounded-xl p-4 border ${
+            alert.type === "warning"
+              ? "bg-amber-50 border-amber-200"
+              : "bg-blue-50 border-blue-200"
+          }`}
+        >
+          {alert.type === "warning" ? (
+            <AlertCircle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+          ) : (
+            <Bell className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+          )}
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-gray-900">{alert.title}</p>
+            <p className="text-xs text-gray-600 mt-0.5">{alert.message}</p>
+          </div>
+          <button
+            onClick={() => dismiss(alert.id)}
+            className="p-1 rounded-lg hover:bg-black/5 flex-shrink-0"
+          >
+            <X className="h-4 w-4 text-gray-400" />
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+}
