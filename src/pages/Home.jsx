@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, FileText, Map, MessageCircle, CheckSquare, Upload, Star, Sparkles, FileUp, Newspaper, ExternalLink } from "lucide-react";
 import PathwayCards from "../components/home/PathwayCards";
 import AINewsWidget from "../components/home/AINewsWidget";
+import OpenClawImmigrationCharts from "../components/home/OpenClawImmigrationCharts";
 import SmartAlerts from "../components/home/SmartAlerts";
 import DashboardSummary from "../components/home/DashboardSummary";
 import RecommendedContent from "../components/home/RecommendedContent";
@@ -281,6 +282,11 @@ export default function Home() {
       {/* News */}
       <section className="max-w-5xl mx-auto px-6 pb-12">
         <AINewsWidget />
+      </section>
+
+      {/* OpenClaw AI Charts */}
+      <section className="max-w-5xl mx-auto px-6 pb-12">
+        <OpenClawImmigrationCharts />
       </section>
 
       {/* Features */}

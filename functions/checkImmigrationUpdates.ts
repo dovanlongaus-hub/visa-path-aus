@@ -4,44 +4,127 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
 
-    // For scheduled automations, use service role
-    const isScheduled = req.headers.get('x-automation-trigger') === 'scheduled';
+    let body: Record<string, unknown> = {};
+    try {
+      body = await req.json();
+    } catch (_) {
+      body = {};
+    }
 
-    // Fetch latest immigration news via AI + internet
+    const isScheduled = req.headers.get('x-automation-trigger') === 'scheduled';
+    const mode = String(body.mode || 'automation');
+    const triggerNotifications = isScheduled || body.triggerNotifications === true;
+
+    // Fetch latest immigration news + chart insights via OpenClaw-style agent prompt.
     const newsResult = await base44.asServiceRole.integrations.Core.InvokeLLM({
-      prompt: `Hãy tìm kiếm và tổng hợp các tin tức di trú Úc mới nhất (trong 24-48 giờ qua) từ các nguồn chính thức như:
+      prompt: `Bạn là OpenClaw Immigration Agent chuyên tổng hợp dữ liệu di trú Úc.
+
+Hãy tìm kiếm và tổng hợp các tin tức di trú Úc mới nhất (trong 24-48 giờ qua) từ các nguồn chính thức như:
 - Department of Home Affairs (immi.homeaffairs.gov.au)
 - SkillSelect / Skilled Occupation List (SOL) thay đổi
 - Lãnh sự quán / Đại sứ quán Úc tại Việt Nam
 - Thay đổi về điểm EOI, visa subclass mới
 
-Trả về JSON với danh sách cập nhật mới nhất. Nếu không có tin tức mới quan trọng, trả về danh sách rỗng.`,
+Yêu cầu:
+- Ưu tiên các visa 485, 482, 189, 190, 491.
+- Trả về cả danh sách tin tức để hiển thị và dữ liệu biểu đồ dashboard.
+- Nếu không có tin mới quan trọng, vẫn trả về dữ liệu ước tính hợp lý và đánh dấu độ tin cậy thấp.
+
+Trả về JSON đúng schema.`,
       add_context_from_internet: true,
       response_json_schema: {
         type: "object",
         properties: {
-          updates: {
+          news: {
             type: "array",
             items: {
               type: "object",
               properties: {
                 title: { type: "string" },
+                date: { type: "string" },
+                tag: { type: "string" },
+                urgent: { type: "boolean" },
                 summary: { type: "string" },
+                detail: { type: "string" },
+                source: { type: "string" },
+                sourceUrl: { type: "string" },
                 category: { type: "string", enum: ["sol_change", "visa_update", "policy_change", "deadline", "general"] },
-                source_url: { type: "string" },
                 is_important: { type: "boolean" }
               }
             }
           },
-          has_important_updates: { type: "boolean" }
+          has_important_updates: { type: "boolean" },
+          chart_insights: {
+            type: "object",
+            properties: {
+              generated_at: { type: "string" },
+              summary: { type: "string" },
+              confidence: { type: "string", enum: ["high", "medium", "low"] },
+              visa_activity: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    visa: { type: "string" },
+                    updates: { type: "number" }
+                  }
+                }
+              },
+              importance_breakdown: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    level: { type: "string" },
+                    value: { type: "number" }
+                  }
+                }
+              },
+              timeline: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    period: { type: "string" },
+                    updates: { type: "number" }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     });
 
-    const { updates = [], has_important_updates = false } = newsResult;
+    const news = Array.isArray(newsResult?.news) ? newsResult.news : [];
+    const updates = news.map((item: any) => ({
+      title: item.title || '',
+      summary: item.summary || '',
+      category: item.category || 'general',
+      source_url: item.sourceUrl || '',
+      is_important: item.is_important ?? item.urgent ?? false,
+    }));
 
-    if (updates.length === 0) {
-      return Response.json({ message: "Không có tin tức mới", updates: [] });
+    const hasImportantUpdates = Boolean(newsResult?.has_important_updates) || updates.some((u: any) => u.is_important);
+    const chartInsights = newsResult?.chart_insights || {
+      generated_at: new Date().toISOString(),
+      summary: 'Không có dữ liệu biểu đồ mới.',
+      confidence: 'low',
+      visa_activity: [],
+      importance_breakdown: [],
+      timeline: [],
+    };
+
+    if (!triggerNotifications) {
+      return Response.json({
+        mode,
+        message: updates.length === 0 ? 'Không có tin tức mới' : `Tải ${updates.length} cập nhật thành công`,
+        news,
+        updates,
+        has_important_updates: hasImportantUpdates,
+        chart_insights: chartInsights,
+        source: 'openclaw_agent',
+      });
     }
 
     // Get all users who subscribed to notifications
@@ -81,7 +164,7 @@ Trả về JSON với danh sách cập nhật mới nhất. Nếu không có tin
     }
 
     // Send email to subscribed users
-    if (has_important_updates && subscribedProfiles.length > 0) {
+    if (hasImportantUpdates && subscribedProfiles.length > 0) {
       const updatesList = updates
         .map(u => `<li><strong>${u.title}</strong><br/>${u.summary}</li>`)
         .join('');
@@ -121,8 +204,13 @@ Trả về JSON với danh sách cập nhật mới nhất. Nếu không có tin
 
     return Response.json({
       message: `Đã xử lý ${updates.length} cập nhật, gửi email cho ${subscribedProfiles.length} người dùng`,
+      mode,
+      news,
       updates,
-      emails_sent: has_important_updates ? subscribedProfiles.length : 0
+      has_important_updates: hasImportantUpdates,
+      chart_insights: chartInsights,
+      emails_sent: hasImportantUpdates ? subscribedProfiles.length : 0,
+      source: 'openclaw_agent',
     });
 
   } catch (error) {

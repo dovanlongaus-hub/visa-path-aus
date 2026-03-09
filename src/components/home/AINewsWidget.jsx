@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+import { getImmigrationInsights } from "@/lib/immigrationInsights";
 import { ExternalLink, ChevronDown, ChevronUp, Newspaper, AlertCircle, TrendingUp, Clock, RefreshCw, Sparkles } from "lucide-react";
 
 const tagColors = {
@@ -58,9 +58,6 @@ function NewsItem({ item }) {
   );
 }
 
-const CACHE_KEY = "ai_immigration_news";
-const CACHE_TTL = 6 * 60 * 60 * 1000; // 6 hours
-
 export default function AINewsWidget() {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -69,76 +66,17 @@ export default function AINewsWidget() {
   const [lastUpdated, setLastUpdated] = useState(null);
 
   const fetchNews = async (force = false) => {
-    if (!force) {
-      try {
-        const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || "null");
-        if (cached && Date.now() - cached.timestamp < CACHE_TTL && cached.news?.length > 0) {
-          setNews(cached.news);
-          setLastUpdated(new Date(cached.timestamp));
-          setLoading(false);
-          return;
-        }
-      } catch (_) {}
-    }
-
     setRefreshing(true);
-    const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `Bạn là chuyên gia di trú Úc. Hãy cung cấp 6 tin tức/cập nhật THỰC TẾ và MỚI NHẤT về hệ thống di trú Úc tính đến tháng 3/2026. 
-
-Bao gồm:
-- Thay đổi visa 485, 189, 190, 491, 482
-- Cập nhật SOL/CSOL (Skilled Occupation List)
-- Thay đổi điểm EOI, phí visa mới
-- Cập nhật TSMIT, migration strategy mới
-- Tin tức từ Home Affairs
-
-Trả về JSON với cấu trúc:
-{
-  "news": [
-    {
-      "title": "tiêu đề ngắn gọn bằng tiếng Việt",
-      "date": "MM/YYYY",
-      "tag": "Visa 485" hoặc "CSOL" hoặc "Visa 189" hoặc "Visa 482" v.v.,
-      "urgent": true/false (urgent nếu là thay đổi quan trọng trong 3 tháng gần nhất),
-      "summary": "tóm tắt 2-3 câu bằng tiếng Việt",
-      "detail": "chi tiết đầy đủ bằng tiếng Việt, dùng bullet points",
-      "source": "tên nguồn (DIBP, Migration Alliance, v.v.)",
-      "sourceUrl": "URL nguồn chính thức"
+    try {
+      const result = await getImmigrationInsights(force);
+      setNews(result.news || []);
+      setLastUpdated(result.timestamp ? new Date(result.timestamp) : null);
+    } catch (error) {
+      console.error("Failed to load immigration insights:", error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
     }
-  ]
-}`,
-      add_context_from_internet: true,
-      response_json_schema: {
-        type: "object",
-        properties: {
-          news: {
-            type: "array",
-            items: {
-              type: "object",
-              properties: {
-                title: { type: "string" },
-                date: { type: "string" },
-                tag: { type: "string" },
-                urgent: { type: "boolean" },
-                summary: { type: "string" },
-                detail: { type: "string" },
-                source: { type: "string" },
-                sourceUrl: { type: "string" }
-              }
-            }
-          }
-        }
-      }
-    });
-
-    if (result?.news?.length > 0) {
-      setNews(result.news);
-      const now = new Date();
-      setLastUpdated(now);
-      localStorage.setItem(CACHE_KEY, JSON.stringify({ news: result.news, timestamp: now.getTime() }));
-    }
-    setLoading(false);
-    setRefreshing(false);
   };
 
   useEffect(() => { fetchNews(); }, []);
