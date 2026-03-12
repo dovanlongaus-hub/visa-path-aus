@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
+import { invokeGemini } from "@/lib/gemini";
 import { Send, Bot, User, Loader2, Trash2, Sparkles, Lock, LogIn, Crown, X } from "lucide-react";
 
 import ReactMarkdown from "react-markdown";
@@ -194,9 +195,19 @@ Hãy cá nhân hoá câu trả lời dựa trên thông tin này khi phù hợp.
     const allMessages = [...messages, newMsg];
     const history = allMessages.slice(-8).map(m => `${m.role === "user" ? "Người dùng" : "Tư vấn viên"}: ${m.content}`).join("\n\n");
 
-    const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `${SYSTEM_PROMPT}\n\n${profileContext}\nLịch sử hội thoại:\n${history}\n\nNgười dùng hỏi: ${userMsg}\n\nTrả lời chi tiết, thực tế bằng tiếng Việt:`,
-    });
+    let result;
+    try {
+      result = await invokeGemini(
+        `${SYSTEM_PROMPT}\n\n${profileContext}\nLịch sử hội thoại:\n${history}\n\nNgười dùng hỏi: ${userMsg}\n\nTrả lời chi tiết, thực tế bằng tiếng Việt:`
+      );
+    } catch {
+      setMessages(prev => [...prev, {
+        role: "assistant",
+        content: "⚠️ Xin lỗi, đã có lỗi kết nối đến AI. Vui lòng thử lại sau."
+      }]);
+      setLoading(false);
+      return;
+    }
 
     const assistantMsg = { role: "assistant", content: result };
     setMessages(prev => [...prev, assistantMsg]);
@@ -242,7 +253,7 @@ Hãy cá nhân hoá câu trả lời dựa trên thông tin này khi phù hợp.
               <div className="font-bold text-[#0a1628]">AI Tư vấn Di trú Úc</div>
               <div className="text-xs text-gray-400 flex items-center gap-2">
                 <span className="flex items-center gap-1 text-emerald-600">
-                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" /> Đang hoạt động
+                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" /> Đang hoạt động · Gemini AI
                 </span>
                 {isPremium && (
                   <span className="text-violet-600 flex items-center gap-1">
@@ -372,7 +383,7 @@ Hãy cá nhân hoá câu trả lời dựa trên thông tin này khi phù hợp.
             <Send className="w-4 h-4" />
           </button>
         </div>
-        <p className="text-center text-[10px] text-gray-300 mt-2">Tạo bởi DVLong &amp; Genetic AI · Thông tin mang tính tham khảo</p>
+        <p className="text-center text-[10px] text-gray-300 mt-2">Tạo bởi DVLong · Powered by Google Gemini · Thông tin mang tính tham khảo</p>
       </div>
     </div>
   );
