@@ -200,7 +200,8 @@ Hãy cá nhân hoá câu trả lời dựa trên thông tin này khi phù hợp.
       result = await invokeGemini(
         `${SYSTEM_PROMPT}\n\n${profileContext}\nLịch sử hội thoại:\n${history}\n\nNgười dùng hỏi: ${userMsg}\n\nTrả lời chi tiết, thực tế bằng tiếng Việt:`
       );
-    } catch {
+    } catch (err) {
+      console.error("[Gemini] API error:", err);
       setMessages(prev => [...prev, {
         role: "assistant",
         content: "⚠️ Xin lỗi, đã có lỗi kết nối đến AI. Vui lòng thử lại sau."

@@ -1,14 +1,14 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
-let genAI = null;
+let ai = null;
 
-function getGenAI() {
-  if (!genAI && API_KEY) {
-    genAI = new GoogleGenerativeAI(API_KEY);
+function getAI() {
+  if (!ai && API_KEY) {
+    ai = new GoogleGenAI({ apiKey: API_KEY });
   }
-  return genAI;
+  return ai;
 }
 
 /**
@@ -17,24 +17,23 @@ function getGenAI() {
  * @returns {Promise<string>} - The generated response text
  */
 export async function invokeGemini(prompt) {
-  const client = getGenAI();
+  const client = getAI();
   if (!client) {
     throw new Error(
       "VITE_GEMINI_API_KEY chưa được cấu hình. Vui lòng thêm key vào file .env."
     );
   }
 
-  const model = client.getGenerativeModel({
+  const response = await client.models.generateContent({
     model: "gemini-2.0-flash",
-    generationConfig: {
+    contents: prompt,
+    config: {
       temperature: 0.7,
       maxOutputTokens: 2048,
     },
   });
 
-  const result = await model.generateContent(prompt);
-  const response = await result.response;
-  return response.text();
+  return response.text;
 }
 
 export const isGeminiConfigured = () => Boolean(API_KEY);
