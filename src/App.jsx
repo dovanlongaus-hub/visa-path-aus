@@ -10,7 +10,9 @@ import PaymentSuccess from './pages/PaymentSuccess';
 import PaymentCancel from './pages/PaymentCancel';
 import BlogPost from './pages/BlogPost';
 
-const { Pages, Layout, mainPage } = pagesConfig;
+
+//const { Pages, Layout, mainPage } = pagesConfig;
+const { Pages, LayoutNew: Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
 
