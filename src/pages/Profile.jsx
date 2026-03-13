@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { User, Save, Loader2, CheckCircle, Calculator } from "lucide-react";
 import { entities } from '@/api/supabaseClient';
+import MyAccount from "@/components/MyAccount";
 
 const POINTS_RULES = {
   age: [
@@ -130,6 +131,11 @@ export default function Profile() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-[#0a1628] mb-2">Hồ sơ cá nhân</h1>
           <p className="text-gray-500">Lưu thông tin để tự động điền vào các biểu mẫu di trú</p>
+        </div>
+
+        {/* My Account section */}
+        <div className="mb-8">
+          <MyAccount />
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">

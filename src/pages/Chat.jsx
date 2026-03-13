@@ -424,7 +424,9 @@ Hãy cá nhân hoá câu trả lời dựa trên thông tin này khi phù hợp.
           </button>
         </div>
         <p className="text-center text-[10px] text-gray-300 mt-2">
-          Visa Path Australia · Thông tin mang tính tham khảo · Tham vấn MARA agent cho quyết định quan trọng
+          Thông tin dựa trên hướng dẫn của DoHA. Xác minh tại{" "}
+          <a href="https://homeaffairs.gov.au" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-400">homeaffairs.gov.au</a>
+          {" "}· Tham vấn MARA agent cho quyết định quan trọng
         </p>
       </div>
     </div>
