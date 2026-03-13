@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import {
-import { entities } from '@/api/supabaseClient';
-import { invokeLLMSmart } from '@/api/aiClient';
-  Bell, AlertTriangle, Clock, Zap, CheckCircle, ChevronDown, ChevronUp,
+import {   Bell, AlertTriangle, Clock, Zap, CheckCircle, ChevronDown, ChevronUp,
   Loader2, RefreshCw, X, Calendar, ArrowRight, Sparkles
-} from "lucide-react";
+ } from "lucide-react";
+import { entities  } from '@/api/supabaseClient';
+import { invokeLLMSmart  } from '@/api/aiClient';
 
 // ──────────────────────────────────────────────────────────────
 // Helpers

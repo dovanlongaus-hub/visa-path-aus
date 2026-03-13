@@ -62,12 +62,7 @@ export default function Feedback() {
 
         // Nếu được phê duyệt, gửi email thông báo cho owner
         if (analysis.recommendation === 'Approve') {
-          // Email notification — implement with Supabase Edge Function
-      // await sendEmailNotification({
-            to: 'admin@ucditru.ai',
-            subject: `[Feedback] ${analysis.recommendation === 'Approve' ? '✨' : '📋'} ${title} - Phiên bản ${analysis.suggested_version}`,
-            body: `Một góp ý mới từ người dùng được phê duyệt:\n\nTiêu đề: ${title}\nLoại: ${category}\nTác động: ${analysis.impact_score}/100\nDộ phức tạp: ${analysis.estimated_effort}\nPhiên bản đề xuất: ${analysis.suggested_version}\n\nNội dung:\n${content}\n\nGhi chú triển khai:\n${analysis.implementation_notes.join('\n')}\n\nTỷ lệ người dùng hưởng lợi: ${analysis.potential_users_benefit}`,
-          });
+          // Email notification: implement via Edge Function
         }
       }
 

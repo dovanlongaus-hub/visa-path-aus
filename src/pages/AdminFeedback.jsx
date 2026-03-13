@@ -27,11 +27,8 @@ function FeedbackCard({ feedback, onUpdate }) {
 
   const handleNotifyOwner = async () => {
     const analysis = feedback.ai_analysis;
-    // await sendEmail({ /* migrate to Edge Function */
-      to: 'admin@ucditru.ai',
-      subject: `[APPROVED] ${feedback.title} - v${analysis.suggested_version}`,
-      body: `Feedback được phê duyệt:\n\nTiêu đề: ${feedback.title}\nLoại: ${feedback.category}\nTác động: ${analysis.impact_score}/100\nĐộ phức tạp: ${analysis.estimated_effort}\nPhiên bản: ${analysis.suggested_version}\n\nNội dung:\n${feedback.content}\n\nGhi chú triển khai:\n${analysis.implementation_notes.join('\n')}`,
-    });
+    // Email notification via Edge Function (not available in local mode)
+    console.log('Notify owner:', feedback.title);
     await entities.Feedback.update(feedback.id, { notified_owner: true });
     onUpdate();
   };

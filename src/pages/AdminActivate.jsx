@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
 import { Crown, Search, CheckCircle, XCircle, Loader2, Shield, User } from "lucide-react";
 import { entities, auth } from '@/api/supabaseClient';
 

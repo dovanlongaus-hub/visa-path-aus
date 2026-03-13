@@ -1,4 +1,3 @@
-import { base44 } from "@/api/base44Client";
 
 const CACHE_KEY = "immigration_insights_bundle_v1";
 const CACHE_TTL = 6 * 60 * 60 * 1000;
@@ -45,18 +44,13 @@ export async function getImmigrationInsights(force = false) {
 
   if (inFlightPromise && !force) return inFlightPromise;
 
-  // inFlightPromise = base44.functions
-    .invoke("checkImmigrationUpdates", { mode: "insights" })
-    .then((response) => {
-      const payload = response?.data || response || {};
-      const normalized = normalizePayload(payload);
-      const timestamp = writeCache(payload);
-      return {
-        ...normalized,
-        timestamp,
-        fromCache: false,
-      };
-    })
+  // Immigration insights: static data in local mode
+  inFlightPromise = Promise.resolve({
+    updates: [],
+    alerts: [],
+    timestamp: Date.now(),
+    fromCache: false,
+  })
     .finally(() => {
       inFlightPromise = null;
     });

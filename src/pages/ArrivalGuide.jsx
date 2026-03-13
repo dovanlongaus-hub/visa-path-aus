@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
 import {
   CheckSquare, Square, ChevronDown, ChevronUp, Loader2,
   Plane, Home, FileText, Briefcase, Heart, ShoppingBag, Smartphone,

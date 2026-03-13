@@ -1,5 +1,4 @@
 import { useState, useRef } from "react";
-import { base44 } from "@/api/base44Client";
 import { Upload, FileText, Loader2, CheckCircle, User, Briefcase, GraduationCap, Download, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -68,14 +67,10 @@ export default function CVUpload() {
       const fileName = `${Date.now()}.${fileExt}`;
       const { data: uploadData } = await supabase.storage.from('cv-uploads').upload(fileName, file);
       const file_url = uploadData?.path || '';
-    setUploading(false);
+      setUploading(false);
     setExtracting(true);
 
-    const result = await invokeLLMSmart(
-      prompt: `Bạn là chuyên gia di trú Úc. Từ CV hoặc tài liệu này, hãy trích xuất thông tin cá nhân, học vấn, kinh nghiệm làm việc và kỹ năng để điền vào hồ sơ di trú Úc. Hãy điền đầy đủ mọi trường bạn tìm thấy. Đối với các trường không có thông tin, để trống. Trả về JSON theo schema yêu cầu.`,
-      file_urls: [file_url],
-      response_json_schema: EXTRACT_SCHEMA,
-    );
+    const result = await invokeLLMSmart(`Bạn là chuyên gia di trú Úc. Từ CV hoặc tài liệu này, hãy trích xuất thông tin cá nhân, học vấn, kinh nghiệm làm việc và kỹ năng để điền vào hồ sơ di trú Úc. Hãy điền đầy đủ mọi trường bạn tìm thấy. Đối với các trường không có thông tin, để trống. Trả về JSON theo schema yêu cầu.`, { json: true });
 
     setExtracted({ ...result, cv_url: file_url });
     setExtracting(false);

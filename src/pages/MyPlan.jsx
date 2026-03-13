@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
 import PremiumGate from "@/components/PremiumGate";
-import { base44 } from "@/api/base44Client";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Clock, AlertTriangle, Zap, Sparkles,
-import { entities } from '@/api/supabaseClient';
-import { invokeLLMSmart } from '@/api/aiClient';
   ChevronDown, ChevronUp, ArrowRight, User, Loader2, RefreshCw,
   Target, BookOpen, Award, Briefcase, FileText, Calendar, Star
 } from "lucide-react";
+import { entities } from '@/api/supabaseClient';
+import { invokeLLMSmart } from '@/api/aiClient';
 
 // ──────────────────────────────────────────────────────────────
 // Task engine: generates personalised tasks based on profile

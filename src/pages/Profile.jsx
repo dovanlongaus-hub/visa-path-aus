@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
 import { User, Save, Loader2, CheckCircle, Calculator } from "lucide-react";
 import { entities } from '@/api/supabaseClient';
 

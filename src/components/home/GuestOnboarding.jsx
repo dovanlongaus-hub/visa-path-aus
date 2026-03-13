@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { base44 } from "@/api/base44Client";
 import { ArrowRight, UserCircle, Upload, Bot, Map, CheckCircle2, Sparkles } from "lucide-react";
 
 const steps = [
