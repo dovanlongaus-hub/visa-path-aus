@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { base44 } from '@/api/base44Client';
 import { Send, Loader2, CheckCircle, AlertCircle, Lightbulb, MessageSquare } from 'lucide-react';
+import { entities } from '@/api/supabaseClient';
+import { invokeLLMSmart } from '@/api/aiClient';
 
 export default function Feedback() {
   const [title, setTitle] = useState('');
@@ -36,10 +37,10 @@ export default function Feedback() {
         status: 'submitted',
       };
 
-      const feedback = await base44.entities.Feedback.create(feedbackData);
+      const feedback = await entities.Feedback.create(feedbackData);
 
       // Phân tích feedback bằng AI
-      const analysisResult = await base44.functions.invoke('analyzeFeedback', {
+      const analysisResult = await invokeLLMSmart(feedbackText, {
         title: title.trim(),
         category,
         content: content.trim(),
@@ -48,7 +49,7 @@ export default function Feedback() {
       // Cập nhật feedback với kết quả phân tích
       if (analysisResult.data) {
         const analysis = analysisResult.data;
-        await base44.entities.Feedback.update(feedback.id, {
+        await entities.Feedback.update(feedback.id, {
           ai_analysis: analysis,
           is_feature_request: analysis.is_feature_request,
           estimated_effort: analysis.estimated_effort,
@@ -61,7 +62,8 @@ export default function Feedback() {
 
         // Nếu được phê duyệt, gửi email thông báo cho owner
         if (analysis.recommendation === 'Approve') {
-          await base44.integrations.Core.SendEmail({
+          // Email notification — implement with Supabase Edge Function
+      // await sendEmailNotification({
             to: 'admin@ucditru.ai',
             subject: `[Feedback] ${analysis.recommendation === 'Approve' ? '✨' : '📋'} ${title} - Phiên bản ${analysis.suggested_version}`,
             body: `Một góp ý mới từ người dùng được phê duyệt:\n\nTiêu đề: ${title}\nLoại: ${category}\nTác động: ${analysis.impact_score}/100\nDộ phức tạp: ${analysis.estimated_effort}\nPhiên bản đề xuất: ${analysis.suggested_version}\n\nNội dung:\n${content}\n\nGhi chú triển khai:\n${analysis.implementation_notes.join('\n')}\n\nTỷ lệ người dùng hưởng lợi: ${analysis.potential_users_benefit}`,

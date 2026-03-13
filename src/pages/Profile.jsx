@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { User, Save, Loader2, CheckCircle, Calculator } from "lucide-react";
+import { entities } from '@/api/supabaseClient';
 
 const POINTS_RULES = {
   age: [
@@ -33,7 +34,7 @@ export default function Profile() {
   const [points, setPoints] = useState(null);
 
   useEffect(() => {
-    base44.entities.UserProfile.list("-created_date", 1).then((list) => {
+    entities.UserProfile.list("-created_date", 1).then((list) => {
       if (list.length > 0) {
         setProfile(list[0]);
         setForm(list[0]);
@@ -45,9 +46,9 @@ export default function Profile() {
   const handleSave = async () => {
     setSaving(true);
     if (profile) {
-      await base44.entities.UserProfile.update(profile.id, form);
+      await entities.UserProfile.update(profile.id, form);
     } else {
-      const created = await base44.entities.UserProfile.create(form);
+      const created = await entities.UserProfile.create(form);
       setProfile(created);
     }
     setSaving(false);

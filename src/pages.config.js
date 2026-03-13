@@ -73,6 +73,9 @@ import Testimonials from './pages/Testimonials';
 import Visa482 from './pages/Visa482';
 import Visa858 from './pages/Visa858';
 import ArrivalGuide from './pages/ArrivalGuide';
+import EOICalculator from './pages/EOICalculator';
+import DocumentTracker from './pages/DocumentTracker';
+import OccupationSearch from './pages/OccupationSearch';
 import __Layout from './Layout.jsx';
 
 
@@ -103,6 +106,9 @@ export const PAGES = {
     "Visa482": Visa482,
     "Visa858": Visa858,
     "ArrivalGuide": ArrivalGuide,
+    "EOICalculator": EOICalculator,
+    "DocumentTracker": DocumentTracker,
+    "OccupationSearch": OccupationSearch,
 }
 
 export const pagesConfig = {

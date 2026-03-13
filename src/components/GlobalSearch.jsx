@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { base44 } from '@/api/base44Client';
 import { Search, Loader2, X, Sparkles } from 'lucide-react';
 
 const typeIcons = {

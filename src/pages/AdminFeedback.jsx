@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
 import { Eye, Mail, Loader2, Filter } from 'lucide-react';
+import { entities, auth } from '@/api/supabaseClient';
 
 const statusColors = {
   submitted: { bg: 'bg-gray-50', border: 'border-gray-300', text: 'text-gray-700', badge: 'bg-gray-100 text-gray-800' },
@@ -21,18 +21,18 @@ function FeedbackCard({ feedback, onUpdate }) {
   };
 
   const handleStatusChange = async (newStatus) => {
-    await base44.entities.Feedback.update(feedback.id, { status: newStatus });
+    await entities.Feedback.update(feedback.id, { status: newStatus });
     onUpdate();
   };
 
   const handleNotifyOwner = async () => {
     const analysis = feedback.ai_analysis;
-    await base44.integrations.Core.SendEmail({
+    // await sendEmail({ /* migrate to Edge Function */
       to: 'admin@ucditru.ai',
       subject: `[APPROVED] ${feedback.title} - v${analysis.suggested_version}`,
       body: `Feedback được phê duyệt:\n\nTiêu đề: ${feedback.title}\nLoại: ${feedback.category}\nTác động: ${analysis.impact_score}/100\nĐộ phức tạp: ${analysis.estimated_effort}\nPhiên bản: ${analysis.suggested_version}\n\nNội dung:\n${feedback.content}\n\nGhi chú triển khai:\n${analysis.implementation_notes.join('\n')}`,
     });
-    await base44.entities.Feedback.update(feedback.id, { notified_owner: true });
+    await entities.Feedback.update(feedback.id, { notified_owner: true });
     onUpdate();
   };
 
@@ -146,13 +146,13 @@ export default function AdminFeedback() {
 
   useEffect(() => {
     const init = async () => {
-      const u = await base44.auth.me().catch(() => null);
+      const u = await auth.me().catch(() => null);
       setUser(u);
       if (u?.role !== 'admin') return;
       
       const data = filterStatus === 'all'
-        ? await base44.entities.Feedback.list('-created_date', 100)
-        : await base44.entities.Feedback.filter({ status: filterStatus }, '-created_date', 100);
+        ? await entities.Feedback.list('-created_date', 100)
+        : await entities.Feedback.filter({ status: filterStatus }, '-created_date', 100);
       setFeedbacks(data);
       setLoading(false);
     };

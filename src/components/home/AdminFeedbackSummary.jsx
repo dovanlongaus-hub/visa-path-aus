@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
 import { MessageSquare, TrendingUp, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { entities, auth } from '@/api/supabaseClient';
 
 export default function AdminFeedbackSummary() {
   const [feedbackStats, setFeedbackStats] = useState(null);
@@ -13,7 +13,7 @@ export default function AdminFeedbackSummary() {
   useEffect(() => {
     const init = async () => {
       try {
-        const u = await base44.auth.me();
+        const u = await auth.me();
         setUser(u);
 
         if (u?.role !== 'admin') {
@@ -22,7 +22,7 @@ export default function AdminFeedbackSummary() {
         }
 
         // Fetch all feedback
-        const allFeedback = await base44.entities.Feedback.list('-created_date', 100);
+        const allFeedback = await entities.Feedback.list('-created_date', 100);
         
         // Calculate stats
         const stats = {

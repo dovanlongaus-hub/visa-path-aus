@@ -4,6 +4,8 @@ import { base44 } from "@/api/base44Client";
 import { Loader2, CheckCircle, Download, RefreshCw, User, Sparkles, Briefcase, Globe, AlertTriangle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { entities } from '@/api/supabaseClient';
+import { invokeLLMSmart } from '@/api/aiClient';
 
 // ─── Helpers ───────────────────────────────────────────────────
 
@@ -63,7 +65,7 @@ export default function EOIGenerator() {
   const [result, setResult] = useState(null);
 
   useEffect(() => {
-    base44.entities.UserProfile.list("-created_date", 1).then(list => {
+    entities.UserProfile.list("-created_date", 1).then(list => {
       setProfile(list[0] || null);
       setLoading(false);
     });
@@ -94,7 +96,7 @@ Ghi chú: ${profile.notes || ""}
     const { total, items } = calcEOIPoints(profile);
 
     if (mode === "eoi") {
-      const res = await base44.integrations.Core.InvokeLLM({
+      const res = await invokeLLMSmart(prompt, {
         prompt: `Bạn là chuyên gia di trú Úc. Dựa trên hồ sơ bên dưới, hãy tạo một bản EOI (Expression of Interest) hoàn chỉnh và chuyên nghiệp để nộp lên hệ thống SkillSelect cho visa PR (189/190/491).
 
 Hồ sơ ứng viên:
@@ -111,7 +113,7 @@ Yêu cầu:
       });
       setResult({ type: "eoi", content: res, points: total, items });
     } else {
-      const res = await base44.integrations.Core.InvokeLLM({
+      const res = await invokeLLMSmart(prompt, {
         prompt: `Bạn là chuyên gia tư vấn nghề nghiệp và di trú Úc. Dựa trên hồ sơ bên dưới, hãy tạo một bản CV chuyên nghiệp chuẩn Úc (Australian-style CV) phù hợp cho mục đích xin việc và hỗ trợ hồ sơ di trú skilled.
 
 Hồ sơ ứng viên:

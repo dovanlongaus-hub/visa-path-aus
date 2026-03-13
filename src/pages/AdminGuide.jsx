@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
 import { Plus, Edit, Trash2, Loader2, Sparkles, Eye, BookOpen, AlertCircle } from 'lucide-react';
+import { entities, auth } from '@/api/supabaseClient';
+import { invokeLLMSmart } from '@/api/aiClient';
 
 const categoryLabels = {
   visa_types: '🛂 Loại Visa',
@@ -30,7 +31,7 @@ function CreateArticleModal({ onClose, onCreated }) {
     setGenerating(true);
     setError('');
     try {
-      const result = await base44.functions.invoke('generateArticle', {
+      const result = await invokeLLMSmart(topic, {
         title: title.trim(),
         category,
         visaCode: visaCode.trim() || null,
@@ -53,7 +54,7 @@ function CreateArticleModal({ onClose, onCreated }) {
     try {
       const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
       
-      await base44.entities.Article.create({
+      await entities.Article.create({
         title: generated.title || title,
         slug,
         category,
@@ -216,7 +217,7 @@ function CreateArticleModal({ onClose, onCreated }) {
 function ArticleItem({ article, onDelete, onRefresh }) {
   const handleDelete = async () => {
     if (confirm('Bạn có chắc muốn xóa bài viết này?')) {
-      await base44.entities.Article.delete(article.id);
+      await entities.Article.delete(article.id);
       onRefresh();
     }
   };
@@ -271,11 +272,11 @@ export default function AdminGuide() {
 
   useEffect(() => {
     const init = async () => {
-      const u = await base44.auth.me().catch(() => null);
+      const u = await auth.me().catch(() => null);
       setUser(u);
       if (u?.role !== 'admin') return;
 
-      const data = await base44.entities.Article.list('-created_date', 100).catch(() => []);
+      const data = await entities.Article.list('-created_date', 100).catch(() => []);
       setArticles(data);
       setLoading(false);
     };

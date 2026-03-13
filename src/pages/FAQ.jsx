@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { base44 } from '@/api/base44Client';
 import { Search, ChevronDown, ThumbsUp, ThumbsDown, Loader2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import { entities } from '@/api/supabaseClient';
 
 const categoryLabels = {
   visa: '🛂 Loại Visa',
@@ -20,7 +20,7 @@ export default function FAQ() {
 
   useState(() => {
     const fetchFAQs = async () => {
-      const data = await base44.entities.FAQ.list('order', 100).catch(() => []);
+      const data = await entities.FAQ.list('order', 100).catch(() => []);
       setFaqs(data);
       setLoading(false);
     };
@@ -37,11 +37,11 @@ export default function FAQ() {
   const handleHelpful = async (faqId, helpful) => {
     const faq = faqs.find(f => f.id === faqId);
     if (helpful) {
-      await base44.entities.FAQ.update(faqId, {
+      await entities.FAQ.update(faqId, {
         helpful_count: (faq.helpful_count || 0) + 1,
       });
     } else {
-      await base44.entities.FAQ.update(faqId, {
+      await entities.FAQ.update(faqId, {
         not_helpful_count: (faq.not_helpful_count || 0) + 1,
       });
     }

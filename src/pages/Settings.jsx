@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
 import { Settings as SettingsIcon, Save, Loader2, CheckCircle, Mail, Bell, FileText } from 'lucide-react';
+import { entities, auth } from '@/api/supabaseClient';
 
 export default function Settings() {
   const [user, setUser] = useState(null);
@@ -22,12 +22,12 @@ export default function Settings() {
 
   useEffect(() => {
     const init = async () => {
-      const u = await base44.auth.me().catch(() => null);
+      const u = await auth.me().catch(() => null);
       setUser(u);
 
       if (u?.settings) setSettings(u.settings);
 
-      const profiles = await base44.entities.UserProfile.list('-created_date', 1).catch(() => []);
+      const profiles = await entities.UserProfile.list('-created_date', 1).catch(() => []);
       if (profiles[0]) {
         setProfile(profiles[0]);
         setNotifPrefs({
@@ -43,11 +43,11 @@ export default function Settings() {
 
   const handleSave = async () => {
     setSaving(true);
-    await base44.auth.updateMe({ settings });
+    await auth.updateMe({ settings });
     if (profile) {
-      await base44.entities.UserProfile.update(profile.id, notifPrefs);
+      await entities.UserProfile.update(profile.id, notifPrefs);
     } else {
-      const p = await base44.entities.UserProfile.create({ ...notifPrefs, email: user.email });
+      const p = await entities.UserProfile.create({ ...notifPrefs, email: user.email });
       setProfile(p);
     }
     setSaved(true);

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
 import { Loader2, CheckCircle, AlertCircle, Clock, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { entities } from '@/api/supabaseClient';
 
 const stageLabels = {
   '500': { label: 'Sinh viên', emoji: '🎓', color: 'from-blue-500 to-cyan-500' },
@@ -22,13 +22,13 @@ export default function DashboardSummary() {
     const init = async () => {
       try {
         // Fetch profile
-        const profiles = await base44.entities.UserProfile.list('-created_date', 1);
+        const profiles = await entities.UserProfile.list('-created_date', 1);
         if (profiles.length > 0) {
           setProfile(profiles[0]);
         }
 
         // Fetch tasks/checklist
-        const checklistItems = await base44.entities.Checklist.filter(
+        const checklistItems = await entities.Checklist.filter(
           { completed: false },
           'created_date',
           5
@@ -36,7 +36,7 @@ export default function DashboardSummary() {
         setTasks(checklistItems);
 
         // Fetch notifications
-        const notifs = await base44.entities.Notification.filter(
+        const notifs = await entities.Notification.filter(
           { read: false },
           '-created_date',
           3

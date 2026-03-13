@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
 import { Download, Filter, Loader2, FileText, Eye } from 'lucide-react';
+import { entities } from '@/api/supabaseClient';
 
 const categoryLabels = {
   template: '📄 Template',
@@ -17,7 +17,7 @@ export default function Downloads() {
 
   useEffect(() => {
     const fetchDocuments = async () => {
-      const data = await base44.entities.Document.list('-created_date', 100).catch(() => []);
+      const data = await entities.Document.list('-created_date', 100).catch(() => []);
       setDocuments(data);
       setLoading(false);
     };
@@ -29,7 +29,7 @@ export default function Downloads() {
   );
 
   const handleDownload = async (doc) => {
-    await base44.entities.Document.update(doc.id, {
+    await entities.Document.update(doc.id, {
       download_count: (doc.download_count || 0) + 1,
     });
     window.location.href = doc.file_url;

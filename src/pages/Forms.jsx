@@ -4,6 +4,7 @@ import { FileText, Download, Eye, ChevronDown, ChevronUp, Loader2, CheckCircle, 
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { useUserProfile } from "../components/useUserProfile";
+import { entities } from '@/api/supabaseClient';
 
 const formGroups = [
   {
@@ -152,7 +153,7 @@ function FormModal({ form, onClose, initialData = {} }) {
 
   const handleSave = async () => {
     setSaving(true);
-    await base44.entities.FormSubmission.create({
+    await entities.FormSubmission.create({
       form_type: form.id,
       form_data: data,
       status: "draft",

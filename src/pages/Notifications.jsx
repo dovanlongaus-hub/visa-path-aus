@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
 import { Bell, Loader2, Check, Trash2 } from 'lucide-react';
+import { entities } from '@/api/supabaseClient';
 
 const typeLabels = {
   visa_update: '🛂 Cập nhật visa',
@@ -16,7 +16,7 @@ export default function Notifications() {
 
   useEffect(() => {
     const fetchNotifications = async () => {
-      const data = await base44.entities.Notification.list('-created_date', 50).catch(() => []);
+      const data = await entities.Notification.list('-created_date', 50).catch(() => []);
       setNotifications(data);
       setLoading(false);
     };
@@ -24,12 +24,12 @@ export default function Notifications() {
   }, []);
 
   const handleMarkAsRead = async (notifId) => {
-    await base44.entities.Notification.update(notifId, { read: true });
+    await entities.Notification.update(notifId, { read: true });
     setNotifications(notifications.map(n => n.id === notifId ? { ...n, read: true } : n));
   };
 
   const handleDelete = async (notifId) => {
-    await base44.entities.Notification.delete(notifId);
+    await entities.Notification.delete(notifId);
     setNotifications(notifications.filter(n => n.id !== notifId));
   };
 

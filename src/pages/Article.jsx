@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
 import { useLocation, Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { ArrowLeft, Clock, Eye, ThumbsUp, ThumbsDown, Share2, Loader2, AlertCircle } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import { entities } from '@/api/supabaseClient';
 
 const categoryLabels = {
   visa_types: { label: '🛂 Loại Visa', color: 'blue' },
@@ -27,14 +27,14 @@ export default function Article() {
 
   useEffect(() => {
     const fetchArticle = async () => {
-      const articles = await base44.entities.Article.filter({ slug }, 1).catch(() => []);
+      const articles = await entities.Article.filter({ slug }, 1).catch(() => []);
       if (articles.length > 0) {
         const art = articles[0];
         setArticle(art);
         setHelpfulCount(art.helpful_count || 0);
 
         // Update view count
-        await base44.entities.Article.update(art.id, {
+        await entities.Article.update(art.id, {
           view_count: (art.view_count || 0) + 1,
         });
       }
@@ -50,7 +50,7 @@ export default function Article() {
     const newHelpfulCount = helpfulCount + 1;
     setHelpfulCount(newHelpfulCount);
 
-    await base44.entities.Article.update(article.id, {
+    await entities.Article.update(article.id, {
       helpful_count: helpful ? newHelpfulCount : article.helpful_count,
       not_helpful_count: !helpful ? (article.not_helpful_count || 0) + 1 : article.not_helpful_count,
     });

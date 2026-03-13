@@ -6,6 +6,8 @@ import { createPageUrl } from "@/utils";
 import VisaPathwayRecommendation from "@/components/VisaPathwayRecommendation";
 import CVOptimizer from "@/components/CVOptimizer";
 import PersonalizedPathway from "@/components/PersonalizedPathway";
+import { entities } from '@/api/supabaseClient';
+import { invokeLLMSmart } from '@/api/aiClient';
 
 const EXTRACT_SCHEMA = {
   type: "object",
@@ -61,15 +63,19 @@ export default function CVUpload() {
   const processCV = async () => {
     if (!file) return;
     setUploading(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    // Upload to Supabase Storage
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}.${fileExt}`;
+      const { data: uploadData } = await supabase.storage.from('cv-uploads').upload(fileName, file);
+      const file_url = uploadData?.path || '';
     setUploading(false);
     setExtracting(true);
 
-    const result = await base44.integrations.Core.InvokeLLM({
+    const result = await invokeLLMSmart(
       prompt: `Bạn là chuyên gia di trú Úc. Từ CV hoặc tài liệu này, hãy trích xuất thông tin cá nhân, học vấn, kinh nghiệm làm việc và kỹ năng để điền vào hồ sơ di trú Úc. Hãy điền đầy đủ mọi trường bạn tìm thấy. Đối với các trường không có thông tin, để trống. Trả về JSON theo schema yêu cầu.`,
       file_urls: [file_url],
       response_json_schema: EXTRACT_SCHEMA,
-    });
+    );
 
     setExtracted({ ...result, cv_url: file_url });
     setExtracting(false);
@@ -77,7 +83,7 @@ export default function CVUpload() {
 
   const saveProfile = async () => {
     if (!extracted) return;
-    await base44.entities.UserProfile.create(extracted);
+    await entities.UserProfile.create(extracted);
     setSavedProfile(true);
   };
 
@@ -85,7 +91,7 @@ export default function CVUpload() {
     if (!extracted) return;
     setAnalyzing(true);
     try {
-      const result = await base44.functions.invoke('analyzeVisaPathway', {
+      const result = await invokeLLMSmart(uploadedText, {
         profileData: {
           ...extracted,
           age: extracted.date_of_birth ? new Date().getFullYear() - new Date(extracted.date_of_birth).getFullYear() : null,
@@ -104,7 +110,7 @@ export default function CVUpload() {
     setOptimizing(true);
     setSelectedVisaForOptimization({ code: visaCode, name: visaName });
     try {
-      const result = await base44.functions.invoke('optimizeCVForVisa', {
+      const result = await invokeLLMSmart(cvText, {
         cvData: extracted,
         visaCode,
         visaName,
@@ -127,7 +133,7 @@ export default function CVUpload() {
     if (!extracted) return;
     setGeneratingPathway(true);
     try {
-      const result = await base44.functions.invoke('generatePersonalizedPathway', {
+      const result = await invokeLLMSmart(profileSummary, {
         cvData: extracted,
       });
       setPersonalizedPathway(result.data);

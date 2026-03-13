@@ -11,12 +11,13 @@ import DashboardSummary from "../components/home/DashboardSummary";
 import RecommendedContent from "../components/home/RecommendedContent";
 import AdminFeedbackSummary from "../components/home/AdminFeedbackSummary";
 import GuestOnboarding from "../components/home/GuestOnboarding";
+import { auth } from '@/api/supabaseClient';
 
 export default function Home() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    base44.auth.me().then(setUser).catch(() => {});
+    auth.me().then(setUser).catch(() => {});
   }, []);
 
   const features = [

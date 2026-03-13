@@ -45,7 +45,7 @@ export async function getImmigrationInsights(force = false) {
 
   if (inFlightPromise && !force) return inFlightPromise;
 
-  inFlightPromise = base44.functions
+  // inFlightPromise = base44.functions
     .invoke("checkImmigrationUpdates", { mode: "insights" })
     .then((response) => {
       const payload = response?.data || response || {};

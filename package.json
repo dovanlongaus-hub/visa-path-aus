@@ -1,5 +1,5 @@
 {
-  "name": "base44-app",
+  "name": "visapath-aus",
   "private": true,
   "version": "0.0.2",
   "type": "module",
@@ -15,8 +15,6 @@
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@base44/sdk": "^0.8.18",
-    "@base44/vite-plugin": "^0.2.29",
     "@hello-pangea/dnd": "^17.0.0",
     "@hookform/resolvers": "^4.1.2",
     "@radix-ui/react-accordion": "^1.2.3",
@@ -79,7 +77,8 @@
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.171.0",
     "vaul": "^1.1.2",
-    "zod": "^3.24.2"
+    "zod": "^3.24.2",
+    "@supabase/supabase-js": "^2.45.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",

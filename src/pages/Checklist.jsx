@@ -4,6 +4,7 @@ import { CheckSquare, Square, ChevronDown, ChevronUp, Zap, User } from "lucide-r
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { useUserProfile } from "../components/useUserProfile";
+import { entities } from '@/api/supabaseClient';
 
 const defaultStages = [
   {
@@ -132,7 +133,7 @@ export default function Checklist() {
   }, [profile]);
 
   useEffect(() => {
-    base44.entities.Checklist.list().then((records) => {
+    entities.Checklist.list().then((records) => {
       const state = {};
       records.forEach((r) => {
         state[`${r.stage}__${r.item}`] = r.completed;
@@ -147,11 +148,11 @@ export default function Checklist() {
     setChecked((prev) => ({ ...prev, [key]: newVal }));
 
     // Upsert to entity
-    const existing = await base44.entities.Checklist.filter({ stage: stageId, item });
+    const existing = await entities.Checklist.filter({ stage: stageId, item });
     if (existing.length > 0) {
-      await base44.entities.Checklist.update(existing[0].id, { completed: newVal });
+      await entities.Checklist.update(existing[0].id, { completed: newVal });
     } else {
-      await base44.entities.Checklist.create({ stage: stageId, item, completed: newVal });
+      await entities.Checklist.create({ stage: stageId, item, completed: newVal });
     }
   };
 

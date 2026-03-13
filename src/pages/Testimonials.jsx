@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
 import { Loader2, Star, Users } from 'lucide-react';
+import { entities } from '@/api/supabaseClient';
 
 export default function Testimonials() {
   const [stories, setStories] = useState([]);
@@ -8,7 +8,7 @@ export default function Testimonials() {
 
   useEffect(() => {
     const fetchStories = async () => {
-      const data = await base44.entities.TestimonialStory.filter(
+      const data = await entities.TestimonialStory.filter(
         { is_featured: true },
         '-created_date',
         100

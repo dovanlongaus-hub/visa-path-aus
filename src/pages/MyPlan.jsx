@@ -4,6 +4,8 @@ import { base44 } from "@/api/base44Client";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Clock, AlertTriangle, Zap, Sparkles,
+import { entities } from '@/api/supabaseClient';
+import { invokeLLMSmart } from '@/api/aiClient';
   ChevronDown, ChevronUp, ArrowRight, User, Loader2, RefreshCw,
   Target, BookOpen, Award, Briefcase, FileText, Calendar, Star
 } from "lucide-react";
@@ -239,7 +241,7 @@ function AIDeepAdvice({ profile }) {
   const generate = async () => {
     setLoading(true);
     setOpen(true);
-    const result = await base44.integrations.Core.InvokeLLM({
+    const result = await invokeLLMSmart(prompt, {
       prompt: `Bạn là chuyên gia tư vấn di trú Úc. Dựa trên hồ sơ người dùng bên dưới, hãy phân tích và đưa ra lộ trình tùy biến chi tiết nhất có thể, bao gồm:
 1. Đánh giá tình trạng hiện tại (điểm mạnh/yếu)
 2. Lộ trình được đề xuất cụ thể (gồm visa nào, thứ tự nào, mốc thời gian)
@@ -438,7 +440,7 @@ export default function MyPlan() {
   const [filter, setFilter] = useState("all");
 
   useEffect(() => {
-    base44.entities.UserProfile.list("-created_date", 1)
+    entities.UserProfile.list("-created_date", 1)
       .then(list => setProfile(list[0] || null))
       .finally(() => setLoading(false));
   }, []);

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Search, Filter, Loader2, BookOpen, Eye, ThumbsUp, Clock } from 'lucide-react';
+import { entities } from '@/api/supabaseClient';
 
 const categoryLabels = {
   visa_types: { label: '🛂 Loại Visa', color: 'blue' },
@@ -69,7 +69,7 @@ export default function Guide() {
 
   useEffect(() => {
     const fetchArticles = async () => {
-      const data = await base44.entities.Article.filter({ status: 'published' }, '-created_date', 100).catch(() => []);
+      const data = await entities.Article.filter({ status: 'published' }, '-created_date', 100).catch(() => []);
       setArticles(data);
       setLoading(false);
     };

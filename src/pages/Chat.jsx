@@ -5,6 +5,8 @@ import { Send, Bot, User, Loader2, Trash2, Sparkles, Lock, LogIn, Crown, X } fro
 import ReactMarkdown from "react-markdown";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { entities, auth } from '@/api/supabaseClient';
+import { invokeLLMSmart } from '@/api/aiClient';
 
 const FREE_LIMIT = 999999;      // Tạm thời không giới hạn
 const BASIC_LIMIT = 999999;    // Tạm thời không giới hạn
@@ -56,7 +58,7 @@ function LoginGate({ onClose, reason }) {
           <p className="text-sm text-gray-500 mt-2">{reason || "Bạn đã dùng hết lượt miễn phí. Đăng nhập để tiếp tục hỏi miễn phí."}</p>
         </div>
         <button
-          onClick={() => base44.auth.redirectToLogin(window.location.pathname)}
+          onClick={() => window.location.href = '/login'}
           className="w-full bg-[#0f2347] text-white py-3 rounded-xl font-semibold hover:bg-[#1a3a6e] transition-colors flex items-center justify-center gap-2"
         >
           <LogIn className="w-4 h-4" /> Đăng nhập / Đăng ký
@@ -112,15 +114,15 @@ export default function Chat() {
       }
       setSessionId(sid);
 
-      const u = await base44.auth.me().catch(() => null);
+      const u = await auth.me().catch(() => null);
       setUser(u);
 
       if (u) {
-        const profiles = await base44.entities.UserProfile.list("-created_date", 1).catch(() => []);
+        const profiles = await entities.UserProfile.list("-created_date", 1).catch(() => []);
         const p = profiles[0] || null;
         setProfile(p);
 
-        const history = await base44.entities.ChatMessage.filter({ session_id: sid }, "created_date", 50).catch(() => []);
+        const history = await entities.ChatMessage.filter({ session_id: sid }, "created_date", 50).catch(() => []);
         if (history.length > 0) {
           setMessages(history.map(m => ({ role: m.role, content: m.content })));
           setLoadingHistory(false);
@@ -178,7 +180,7 @@ export default function Chat() {
 
     // Save to DB if logged in
     if (user && sessionId) {
-      base44.entities.ChatMessage.create({ role: "user", content: userMsg, session_id: sessionId }).catch(() => {});
+      entities.ChatMessage.create({ role: "user", content: userMsg, session_id: sessionId }).catch(() => {});
     }
 
     const profileContext = profile ? `
@@ -194,7 +196,7 @@ Hãy cá nhân hoá câu trả lời dựa trên thông tin này khi phù hợp.
     const allMessages = [...messages, newMsg];
     const history = allMessages.slice(-8).map(m => `${m.role === "user" ? "Người dùng" : "Tư vấn viên"}: ${m.content}`).join("\n\n");
 
-    const result = await base44.integrations.Core.InvokeLLM({
+    const result = await invokeLLMSmart(prompt, {
       prompt: `${SYSTEM_PROMPT}\n\n${profileContext}\nLịch sử hội thoại:\n${history}\n\nNgười dùng hỏi: ${userMsg}\n\nTrả lời chi tiết, thực tế bằng tiếng Việt:`,
     });
 
@@ -202,7 +204,7 @@ Hãy cá nhân hoá câu trả lời dựa trên thông tin này khi phù hợp.
     setMessages(prev => [...prev, assistantMsg]);
 
     if (user && sessionId) {
-      base44.entities.ChatMessage.create({ role: "assistant", content: result, session_id: sessionId }).catch(() => {});
+      entities.ChatMessage.create({ role: "assistant", content: result, session_id: sessionId }).catch(() => {});
     }
 
     // Show upgrade banner after BASIC_LIMIT messages for logged-in non-premium users
@@ -216,8 +218,8 @@ Hãy cá nhân hoá câu trả lời dựa trên thông tin này khi phù hợp.
 
   const clearHistory = async () => {
     if (!sessionId) return;
-    const existing = await base44.entities.ChatMessage.filter({ session_id: sessionId }).catch(() => []);
-    await Promise.all(existing.map(m => base44.entities.ChatMessage.delete(m.id).catch(() => {})));
+    const existing = await entities.ChatMessage.filter({ session_id: sessionId }).catch(() => []);
+    await Promise.all(existing.map(m => entities.ChatMessage.delete(m.id).catch(() => {})));
     const newSid = `session_${Date.now()}_${Math.random().toString(36).slice(2)}`;
     localStorage.setItem(SESSION_KEY, newSid);
     setSessionId(newSid);
@@ -265,7 +267,7 @@ Hãy cá nhân hoá câu trả lời dựa trên thông tin này khi phù hợp.
           <div className="flex items-center gap-2">
             {!user && user !== undefined && (
               <button
-                onClick={() => base44.auth.redirectToLogin(window.location.pathname)}
+                onClick={() => window.location.href = '/login'}
                 className="text-xs bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-1"
               >
                 <LogIn className="w-3 h-3" /> Đăng nhập

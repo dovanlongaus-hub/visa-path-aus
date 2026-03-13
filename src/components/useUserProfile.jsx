@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
+import { entities } from '@/api/supabaseClient';
 
 export function useUserProfile() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    base44.entities.UserProfile.list("-created_date", 1)
+    entities.UserProfile.list("-created_date", 1)
       .then((list) => {
         setProfile(list.length > 0 ? list[0] : null);
       })

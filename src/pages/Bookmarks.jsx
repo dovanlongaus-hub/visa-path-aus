@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
 import { Bookmark, Trash2, ExternalLink, Loader2, Search } from 'lucide-react';
+import { entities } from '@/api/supabaseClient';
 
 export default function Bookmarks() {
   const [bookmarks, setBookmarks] = useState([]);
@@ -10,7 +10,7 @@ export default function Bookmarks() {
 
   useEffect(() => {
     const fetchBookmarks = async () => {
-      const data = await base44.entities.Bookmark.list('-created_date', 100).catch(() => []);
+      const data = await entities.Bookmark.list('-created_date', 100).catch(() => []);
       setBookmarks(data);
       setLoading(false);
     };
@@ -25,7 +25,7 @@ export default function Bookmarks() {
 
   const handleDelete = async (id) => {
     if (confirm('Xóa bookmark này?')) {
-      await base44.entities.Bookmark.delete(id);
+      await entities.Bookmark.delete(id);
       setBookmarks(bookmarks.filter(b => b.id !== id));
     }
   };

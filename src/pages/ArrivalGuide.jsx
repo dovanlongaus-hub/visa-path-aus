@@ -7,6 +7,8 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { entities } from '@/api/supabaseClient';
+import { invokeLLMSmart } from '@/api/aiClient';
 
 const STAGE_ICONS = {
   before_depart: Plane,
@@ -222,11 +224,11 @@ export default function ArrivalGuide() {
 
   useEffect(() => {
     const init = async () => {
-      const profiles = await base44.entities.UserProfile.list("-created_date", 1).catch(() => []);
+      const profiles = await entities.UserProfile.list("-created_date", 1).catch(() => []);
       const p = profiles[0] || null;
       setProfile(p);
 
-      const records = await base44.entities.Checklist.filter({ stage: { $regex: "^arrival__" } }).catch(() => []);
+      const records = await entities.Checklist.filter({ stage: { $regex: "^arrival__" } }).catch(() => []);
       const state = {};
       records.forEach((r) => { state[`${r.stage}__${r.item}`] = r.completed; });
       setChecked(state);
@@ -251,11 +253,11 @@ export default function ArrivalGuide() {
     const newVal = !checked[key];
     setChecked((prev) => ({ ...prev, [key]: newVal }));
     const fullStageId = `${ENTITY_PREFIX}${stageId}`;
-    const existing = await base44.entities.Checklist.filter({ stage: fullStageId, item: itemText }).catch(() => []);
+    const existing = await entities.Checklist.filter({ stage: fullStageId, item: itemText }).catch(() => []);
     if (existing.length > 0) {
-      base44.entities.Checklist.update(existing[0].id, { completed: newVal }).catch(() => {});
+      entities.Checklist.update(existing[0].id, { completed: newVal }).catch(() => {});
     } else {
-      base44.entities.Checklist.create({ stage: fullStageId, item: itemText, completed: newVal }).catch(() => {});
+      entities.Checklist.create({ stage: fullStageId, item: itemText, completed: newVal }).catch(() => {});
     }
   };
 
@@ -274,7 +276,7 @@ export default function ArrivalGuide() {
   const loadAITips = async () => {
     setLoadingAI(true);
     const context = profile ? `Người dùng có Visa ${profile.current_visa_type || "không rõ"}, học tại ${profile.university || "Úc"}, ngành ${profile.course || "không rõ"}, tiếng Anh ${profile.english_test_type || ""} ${profile.english_score || ""}.` : "Người dùng chưa có hồ sơ.";
-    const result = await base44.integrations.Core.InvokeLLM({
+    const result = await invokeLLMSmart(prompt, {
       prompt: `Bạn là chuyên gia hỗ trợ người Việt Nam mới sang Úc định cư. ${context}
 Hãy đưa ra 5 lời khuyên thực tế và quan trọng nhất cho người này khi mới đến Úc, đặc biệt về: giấy tờ cần dịch thuật, cách tìm việc, những lỗi phổ biến cần tránh, và bí quyết hội nhập nhanh. Trả lời bằng tiếng Việt, ngắn gọn và thực tế.`,
     });

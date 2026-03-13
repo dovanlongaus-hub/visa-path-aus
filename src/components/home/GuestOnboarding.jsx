@@ -159,7 +159,7 @@ export default function GuestOnboarding() {
           </div>
         </div>
         <button
-          onClick={() => base44.auth.redirectToLogin(window.location.pathname)}
+          onClick={() => window.location.href = '/login'}
           className="flex-shrink-0 bg-[#0f2347] text-white px-6 py-2.5 rounded-xl font-semibold text-sm hover:bg-[#1a3a6e] transition-colors whitespace-nowrap"
         >
           Đăng ký miễn phí →

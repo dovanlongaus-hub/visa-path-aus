@@ -3,6 +3,8 @@ import { base44 } from "@/api/base44Client";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import {
+import { entities } from '@/api/supabaseClient';
+import { invokeLLMSmart } from '@/api/aiClient';
   Bell, AlertTriangle, Clock, Zap, CheckCircle, ChevronDown, ChevronUp,
   Loader2, RefreshCw, X, Calendar, ArrowRight, Sparkles
 } from "lucide-react";
@@ -190,7 +192,7 @@ Tình trạng hồ sơ di trú:
     `.trim();
 
     try {
-      const result = await base44.integrations.Core.InvokeLLM({
+      const result = await invokeLLMSmart(prompt, {
         prompt: `Bạn là chuyên gia tư vấn di trú Úc cho người Việt. Dựa trên tình trạng hồ sơ bên dưới, hãy đưa ra 3-4 lời nhắc hành động CỤ THỂ và THỰC TẾ nhất mà người dùng nên làm NGAY TRONG 30 NGÀY TỚI.
 
 ${profileSummary}
@@ -343,7 +345,7 @@ export default function SmartAlerts() {
   const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
-    base44.entities.UserProfile.list("-created_date", 1)
+    entities.UserProfile.list("-created_date", 1)
       .then(list => setProfile(list[0] || null))
       .catch(() => setProfile(null))
       .finally(() => setLoading(false));

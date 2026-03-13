@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { base44 } from '@/api/base44Client';
 import { Send, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import { entities } from '@/api/supabaseClient';
 
 export default function Contact() {
   const [subject, setSubject] = useState('');
@@ -30,7 +30,7 @@ export default function Contact() {
     setSubmitting(true);
     setError('');
     try {
-      await base44.entities.Contact.create({
+      await entities.Contact.create({
         subject: subject.trim(),
         category,
         message: message.trim(),

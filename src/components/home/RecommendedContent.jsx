@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
 import { Loader2, BookOpen, FileText } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { entities } from '@/api/supabaseClient';
 
 export default function RecommendedContent() {
   const [profile, setProfile] = useState(null);
@@ -14,14 +14,14 @@ export default function RecommendedContent() {
     const init = async () => {
       try {
         // Fetch user profile
-        const profiles = await base44.entities.UserProfile.list('-created_date', 1);
+        const profiles = await entities.UserProfile.list('-created_date', 1);
         if (profiles.length > 0) {
           const prof = profiles[0];
           setProfile(prof);
 
           // Fetch relevant articles based on visa stage
           const visaCode = prof.current_visa_type || '';
-          const relevantArticles = await base44.entities.Article.filter(
+          const relevantArticles = await entities.Article.filter(
             { status: 'published' },
             '-view_count',
             6
@@ -29,7 +29,7 @@ export default function RecommendedContent() {
           setArticles(relevantArticles);
 
           // Fetch relevant documents
-          const relevantDocs = await base44.entities.Document.list('-download_count', 4);
+          const relevantDocs = await entities.Document.list('-download_count', 4);
           setDocuments(relevantDocs);
         }
       } catch (error) {

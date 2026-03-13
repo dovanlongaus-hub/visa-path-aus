@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Crown, Search, CheckCircle, XCircle, Loader2, Shield, User } from "lucide-react";
+import { entities, auth } from '@/api/supabaseClient';
 
 export default function AdminActivate() {
   const [user, setUser] = useState(null);
@@ -12,10 +13,10 @@ export default function AdminActivate() {
 
   useEffect(() => {
     const init = async () => {
-      const u = await base44.auth.me().catch(() => null);
+      const u = await auth.me().catch(() => null);
       setUser(u);
       if (u?.role === "admin") {
-        const all = await base44.entities.UserProfile.list("-created_date", 100).catch(() => []);
+        const all = await entities.UserProfile.list("-created_date", 100).catch(() => []);
         setProfiles(all);
       }
       setLoading(false);
@@ -25,7 +26,7 @@ export default function AdminActivate() {
 
   const activate = async (profile, planName) => {
     setActivating(profile.id);
-    await base44.entities.UserProfile.update(profile.id, {
+    await entities.UserProfile.update(profile.id, {
       is_premium: true,
       premium_plan: planName,
       premium_activated_at: new Date().toISOString().slice(0, 10),
@@ -41,7 +42,7 @@ export default function AdminActivate() {
 
   const deactivate = async (profile) => {
     setActivating(profile.id);
-    await base44.entities.UserProfile.update(profile.id, { is_premium: false, premium_plan: null });
+    await entities.UserProfile.update(profile.id, { is_premium: false, premium_plan: null });
     setProfiles(prev => prev.map(p => p.id === profile.id ? { ...p, is_premium: false, premium_plan: null } : p));
     setMsg(`ℹ️ Đã thu hồi Premium của ${profile.full_name || profile.email}`);
     setActivating(null);
