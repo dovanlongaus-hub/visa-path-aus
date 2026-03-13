@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, ChevronDown, ThumbsUp, ThumbsDown, Loader2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { entities } from '@/api/supabaseClient';
@@ -18,7 +18,7 @@ export default function FAQ() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [expanded, setExpanded] = useState(null);
 
-  useState(() => {
+  useEffect(() => {
     const fetchFAQs = async () => {
       const data = await entities.FAQ.list('order', 100).catch(() => []);
       setFaqs(data);
@@ -107,8 +107,10 @@ export default function FAQ() {
         {/* FAQs */}
         <div className="space-y-3">
           {filtered.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-2xl border-2 border-gray-100">
-              <p className="text-gray-500">Không tìm thấy câu hỏi nào</p>
+            <div className="text-center py-16 bg-white rounded-2xl border-2 border-gray-100">
+              <Search className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+              <p className="text-gray-600 font-medium mb-1">Không tìm thấy câu hỏi nào</p>
+              <p className="text-sm text-gray-400">Thử tìm kiếm với từ khóa khác hoặc chọn danh mục khác</p>
             </div>
           ) : (
             filtered.map((faq) => (

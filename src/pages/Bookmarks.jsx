@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Bookmark, Trash2, ExternalLink, Loader2, Search } from 'lucide-react';
+import { Bookmark, Trash2, ExternalLink, Loader2, Search, BookOpen } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { entities } from '@/api/supabaseClient';
 
 export default function Bookmarks() {
@@ -92,9 +94,17 @@ export default function Bookmarks() {
 
         {/* Bookmarks List */}
         {filtered.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-2xl border-2 border-gray-100">
+          <div className="text-center py-16 bg-white rounded-2xl border-2 border-gray-100">
             <Bookmark className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-            <p className="text-gray-600">Chưa có bookmark nào</p>
+            <p className="text-gray-600 font-medium mb-1">Chưa có bookmark nào</p>
+            <p className="text-sm text-gray-400 mb-4">Lưu bài viết và tài liệu hữu ích để xem sau</p>
+            <Link
+              to={createPageUrl("Guide")}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium text-sm hover:bg-blue-700 transition-colors"
+            >
+              <BookOpen className="w-4 h-4" />
+              Khám phá bài viết
+            </Link>
           </div>
         ) : (
           <div className="grid md:grid-cols-2 gap-4">

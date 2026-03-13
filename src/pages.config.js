@@ -76,6 +76,9 @@ import ArrivalGuide from './pages/ArrivalGuide';
 import EOICalculator from './pages/EOICalculator';
 import DocumentTracker from './pages/DocumentTracker';
 import OccupationSearch from './pages/OccupationSearch';
+import PaymentSuccess from './pages/PaymentSuccess';
+import PaymentCancel from './pages/PaymentCancel';
+import VisaTimeline from './pages/VisaTimeline';
 import __Layout from './Layout.jsx';
 
 
@@ -109,6 +112,9 @@ export const PAGES = {
     "EOICalculator": EOICalculator,
     "DocumentTracker": DocumentTracker,
     "OccupationSearch": OccupationSearch,
+    "PaymentSuccess": PaymentSuccess,
+    "PaymentCancel": PaymentCancel,
+    "VisaTimeline": VisaTimeline,
 }
 
 export const pagesConfig = {

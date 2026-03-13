@@ -59,9 +59,10 @@ export default function Notifications() {
         </div>
 
         {notifications.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-2xl border-2 border-gray-100">
+          <div className="text-center py-16 bg-white rounded-2xl border-2 border-gray-100">
             <Bell className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-            <p className="text-gray-600">Không có thông báo nào</p>
+            <p className="text-gray-600 font-medium mb-1">Không có thông báo nào</p>
+            <p className="text-sm text-gray-400">Bạn sẽ nhận thông báo khi có cập nhật visa hoặc nhắc nhở quan trọng</p>
           </div>
         ) : (
           <div className="space-y-3">

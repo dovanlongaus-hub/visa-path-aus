@@ -6,7 +6,8 @@ import {
   User, Menu, X, Briefcase, Award, Sparkles,
   ChevronDown, Bot, Target, Crown, Shield, Lightbulb, BookOpen,
   HelpCircle, Bookmark, Download, Users, Bell, Settings as SettingsIcon,
-  Search, Plane, Globe, Headphones, ArrowLeft, FolderOpen, LifeBuoy
+  Search, Plane, Globe, Headphones, ArrowLeft, FolderOpen, LifeBuoy,
+  Calculator, FileSearch, Clock
 } from "lucide-react";
 import GlobalSearch from "./components/GlobalSearch";
 
@@ -23,6 +24,8 @@ const navGroups = [
       { label: "Visa 858", icon: Award, page: "Visa858", desc: "National Innovation" },
       { label: "Kế hoạch cá nhân", icon: Target, page: "MyPlan", desc: "Mục tiêu theo mốc thời gian" },
       { label: "Checklist PR", icon: CheckSquare, page: "Checklist", desc: "Theo dõi tiến độ hồ sơ" },
+      { label: "Tiến trình Visa", icon: Clock, page: "VisaTimeline", desc: "Theo dõi từng bước visa (Premium)" },
+      { label: "Tính điểm EOI", icon: Calculator, page: "EOICalculator", desc: "Tính điểm SkillSelect chính xác" },
       { label: "Chuẩn bị qua Úc", icon: Plane, page: "ArrivalGuide", desc: "Việc cần làm trước khi đến Úc" },
     ],
   },
@@ -36,6 +39,7 @@ const navGroups = [
       { label: "Upload CV", icon: Upload, page: "CVUpload", desc: "Chuẩn hóa dữ liệu bằng AI" },
       { label: "Biểu mẫu di trú", icon: FileText, page: "Forms", desc: "Form DIBP chính thức" },
       { label: "EOI & CV AI", icon: Sparkles, page: "EOIGenerator", desc: "Tạo hồ sơ EOI tự động" },
+      { label: "Tra cứu nghề nghiệp", icon: FileSearch, page: "OccupationSearch", desc: "Danh sách nghề trong SOL" },
     ],
   },
   {
@@ -108,6 +112,10 @@ const PAGE_TITLES = {
   Settings: "Cài đặt",
   Feedback: "Góp ý",
   Article: "Bài viết",
+  EOICalculator: "Tính điểm EOI",
+  OccupationSearch: "Tra cứu nghề nghiệp",
+  DocumentTracker: "Theo dõi hồ sơ",
+  VisaTimeline: "Tiến trình Visa",
   AdminActivate: "Admin – Kích hoạt",
   AdminFeedback: "Admin – Feedback",
   AdminGuide: "Admin – Knowledge Base",
@@ -416,24 +424,81 @@ export default function Layout({ children, currentPageName }) {
       <main>{children}</main>
 
       {/* Footer – desktop only */}
-      <footer className="hidden lg:block bg-white border-t border-slate-200 mt-16">
-        <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-gradient-to-br from-[#1a4b9b] to-[#0f2347] rounded-md flex items-center justify-center">
-              <span className="text-white font-black text-[10px]">ÚC</span>
+      <footer className="hidden lg:block bg-[#0f2347] text-white mt-16">
+        <div className="max-w-7xl mx-auto px-6 py-10">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            {/* Brand */}
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-8 h-8 bg-gradient-to-br from-[#1a4b9b] to-[#3b7ddd] rounded-lg flex items-center justify-center">
+                  <span className="text-white font-black text-[11px]">VP</span>
+                </div>
+                <span className="font-black text-white text-sm">Visa Path <span className="text-blue-300">Australia</span></span>
+              </div>
+              <p className="text-sm text-slate-400 leading-relaxed">
+                Nền tảng hướng dẫn visa Úc toàn diện cho người Việt. Lộ trình PR, tính điểm EOI, tư vấn AI 24/7.
+              </p>
             </div>
-            <span className="text-sm font-bold text-slate-800">Úc Di Trú <span className="text-[#1a4b9b]">AI</span></span>
+
+            {/* Lộ trình */}
+            <div>
+              <h4 className="font-bold text-sm text-slate-200 mb-3">Lộ trình & Visa</h4>
+              <div className="space-y-2">
+                <Link to={createPageUrl("Roadmap")} className="block text-sm text-slate-400 hover:text-white transition-colors">Lộ trình PR</Link>
+                <Link to={createPageUrl("EOICalculator")} className="block text-sm text-slate-400 hover:text-white transition-colors">Tính điểm EOI</Link>
+                <Link to={createPageUrl("Visa482")} className="block text-sm text-slate-400 hover:text-white transition-colors">Visa 482</Link>
+                <Link to={createPageUrl("Visa858")} className="block text-sm text-slate-400 hover:text-white transition-colors">Visa 858</Link>
+              </div>
+            </div>
+
+            {/* Công cụ */}
+            <div>
+              <h4 className="font-bold text-sm text-slate-200 mb-3">Công cụ</h4>
+              <div className="space-y-2">
+                <Link to={createPageUrl("Chat")} className="block text-sm text-slate-400 hover:text-white transition-colors">Tư vấn AI</Link>
+                <Link to={createPageUrl("Forms")} className="block text-sm text-slate-400 hover:text-white transition-colors">Biểu mẫu di trú</Link>
+                <Link to={createPageUrl("CVUpload")} className="block text-sm text-slate-400 hover:text-white transition-colors">Upload CV</Link>
+                <Link to={createPageUrl("OccupationSearch")} className="block text-sm text-slate-400 hover:text-white transition-colors">Tra cứu nghề nghiệp</Link>
+              </div>
+            </div>
+
+            {/* Liên hệ */}
+            <div>
+              <h4 className="font-bold text-sm text-slate-200 mb-3">Liên hệ</h4>
+              <div className="space-y-2">
+                <a href="mailto:payment@visa-path-aus.com" className="block text-sm text-slate-400 hover:text-white transition-colors">payment@visa-path-aus.com</a>
+                <Link to={createPageUrl("Contact")} className="block text-sm text-slate-400 hover:text-white transition-colors">Hỗ trợ trực tiếp</Link>
+                <Link to={createPageUrl("FAQ")} className="block text-sm text-slate-400 hover:text-white transition-colors">FAQ</Link>
+                <Link to={createPageUrl("Feedback")} className="block text-sm text-slate-400 hover:text-white transition-colors">Góp ý</Link>
+              </div>
+            </div>
           </div>
-          <p className="text-xs text-slate-400 text-center max-w-sm">
-            Thông tin mang tính tham khảo. Luôn tham vấn MARA agent được đăng ký cho các quyết định di trú quan trọng.
-          </p>
-          <div className="text-xs text-slate-400 text-center sm:text-right">
-            Tạo bởi <span className="font-semibold text-slate-500">DVLong</span> &amp; <span className="font-semibold text-[#1a4b9b]">Agentic AI</span>
-            <span className="mx-2 text-slate-300">|</span>
-            <span className="font-semibold text-slate-600">Phiên bản mới v0.0.1</span>
+
+          <div className="border-t border-slate-700 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p className="text-xs text-slate-500">
+              &copy; 2026 Visa Path Australia. Thông tin mang tính tham khảo. Luôn tham vấn MARA agent cho các quyết định di trú quan trọng.
+            </p>
+            <p className="text-xs text-slate-500">
+              Tạo bởi <span className="font-semibold text-slate-400">DVLong</span> &amp; <span className="font-semibold text-blue-400">Agentic AI</span>
+            </p>
           </div>
         </div>
       </footer>
+
+      {/* Mobile Footer (above tab bar) */}
+      <div className="lg:hidden bg-[#0f2347] text-white px-6 py-8 mb-16">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-7 h-7 bg-gradient-to-br from-[#1a4b9b] to-[#3b7ddd] rounded-lg flex items-center justify-center">
+            <span className="text-white font-black text-[10px]">VP</span>
+          </div>
+          <span className="font-bold text-white text-sm">Visa Path Australia</span>
+        </div>
+        <p className="text-xs text-slate-400 mb-3">Nền tảng hướng dẫn visa Úc cho người Việt.</p>
+        <a href="mailto:payment@visa-path-aus.com" className="text-xs text-blue-300 hover:text-blue-200">payment@visa-path-aus.com</a>
+        <div className="border-t border-slate-700 mt-4 pt-4">
+          <p className="text-[10px] text-slate-500">&copy; 2026 Visa Path Australia. Thông tin mang tính tham khảo.</p>
+        </div>
+      </div>
 
       {/* ── Mobile Bottom Tab Bar ── */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200"

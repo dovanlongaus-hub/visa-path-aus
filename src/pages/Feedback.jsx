@@ -40,6 +40,7 @@ export default function Feedback() {
       const feedback = await entities.Feedback.create(feedbackData);
 
       // Phân tích feedback bằng AI
+      const feedbackText = `[${category}] ${title.trim()}: ${content.trim()}`;
       const analysisResult = await invokeLLMSmart(feedbackText, {
         title: title.trim(),
         category,

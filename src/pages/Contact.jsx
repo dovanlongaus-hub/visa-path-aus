@@ -166,7 +166,7 @@ export default function Contact() {
           <div className="bg-white rounded-2xl border-2 border-gray-100 p-6 text-center">
             <div className="text-4xl mb-3">📧</div>
             <div className="font-bold text-gray-900">Email</div>
-            <p className="text-sm text-gray-600 mt-1">admin@ucditru.ai</p>
+            <p className="text-sm text-gray-600 mt-1">admin@blockID.au</p>
           </div>
           <div className="bg-white rounded-2xl border-2 border-gray-100 p-6 text-center">
             <div className="text-4xl mb-3">💬</div>
