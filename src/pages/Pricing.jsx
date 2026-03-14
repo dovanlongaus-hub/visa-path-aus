@@ -332,7 +332,7 @@ export default function Pricing() {
                       📅 <strong>Bước 1:</strong> Chọn giờ phù hợp
                     </p>
                     <a
-                      href="https://calendly.com/contact-longcare/30min"
+                      href="https://calendly.com/contact-longcare/t-v-n-visa-australia"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="block w-full text-center py-2 px-4 bg-orange-100 text-orange-700 rounded-lg text-sm font-medium hover:bg-orange-200 transition"

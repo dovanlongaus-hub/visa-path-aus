@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Send, Loader2, CheckCircle, AlertCircle, Calendar } from 'lucide-react';
 import { entities } from '@/api/supabaseClient';
 
-const CALENDLY_URL = 'https://calendly.com/contact-longcare/30min';
+const CALENDLY_URL = 'https://calendly.com/contact-longcare/t-v-n-visa-australia';
 
 export default function Contact() {
   const [subject, setSubject] = useState('');
