@@ -80,6 +80,8 @@ import PaymentSuccess from './pages/PaymentSuccess';
 import PaymentCancel from './pages/PaymentCancel';
 import VisaTimeline from './pages/VisaTimeline';
 import WorkflowEngine from './pages/WorkflowEngine';
+import Community from './pages/Community';
+import Referral from './pages/Referral';
 import __Layout from './Layout.jsx';
 
 
@@ -117,6 +119,8 @@ export const PAGES = {
     "PaymentCancel": PaymentCancel,
     "VisaTimeline": VisaTimeline,
     "WorkflowEngine": WorkflowEngine,
+    "Community": Community,
+    "Referral": Referral,
 }
 
 export const pagesConfig = {

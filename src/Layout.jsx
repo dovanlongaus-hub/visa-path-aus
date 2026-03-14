@@ -7,7 +7,7 @@ import {
   ChevronDown, Bot, Target, Crown, Shield, Lightbulb, BookOpen,
   HelpCircle, Bookmark, Download, Users, Bell, Settings as SettingsIcon,
   Search, Plane, Globe, Headphones, ArrowLeft, FolderOpen, LifeBuoy,
-  Calculator, FileSearch, Clock
+  Calculator, FileSearch, Clock, MessageCircle, Gift
 } from "lucide-react";
 import GlobalSearch from "./components/GlobalSearch";
 
@@ -51,6 +51,7 @@ const navGroups = [
       { label: "Knowledge Base", icon: BookOpen, page: "Guide", desc: "Hướng dẫn chính thức" },
       { label: "FAQ", icon: HelpCircle, page: "FAQ", desc: "Câu hỏi thường gặp" },
       { label: "Câu chuyện thành công", icon: Users, page: "Testimonials", desc: "Kinh nghiệm thực tế" },
+      { label: "Cộng đồng Visa Úc", icon: MessageCircle, page: "Community", desc: "Hỏi đáp & chia sẻ kinh nghiệm 🇻🇳" },
       { label: "Bookmarks", icon: Bookmark, page: "Bookmarks", desc: "Lưu bài yêu thích" },
       { label: "Tải xuống", icon: Download, page: "Downloads", desc: "Templates & guides" },
     ],
@@ -63,6 +64,7 @@ const navGroups = [
     items: [
       { label: "Liên hệ", icon: Headphones, page: "Contact", desc: "Hỗ trợ trực tiếp" },
       { label: "Góp ý", icon: Lightbulb, page: "Feedback", desc: "Đề xuất cải tiến" },
+      { label: "Giới thiệu bạn bè", icon: Gift, page: "Referral", desc: "Nhận 1 tháng Basic miễn phí" },
       { label: "Thông báo", icon: Bell, page: "Notifications", desc: "Cập nhật hệ thống" },
       { label: "Cài đặt", icon: SettingsIcon, page: "Settings", desc: "Tùy chỉnh tài khoản" },
       { label: "Nâng cấp Premium", icon: Crown, page: "Pricing", desc: "Mở khóa tính năng nâng cao" },
@@ -116,6 +118,9 @@ const PAGE_TITLES = {
   OccupationSearch: "Tra cứu nghề nghiệp",
   DocumentTracker: "Theo dõi hồ sơ",
   VisaTimeline: "Tiến trình Visa",
+  WorkflowEngine: "Workflow",
+  Community: "Cộng đồng Visa Úc",
+  Referral: "Giới thiệu bạn bè",
   AdminActivate: "Admin – Kích hoạt",
   AdminFeedback: "Admin – Feedback",
   AdminGuide: "Admin – Knowledge Base",
