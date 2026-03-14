@@ -646,6 +646,23 @@ export default function MyPlan() {
             </div>
           </Link>
         </div>
+
+        {/* Workflow Engine CTA */}
+        <Link
+          to={createPageUrl("WorkflowEngine")}
+          className="mt-3 w-full flex items-center justify-between bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl p-4 hover:opacity-90 transition-all"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 bg-white/20 rounded-xl flex items-center justify-center">
+              <Target className="w-4 h-4 text-white" />
+            </div>
+            <div>
+              <div className="text-sm font-semibold text-white">📋 Xem lộ trình chi tiết</div>
+              <div className="text-xs text-emerald-200">Step-by-step · Visa 189 / 190 / 491</div>
+            </div>
+          </div>
+          <ArrowRight className="w-4 h-4 text-white/70" />
+        </Link>
       </div>
       </div>
     </PremiumGate>

@@ -79,6 +79,7 @@ import OccupationSearch from './pages/OccupationSearch';
 import PaymentSuccess from './pages/PaymentSuccess';
 import PaymentCancel from './pages/PaymentCancel';
 import VisaTimeline from './pages/VisaTimeline';
+import WorkflowEngine from './pages/WorkflowEngine';
 import __Layout from './Layout.jsx';
 
 
@@ -115,6 +116,7 @@ export const PAGES = {
     "PaymentSuccess": PaymentSuccess,
     "PaymentCancel": PaymentCancel,
     "VisaTimeline": VisaTimeline,
+    "WorkflowEngine": WorkflowEngine,
 }
 
 export const pagesConfig = {
