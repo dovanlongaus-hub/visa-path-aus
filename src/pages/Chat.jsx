@@ -39,6 +39,20 @@ Tôi có thể giúp bạn về:
 
 Hãy hỏi bất kỳ câu hỏi nào về visa và di trú Úc!`;
 
+function getGreeting(profile) {
+  if (!profile) return GREETING;
+  const visaLabel = profile.current_visa_type ? ` đang ở ${profile.current_visa_type}` : "";
+  const occupationLabel = profile.occupation_code ? ` (${profile.occupation_code})` : "";
+  return `Xin chào trở lại! 👋
+
+Tôi thấy hồ sơ của bạn${visaLabel}${occupationLabel}. Tôi sẵn sàng hỗ trợ bạn về:
+- **Lộ trình PR phù hợp** với tình trạng visa và nghề nghiệp của bạn
+- **Điểm EOI hiện tại** và cách tối ưu để đạt invitation
+- **Bước tiếp theo** cụ thể bạn cần làm
+
+Bạn muốn hỏi về điều gì?`;
+}
+
 const FREE_COUNT_KEY = "chat_free_count";
 const FREE_COUNT_DATE_KEY = "chat_free_count_date";
 
@@ -159,9 +173,11 @@ export default function Chat() {
       const u = await auth.me().catch(() => null);
       setUser(u);
 
+      let loadedProfile = null;
       if (u) {
         const profiles = await entities.UserProfile.list("-created_date", 1).catch(() => []);
-        setProfile(profiles[0] || null);
+        loadedProfile = profiles[0] || null;
+        setProfile(loadedProfile);
       }
 
       // Load from localStorage
@@ -169,7 +185,7 @@ export default function Chat() {
       if (saved && saved.length > 0) {
         setMessages(saved);
       } else {
-        setMessages([{ role: "assistant", content: GREETING }]);
+        setMessages([{ role: "assistant", content: getGreeting(loadedProfile) }]);
       }
       setLoadingHistory(false);
     };
@@ -213,15 +229,28 @@ export default function Chat() {
       localStorage.setItem(FREE_COUNT_KEY, String(newCount));
     }
 
-    const profileContext = profile ? `
-Thông tin người dùng hiện tại:
-- Visa: ${profile.current_visa_type || "chưa rõ"}, hết hạn: ${profile.current_visa_expiry || "chưa rõ"}
-- Trường: ${profile.university || "chưa rõ"}, ngành: ${profile.course || "chưa rõ"}
-- Tiếng Anh: ${profile.english_test_type || ""} ${profile.english_score || ""}
-- Skills Assessment: ${profile.skills_assessment_done ? "Đã hoàn thành" : "Chưa làm"}
-- ANZSCO: ${profile.occupation_code || "chưa rõ"}
-Hãy cá nhân hoá câu trả lời dựa trên thông tin này khi phù hợp.
-` : "";
+    const profileContext = (() => {
+      // Lấy thêm EOI score từ localStorage nếu có
+      const storedEoi = localStorage.getItem("eoi_calc_result");
+      let eoiData = null;
+      try { eoiData = storedEoi ? JSON.parse(storedEoi) : null; } catch(e) {}
+
+      return `
+Thông tin người dùng:
+${profile ? `
+- Visa hiện tại: ${profile.current_visa_type || "chưa rõ"}, hết hạn: ${profile.current_visa_expiry || "chưa rõ"}
+- Trường/tổ chức: ${profile.university || "chưa rõ"}, ngành: ${profile.course || "chưa rõ"}
+- Kết quả tiếng Anh: ${profile.english_test_type || ""} ${profile.english_score || ""}
+- Skills Assessment: ${profile.skills_assessment_done ? "Đã hoàn thành (" + (profile.skills_assessment_authority || "") + ")" : "Chưa làm"}
+- Mã nghề ANZSCO: ${profile.occupation_code || "chưa rõ"}
+- Kinh nghiệm làm việc: ${profile.work_experience_years || "chưa rõ"} năm
+- Quốc tịch: ${profile.nationality || "Việt Nam"}
+` : "Người dùng chưa cập nhật hồ sơ chi tiết."}
+${eoiData ? `- Điểm EOI gần nhất: ${eoiData.totalPoints || ""} điểm (tính lần cuối: ${eoiData.calculatedAt || ""})` : ""}
+
+Hãy cá nhân hoá câu trả lời dựa trên hồ sơ này. Nếu người dùng hỏi điều gì đó phù hợp với thông tin trên, hãy tham chiếu cụ thể. Nếu thông tin chưa đủ, hỏi thêm để tư vấn chính xác hơn.
+`;
+    })();
 
     // Build history for context (last 8 messages)
     const history = updatedMessages.slice(-8).map(m => ({
@@ -378,6 +407,29 @@ Hãy cá nhân hoá câu trả lời dựa trên thông tin này khi phù hợp.
           <div ref={bottomRef} />
         </div>
       </div>
+
+      {/* Upgrade Banner - shown when free limit reached */}
+      {!user && freeCount >= FREE_LIMIT && (
+        <div className="mx-4 mb-4 bg-gradient-to-r from-blue-600 to-violet-600 rounded-2xl p-5 text-white">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+              <Crown className="w-5 h-5" />
+            </div>
+            <div className="flex-1">
+              <p className="font-bold text-base mb-1">Bạn đã dùng hết 3 câu hỏi miễn phí hôm nay</p>
+              <p className="text-white/80 text-sm mb-3">Nâng cấp Basic ($12/tháng) để hỏi không giới hạn + AI biết hồ sơ của bạn</p>
+              <div className="flex gap-2 flex-wrap">
+                <Link to={createPageUrl("Pricing")} className="bg-white text-blue-600 font-semibold text-sm px-4 py-2 rounded-xl hover:bg-blue-50 transition-colors">
+                  Nâng cấp ngay →
+                </Link>
+                <Link to={createPageUrl("Profile")} className="bg-white/20 text-white font-semibold text-sm px-4 py-2 rounded-xl hover:bg-white/30 transition-colors">
+                  Đăng ký miễn phí
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Suggested Questions Panel */}
       {messages.length <= 3 && !loadingHistory && (

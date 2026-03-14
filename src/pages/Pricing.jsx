@@ -40,6 +40,7 @@ const PLANS_CONFIG = [
     color: "blue",
     badge: "Phổ biến nhất",
     popular: true,
+    trialBadge: "7 ngày miễn phí",
     features: [
       "AI không giới hạn",
       "Document Tracker",
@@ -68,6 +69,7 @@ const PLANS_CONFIG = [
       "Priority Support",
       "EOI Generator",
       "CV Upload & Analysis",
+      "Consultation call 30 phút",
     ],
     locked: [
       "Agent Tools",
@@ -188,13 +190,13 @@ export default function Pricing() {
               onClick={() => setIsAnnual(false)}
               className={`relative px-6 py-2.5 rounded-xl text-sm font-semibold transition-all ${!isAnnual ? "bg-[#0f2347] text-white shadow-md" : "text-gray-500 hover:text-gray-800 hover:bg-gray-50"}`}
             >
-              Monthly
+              Tháng
             </button>
             <button
               onClick={() => setIsAnnual(true)}
               className={`relative px-6 py-2.5 rounded-xl text-sm font-semibold transition-all ${isAnnual ? "bg-[#0f2347] text-white shadow-md" : "text-gray-500 hover:text-gray-800 hover:bg-gray-50"}`}
             >
-              Annual
+              Năm
               <span className={`absolute -top-2 -right-2 text-[9px] font-black px-1.5 py-0.5 rounded-full ${isAnnual ? "bg-emerald-400 text-white" : "bg-emerald-100 text-emerald-700"}`}>
                 -20%
               </span>
@@ -214,6 +216,11 @@ export default function Pricing() {
                 {plan.badge && (
                   <div className={`absolute top-3 right-3 text-xs font-bold px-2.5 py-1 rounded-full ${c.badge}`}>
                     {plan.badge}
+                  </div>
+                )}
+                {plan.trialBadge && (
+                  <div className="absolute top-3 left-3 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200">
+                    {plan.trialBadge}
                   </div>
                 )}
                 <div className={`px-5 pt-5 pb-4 ${c.header}`}>

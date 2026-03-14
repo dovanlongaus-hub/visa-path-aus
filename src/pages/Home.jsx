@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { createPageUrl } from "@/utils";
 import { Link } from "react-router-dom";
 import { ArrowRight, FileText, Map, MessageCircle, CheckSquare, Upload, Star, Sparkles, FileUp, Newspaper, ExternalLink, Calculator, Shield, Clock, Users, Mail, Check, ChevronDown, Quote } from "lucide-react";
+import Testimonials from "../components/home/Testimonials";
 import PathwayCards from "../components/home/PathwayCards";
 import AINewsWidget from "../components/home/AINewsWidget";
 import OpenClawImmigrationCharts from "../components/home/OpenClawImmigrationCharts";
@@ -138,13 +139,13 @@ export default function Home() {
                 to={createPageUrl("EOICalculator")}
                 className="inline-flex items-center gap-2 bg-emerald-500 text-white font-bold px-7 py-3.5 rounded-2xl hover:bg-emerald-600 transition-all shadow-lg hover:-translate-y-0.5"
               >
-                <Calculator className="w-5 h-5" /> Tính điểm EOI
+                <Calculator className="w-5 h-5" /> Kiểm tra lộ trình của bạn →
               </Link>
               <Link
                 to={createPageUrl("Chat")}
                 className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/30 text-white font-semibold px-7 py-3.5 rounded-2xl hover:bg-white/20 transition-all"
               >
-                <MessageCircle className="w-5 h-5" /> Hỏi tư vấn AI
+                <MessageCircle className="w-5 h-5" /> Hỏi AI ngay - Miễn phí
               </Link>
             </div>
 
@@ -217,10 +218,10 @@ export default function Home() {
       <section className="max-w-5xl mx-auto px-6 py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
           {[
-            { num: "6+", label: "Loại visa được hỗ trợ", emoji: "🛂", bg: "from-[#eaf1f8] to-[#edf4fb]", border: "border-[#c8d9ea]" },
-            { num: "50+", label: "Biểu mẫu di trú", emoji: "📋", bg: "from-[#e8f4f4] to-[#eff7f7]", border: "border-[#c7e3e4]" },
-            { num: "24/7", label: "Tư vấn AI", emoji: "🤖", bg: "from-[#f6f1ea] to-[#faf6f1]", border: "border-[#e7dccf]" },
-            { num: "100%", label: "Miễn phí cơ bản", emoji: "✨", bg: "from-[#edf4ef] to-[#f3f8f4]", border: "border-[#cfe1d3]" },
+            { num: "500+", label: "Người Việt đã sử dụng", emoji: "👥", bg: "from-[#eaf1f8] to-[#edf4fb]", border: "border-[#c8d9ea]" },
+            { num: "95%", label: "Tìm được lộ trình phù hợp", emoji: "🎯", bg: "from-[#e8f4f4] to-[#eff7f7]", border: "border-[#c7e3e4]" },
+            { num: "24/7", label: "Tư vấn AI tiếng Việt", emoji: "🤖", bg: "from-[#f6f1ea] to-[#faf6f1]", border: "border-[#e7dccf]" },
+            { num: "#1", label: "Nền tảng di trú tiếng Việt", emoji: "🇦🇺", bg: "from-[#edf4ef] to-[#f3f8f4]", border: "border-[#cfe1d3]" },
           ].map((s, i) => (
             <div key={i} className={`bg-gradient-to-br ${s.bg} rounded-2xl p-5 text-center border ${s.border} shadow-sm`}>
               <div className="text-2xl mb-1">{s.emoji}</div>
@@ -230,6 +231,9 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* Testimonials - Social Proof */}
+      <Testimonials />
 
       {/* Visa 189 Timeline Overview */}
       <section className="max-w-5xl mx-auto px-6 py-8">
