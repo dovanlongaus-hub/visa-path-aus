@@ -124,7 +124,7 @@ export default function Pricing() {
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [showPayment, setShowPayment] = useState(false);
   const [stripeLoading, setStripeLoading] = useState(false);
-  const STRIPE_ADMIN_EMAIL = "payment@visa-path-aus.com";
+  const STRIPE_ADMIN_EMAIL = "info@longcare.au";
 
   const getPrice = (plan) => {
     return isAnnual ? plan.annualPrice : plan.monthlyPrice;

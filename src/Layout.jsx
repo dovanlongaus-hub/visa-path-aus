@@ -474,7 +474,7 @@ export default function Layout({ children, currentPageName }) {
             <div>
               <h4 className="font-bold text-sm text-slate-200 mb-3">Liên hệ</h4>
               <div className="space-y-2">
-                <a href="mailto:payment@visa-path-aus.com" className="block text-sm text-slate-400 hover:text-white transition-colors">payment@visa-path-aus.com</a>
+                <a href="mailto:info@longcare.au" className="block text-sm text-slate-400 hover:text-white transition-colors">info@longcare.au</a>
                 <Link to={createPageUrl("Contact")} className="block text-sm text-slate-400 hover:text-white transition-colors">Hỗ trợ trực tiếp</Link>
                 <Link to={createPageUrl("FAQ")} className="block text-sm text-slate-400 hover:text-white transition-colors">FAQ</Link>
                 <Link to={createPageUrl("Feedback")} className="block text-sm text-slate-400 hover:text-white transition-colors">Góp ý</Link>
@@ -502,7 +502,7 @@ export default function Layout({ children, currentPageName }) {
           <span className="font-bold text-white text-sm">Visa Path Australia</span>
         </div>
         <p className="text-xs text-slate-400 mb-3">Nền tảng hướng dẫn visa Úc cho người Việt.</p>
-        <a href="mailto:payment@visa-path-aus.com" className="text-xs text-blue-300 hover:text-blue-200">payment@visa-path-aus.com</a>
+        <a href="mailto:info@longcare.au" className="text-xs text-blue-300 hover:text-blue-200">info@longcare.au</a>
         <div className="border-t border-slate-700 mt-4 pt-4">
           <p className="text-[10px] text-slate-500">&copy; 2026 Visa Path Australia. Thông tin mang tính tham khảo.</p>
         </div>
