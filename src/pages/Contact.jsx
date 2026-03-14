@@ -1,6 +1,8 @@
-import { useState } from 'react';
-import { Send, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Send, Loader2, CheckCircle, AlertCircle, Calendar } from 'lucide-react';
 import { entities } from '@/api/supabaseClient';
+
+const CALENDLY_URL = 'https://calendly.com/contact-longcare/30min';
 
 export default function Contact() {
   const [subject, setSubject] = useState('');
@@ -56,6 +58,31 @@ export default function Contact() {
         <div className="text-center mb-10">
           <h1 className="text-3xl font-black text-[#0a1628] mb-2">Liên hệ với chúng tôi</h1>
           <p className="text-gray-600">Chúng tôi sẵn sàng giúp bạn. Gửi tin nhắn bất cứ lúc nào</p>
+        </div>
+
+        {/* ── Calendly Booking Section ── */}
+        <div className="mb-10 bg-gradient-to-br from-[#1a4b9b] to-[#3b7ddd] rounded-2xl p-7 text-white shadow-lg">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+              <Calendar className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold">Đặt lịch tư vấn Visa miễn phí</h2>
+              <p className="text-blue-200 text-sm">30 phút · 1-on-1 · Tiếng Việt</p>
+            </div>
+          </div>
+          <p className="text-blue-100 text-sm mb-5">
+            Tư vấn trực tiếp về lộ trình PR 189/190/491, điểm EOI, hồ sơ và thời gian. Đặt lịch ngay — hoàn toàn miễn phí.
+          </p>
+          <a
+            href={CALENDLY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-white text-[#1a4b9b] font-bold px-6 py-3 rounded-xl hover:bg-blue-50 transition-colors shadow"
+          >
+            <Calendar className="w-4 h-4" />
+            📅 Đặt lịch tư vấn ngay
+          </a>
         </div>
 
         {submitted && (
