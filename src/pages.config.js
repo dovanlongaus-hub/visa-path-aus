@@ -82,6 +82,7 @@ import VisaTimeline from './pages/VisaTimeline';
 import WorkflowEngine from './pages/WorkflowEngine';
 import Community from './pages/Community';
 import Referral from './pages/Referral';
+import Blog from './pages/Blog';
 import __Layout from './Layout.jsx';
 
 
@@ -121,6 +122,7 @@ export const PAGES = {
     "WorkflowEngine": WorkflowEngine,
     "Community": Community,
     "Referral": Referral,
+    "Blog": Blog,
 }
 
 export const pagesConfig = {

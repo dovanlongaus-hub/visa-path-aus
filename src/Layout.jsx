@@ -53,6 +53,7 @@ const navGroups = [
       { label: "Câu chuyện thành công", icon: Users, page: "Testimonials", desc: "Kinh nghiệm thực tế" },
       { label: "Cộng đồng Visa Úc", icon: MessageCircle, page: "Community", desc: "Hỏi đáp & chia sẻ kinh nghiệm 🇻🇳" },
       { label: "Bookmarks", icon: Bookmark, page: "Bookmarks", desc: "Lưu bài yêu thích" },
+      { label: "Blog Visa Úc", icon: BookOpen, page: "Blog", desc: "Hướng dẫn & kinh nghiệm thực tế" },
       { label: "Tải xuống", icon: Download, page: "Downloads", desc: "Templates & guides" },
     ],
   },
@@ -121,6 +122,7 @@ const PAGE_TITLES = {
   WorkflowEngine: "Workflow",
   Community: "Cộng đồng Visa Úc",
   Referral: "Giới thiệu bạn bè",
+  Blog: "Blog Visa Úc",
   AdminActivate: "Admin – Kích hoạt",
   AdminFeedback: "Admin – Feedback",
   AdminGuide: "Admin – Knowledge Base",
@@ -464,6 +466,7 @@ export default function Layout({ children, currentPageName }) {
                 <Link to={createPageUrl("Forms")} className="block text-sm text-slate-400 hover:text-white transition-colors">Biểu mẫu di trú</Link>
                 <Link to={createPageUrl("CVUpload")} className="block text-sm text-slate-400 hover:text-white transition-colors">Upload CV</Link>
                 <Link to={createPageUrl("OccupationSearch")} className="block text-sm text-slate-400 hover:text-white transition-colors">Tra cứu nghề nghiệp</Link>
+                <Link to={createPageUrl("Blog")} className="block text-sm text-slate-400 hover:text-white transition-colors">Blog Visa Úc</Link>
               </div>
             </div>
 

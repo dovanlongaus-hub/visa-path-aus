@@ -8,6 +8,7 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import PaymentSuccess from './pages/PaymentSuccess';
 import PaymentCancel from './pages/PaymentCancel';
+import BlogPost from './pages/BlogPost';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -50,6 +51,11 @@ const AuthenticatedApp = () => {
       } />
       <Route path="/success" element={<PaymentSuccess />} />
       <Route path="/cancel" element={<PaymentCancel />} />
+      <Route path="/blog/:slug" element={
+        <LayoutWrapper currentPageName="Blog">
+          <BlogPost />
+        </LayoutWrapper>
+      } />
       {Object.entries(Pages).map(([path, Page]) => (
         <Route
           key={path}
