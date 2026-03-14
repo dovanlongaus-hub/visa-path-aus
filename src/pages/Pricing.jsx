@@ -318,19 +318,38 @@ export default function Pricing() {
                     </li>
                   ))}
                 </ul>
-                <div className="mt-6 flex items-center justify-between">
-                  <div>
-                    <span className="text-3xl font-bold text-gray-900">$149</span>
-                    <span className="text-gray-500 text-sm ml-1">AUD / buổi</span>
-                    <p className="text-xs text-gray-400 mt-0.5">Thị trường: $200-500/buổi</p>
+                <div className="mt-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <span className="text-3xl font-bold text-gray-900">$149</span>
+                      <span className="text-gray-500 text-sm ml-1">AUD / buổi</span>
+                      <p className="text-xs text-gray-400 mt-0.5">Thị trường: $200-500/buổi</p>
+                    </div>
                   </div>
-                  <button
-                    onClick={() => handleConsultationCheckout()}
-                    disabled={stripeLoading}
-                    className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-xl transition-all transform hover:scale-105 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2"
-                  >
-                    {stripeLoading ? <><Loader2 className="w-4 h-4 animate-spin" /> Đang xử lý...</> : "Đặt lịch ngay →"}
-                  </button>
+                  {/* Calendly embed section */}
+                  <div className="mt-4 p-4 bg-orange-50 rounded-lg border border-orange-200">
+                    <p className="text-sm text-gray-600 mb-3">
+                      📅 <strong>Bước 1:</strong> Chọn giờ phù hợp
+                    </p>
+                    <a
+                      href="REPLACE_WITH_CALENDLY_URL"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block w-full text-center py-2 px-4 bg-orange-100 text-orange-700 rounded-lg text-sm font-medium hover:bg-orange-200 transition"
+                    >
+                      📅 Xem lịch trống →
+                    </a>
+                    <p className="text-sm text-gray-600 mt-3 mb-3">
+                      💳 <strong>Bước 2:</strong> Thanh toán $149 AUD
+                    </p>
+                    <button
+                      onClick={() => handleConsultationCheckout()}
+                      disabled={stripeLoading}
+                      className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-xl transition-all transform hover:scale-105 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    >
+                      {stripeLoading ? <><Loader2 className="w-4 h-4 animate-spin" /> Đang xử lý...</> : "Thanh toán ngay →"}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
