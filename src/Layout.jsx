@@ -487,7 +487,7 @@ export default function Layout({ children, currentPageName }) {
               &copy; 2026 Visa Path Australia. Thông tin mang tính tham khảo. Luôn tham vấn MARA agent cho các quyết định di trú quan trọng.
             </p>
             <p className="text-xs text-slate-500">
-              Tạo bởi <span className="font-semibold text-slate-400">DVLong</span> &amp; <span className="font-semibold text-blue-400">Agentic AI</span>
+              v2026.03.14 · Developed by <span className="font-semibold text-slate-300">AusTalent</span> &amp; <span className="font-semibold text-blue-400">Agentic AI</span>
             </p>
           </div>
         </div>
