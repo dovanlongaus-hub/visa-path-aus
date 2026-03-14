@@ -144,6 +144,31 @@ export default function Pricing() {
     setTimeout(() => document.getElementById("payment-section")?.scrollIntoView({ behavior: "smooth" }), 100);
   };
 
+  const handleConsultationCheckout = async () => {
+    setStripeLoading(true);
+    try {
+      const res = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          planId: "consultation",
+          isAnnual: false,
+          email: STRIPE_ADMIN_EMAIL,
+        }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert(data.error || "Không thể tạo phiên thanh toán. Vui lòng thử lại.");
+        setStripeLoading(false);
+      }
+    } catch {
+      alert("Lỗi kết nối. Vui lòng thử lại sau hoặc liên hệ support@longcare.au");
+      setStripeLoading(false);
+    }
+  };
+
   const handleStripeCheckout = async () => {
     if (!selectedPlan?.id || selectedPlan.id === "free") return;
     setStripeLoading(true);
@@ -271,6 +296,46 @@ export default function Pricing() {
               </div>
             );
           })}
+        </div>
+
+        {/* Consultation Section */}
+        <div id="consultation" className="mt-4 mb-14 max-w-2xl mx-auto">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">Cần tư vấn cá nhân?</h2>
+            <p className="text-gray-600 mt-2">Chuyên gia visa người Việt, hiểu rõ hệ thống Úc</p>
+          </div>
+          <div className="bg-gradient-to-br from-orange-50 to-red-50 border-2 border-orange-200 rounded-2xl p-8 relative">
+            <span className="absolute -top-3 right-6 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">🔥 Tiết kiệm 60%</span>
+            <div className="flex items-start gap-4">
+              <div className="text-4xl">👨‍💼</div>
+              <div className="flex-1">
+                <h3 className="text-xl font-bold text-gray-900">Tư vấn 1-1 với Chuyên gia Visa</h3>
+                <p className="text-gray-600 mt-1 text-sm">Review hồ sơ cá nhân — 30 phút Zoom, tiếng Việt</p>
+                <ul className="mt-4 space-y-2">
+                  {["Review EOI score & điểm mạnh/yếu", "Lộ trình tùy chỉnh theo case của bạn", "Giải đáp mọi câu hỏi cụ thể", "30 phút Zoom + follow-up email"].map(f => (
+                    <li key={f} className="flex items-center gap-2 text-sm text-gray-700">
+                      <span className="text-green-500">✓</span> {f}
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-6 flex items-center justify-between">
+                  <div>
+                    <span className="text-3xl font-bold text-gray-900">$149</span>
+                    <span className="text-gray-500 text-sm ml-1">AUD / buổi</span>
+                    <p className="text-xs text-gray-400 mt-0.5">Thị trường: $200-500/buổi</p>
+                  </div>
+                  <button
+                    onClick={() => handleConsultationCheckout()}
+                    disabled={stripeLoading}
+                    className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-xl transition-all transform hover:scale-105 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2"
+                  >
+                    {stripeLoading ? <><Loader2 className="w-4 h-4 animate-spin" /> Đang xử lý...</> : "Đặt lịch ngay →"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p className="text-center text-xs text-gray-400 mt-3">Sau khi thanh toán, chúng tôi sẽ liên hệ để sắp xếp lịch Zoom trong 24h</p>
         </div>
 
         {/* Feature Comparison Table */}

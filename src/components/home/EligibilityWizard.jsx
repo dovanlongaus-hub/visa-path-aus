@@ -167,6 +167,16 @@ export default function EligibilityWizard() {
           <Link to={createPageUrl("EOICalculator")} className="bg-white/10 text-white font-semibold text-center py-3 rounded-xl hover:bg-white/20 transition-colors text-sm">
             Tính điểm chi tiết →
           </Link>
+          {/* Consultation CTA */}
+          <div className="mt-2 p-4 bg-orange-500/20 border border-orange-400/40 rounded-xl text-center">
+            <p className="text-sm font-semibold text-orange-200">💡 Muốn chuyên gia review hồ sơ cụ thể của bạn?</p>
+            <button
+              onClick={() => window.location.href = '/Pricing#consultation'}
+              className="mt-2 bg-orange-500 text-white text-sm font-bold px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors"
+            >
+              Đặt tư vấn $149 →
+            </button>
+          </div>
           <button onClick={() => { setShowResult(false); setStep(0); setData({ visa: "", occupation: "", age: "28", english: "", experience: "", state: "" }); }} className="text-white/50 text-sm hover:text-white/80 transition-colors py-1">
             Làm lại
           </button>

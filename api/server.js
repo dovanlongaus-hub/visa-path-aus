@@ -11,6 +11,24 @@ import express from 'express';
 import Stripe from 'stripe';
 import cors from 'cors';
 import { randomUUID } from 'crypto';
+import { readFileSync, existsSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+// Load .env file from api/ directory if it exists
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const envFile = join(__dirname, '.env');
+if (existsSync(envFile)) {
+  readFileSync(envFile, 'utf8').split('\n').forEach(line => {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) return;
+    const eqIdx = trimmed.indexOf('=');
+    if (eqIdx < 1) return;
+    const key = trimmed.slice(0, eqIdx).trim();
+    const val = trimmed.slice(eqIdx + 1).trim();
+    if (key) process.env[key] = val; // .env file takes priority over PM2/system env
+  });
+}
 
 const app = express();
 const PORT = process.env.PORT || 3045;
@@ -40,6 +58,11 @@ const PLANS = {
     monthly: { amount: 4500, description: 'Professional Plan — Monthly ($45 AUD/month)' },
     annual:  { amount: 43200, description: 'Professional Plan — Annual ($432 AUD/year, save 20%)' },
   },
+  consultation: {
+    name: 'Visa Consultation 30 phút',
+    monthly: { amount: 14900, description: 'Expert visa consultation — 30 min 1-on-1 ($149 AUD)' },
+    annual:  { amount: 14900, description: 'Expert visa consultation — 30 min 1-on-1 ($149 AUD)' },
+  },
 };
 
 // ── Middleware ───────────────────────────────────────────────
@@ -47,6 +70,8 @@ app.use(cors({
   origin: [
     'https://visa-path-aus.com',
     'https://www.visa-path-aus.com',
+    'https://visaaus.com.au',
+    'https://www.visaaus.com.au',
     'https://visa.longcare.au',
     'http://localhost:5173',
     'http://localhost:4173',
@@ -66,7 +91,7 @@ app.post('/api/create-checkout-session', async (req, res) => {
     const { planId, isAnnual, email } = req.body;
 
     if (!planId || !PLANS[planId]) {
-      return res.status(400).json({ error: 'Invalid plan ID. Valid plans: basic, premium, professional' });
+      return res.status(400).json({ error: 'Invalid plan ID. Valid plans: basic, premium, professional, consultation' });
     }
 
     const plan = PLANS[planId];

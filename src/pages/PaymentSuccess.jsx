@@ -67,8 +67,11 @@ export default function PaymentSuccess() {
     basic: { name: "Basic", color: "blue", price: isAnnual ? "$115/năm" : "$12/tháng" },
     premium: { name: "Premium", color: "violet", price: isAnnual ? "$240/năm" : "$25/tháng" },
     professional: { name: "Chuyên nghiệp", color: "amber", price: isAnnual ? "$432/năm" : "$45/tháng" },
+    consultation: { name: "Tư vấn 1-1 với Chuyên gia", color: "orange", price: "$149 AUD" },
   };
   const planInfo = planLabels[account?.planId || planId] || planLabels.basic;
+
+  const isConsultation = (account?.planId || planId) === "consultation";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-4">
@@ -89,20 +92,39 @@ export default function PaymentSuccess() {
 
           {/* Title */}
           <h1 className="text-2xl font-black text-[#0a1628] mb-3">
-            {activating ? "Đang kích hoạt tài khoản..." : "Thanh toán thành công!"}
+            {activating ? "Đang xử lý..." : isConsultation ? "🎉 Đặt lịch thành công!" : "Thanh toán thành công!"}
           </h1>
 
           {/* Message */}
           {activating ? (
             <p className="text-gray-500 mb-6">Vui lòng chờ trong giây lát...</p>
+          ) : isConsultation ? (
+            <p className="text-gray-600 mb-6">Cảm ơn bạn! Chúng tôi sẽ liên hệ trong <strong>24h</strong> để confirm lịch Zoom.</p>
           ) : (
             <p className="text-gray-600 mb-6">
               Cảm ơn bạn! {account ? "Tài khoản đã được kích hoạt ngay lập tức." : "Tài khoản sẽ được kích hoạt sớm."}
             </p>
           )}
 
-          {/* Account Info (after activation) */}
-          {activated && account && (
+          {/* Consultation booking info */}
+          {isConsultation && (
+            <div className="bg-orange-50 border border-orange-200 rounded-2xl p-4 mb-5 text-left">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-xl">📅</span>
+                <span className="font-bold text-orange-800 text-sm">Bước tiếp theo</span>
+              </div>
+              <div className="space-y-2 text-xs text-orange-700">
+                <p>✅ Chúng tôi sẽ email bạn trong <strong>24h</strong> để xác nhận lịch Zoom.</p>
+                <p>✅ Buổi tư vấn 30 phút, tiếng Việt, với chuyên gia visa.</p>
+                <p>Cần hỗ trợ ngay? Liên hệ:</p>
+                <p><a href="mailto:support@longcare.au" className="text-orange-600 font-semibold underline">support@longcare.au</a></p>
+                <p>Telegram: <a href="https://t.me/visapathaus" className="text-orange-600 font-semibold underline">@visapathaus</a></p>
+              </div>
+            </div>
+          )}
+
+          {/* Account Info (after activation) — only for non-consultation plans */}
+          {!isConsultation && activated && account && (
             <div className="bg-green-50 border border-green-200 rounded-2xl p-4 mb-5 text-left">
               <div className="flex items-center gap-2 mb-3">
                 <Crown className="w-4 h-4 text-amber-500" />
@@ -155,16 +177,18 @@ export default function PaymentSuccess() {
 
           {/* Actions */}
           <div className="space-y-3">
-            <Link
-              to={createPageUrl("Profile")}
-              className="inline-flex items-center justify-center gap-2 w-full py-3 px-6 bg-[#0f2347] text-white font-semibold rounded-xl hover:bg-[#1a3a6e] transition-all"
-            >
-              <User className="w-4 h-4" />
-              Xem tài khoản của tôi
-            </Link>
+            {!isConsultation && (
+              <Link
+                to={createPageUrl("Profile")}
+                className="inline-flex items-center justify-center gap-2 w-full py-3 px-6 bg-[#0f2347] text-white font-semibold rounded-xl hover:bg-[#1a3a6e] transition-all"
+              >
+                <User className="w-4 h-4" />
+                Xem tài khoản của tôi
+              </Link>
+            )}
             <Link
               to={createPageUrl("Home")}
-              className="inline-flex items-center justify-center gap-2 w-full py-3 px-6 border-2 border-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all"
+              className={`inline-flex items-center justify-center gap-2 w-full py-3 px-6 font-semibold rounded-xl transition-all ${isConsultation ? "bg-[#0f2347] text-white hover:bg-[#1a3a6e]" : "border-2 border-gray-200 text-gray-700 hover:bg-gray-50"}`}
             >
               <Home className="w-4 h-4" />
               Về trang chủ
