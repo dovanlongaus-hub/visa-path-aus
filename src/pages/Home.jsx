@@ -11,6 +11,7 @@ import DashboardSummary from "../components/home/DashboardSummary";
 import RecommendedContent from "../components/home/RecommendedContent";
 import AdminFeedbackSummary from "../components/home/AdminFeedbackSummary";
 import GuestOnboarding from "../components/home/GuestOnboarding";
+import EligibilityWizard from "../components/home/EligibilityWizard";
 import { auth } from '@/api/supabaseClient';
 
 export default function Home() {
@@ -163,6 +164,24 @@ export default function Home() {
               ))}
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Eligibility Wizard */}
+      <section className="max-w-5xl mx-auto px-6 -mt-6 relative z-10 mb-4">
+        <div className="grid md:grid-cols-2 gap-6 items-start">
+          <div>
+            <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-200 text-blue-700 text-sm font-semibold px-4 py-1.5 rounded-full mb-4">
+              <Sparkles className="w-4 h-4" />
+              Kiểm tra miễn phí, không cần đăng ký
+            </div>
+            <h2 className="text-2xl md:text-3xl font-bold text-[#0a1628] mb-3">Bạn đủ điều kiện<br/>visa nào?</h2>
+            <p className="text-gray-500 mb-4">Trả lời 5 câu hỏi đơn giản — nhận kết quả ngay lập tức về lộ trình PR phù hợp với hoàn cảnh của bạn.</p>
+            <div className="flex flex-col gap-2 text-sm text-gray-600">
+              {["✅ Không cần tài khoản", "✅ Kết quả trong 30 giây", "✅ Dựa trên dữ liệu Home Affairs thực tế"].map((t, i) => <p key={i}>{t}</p>)}
+            </div>
+          </div>
+          <EligibilityWizard />
         </div>
       </section>
 

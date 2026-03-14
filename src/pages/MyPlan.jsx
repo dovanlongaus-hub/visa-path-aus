@@ -405,6 +405,86 @@ function TaskCard({ task }) {
 }
 
 // ──────────────────────────────────────────────────────────────
+// Progress Dashboard
+// ──────────────────────────────────────────────────────────────
+function ProgressDashboard({ profile }) {
+  if (!profile) return null;
+
+  // Determine milestones completed
+  const milestones = [
+    { id: "profile", label: "Hoàn thiện hồ sơ", done: !!(profile.current_visa_type && profile.occupation_code) },
+    { id: "english", label: "Kết quả tiếng Anh", done: !!(profile.english_score && parseFloat(profile.english_score) >= 6) },
+    { id: "skills_assess", label: "Skills Assessment", done: !!profile.skills_assessment_done },
+    { id: "eoi", label: "Nộp EOI SkillSelect", done: !!profile.eoi_submitted },
+    { id: "invitation", label: "Nhận Invitation to Apply", done: !!profile.invitation_received },
+    { id: "lodge", label: "Nộp hồ sơ visa", done: !!profile.visa_lodged },
+    { id: "health", label: "Khám sức khỏe", done: !!profile.health_exam_done },
+    { id: "grant", label: "Visa được cấp 🎉", done: !!profile.visa_granted },
+  ];
+
+  const completedCount = milestones.filter(m => m.done).length;
+  const progressPct = Math.round((completedCount / milestones.length) * 100);
+  const nextMilestone = milestones.find(m => !m.done);
+
+  // EOI score from localStorage
+  let eoiScore = null;
+  try {
+    const stored = localStorage.getItem("eoi_calc_result");
+    if (stored) eoiScore = JSON.parse(stored)?.totalPoints;
+  } catch(e) {}
+
+  return (
+    <div className="bg-gradient-to-br from-[#0f2347] to-[#1a3a6b] rounded-2xl p-6 text-white mb-6">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h2 className="text-xl font-bold">Lộ trình của bạn</h2>
+          <p className="text-white/60 text-sm">{completedCount}/{milestones.length} bước hoàn thành</p>
+        </div>
+        {eoiScore && (
+          <div className="text-center bg-white/10 rounded-xl px-4 py-3">
+            <p className="text-2xl font-black">{eoiScore}</p>
+            <p className="text-xs text-white/60">điểm EOI</p>
+          </div>
+        )}
+      </div>
+
+      {/* Progress bar */}
+      <div className="w-full h-2.5 bg-white/20 rounded-full mb-5 overflow-hidden">
+        <div className="h-full bg-gradient-to-r from-blue-400 to-emerald-400 rounded-full transition-all duration-700" style={{ width: `${progressPct}%` }} />
+      </div>
+
+      {/* Milestones */}
+      <div className="grid grid-cols-4 md:grid-cols-8 gap-2 mb-5">
+        {milestones.map((m, i) => (
+          <div key={m.id} className="flex flex-col items-center gap-1">
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm transition-all ${m.done ? "bg-emerald-500 text-white" : i === completedCount ? "bg-blue-400 text-white animate-pulse ring-2 ring-blue-300/50" : "bg-white/10 text-white/30"}`}>
+              {m.done ? "✓" : i + 1}
+            </div>
+            <p className="text-[9px] text-white/50 text-center leading-tight hidden md:block">{m.label.split(" ")[0]}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Next action */}
+      {nextMilestone && (
+        <div className="bg-white/10 border border-white/20 rounded-xl p-3 flex items-center gap-3">
+          <div className="w-8 h-8 bg-blue-400 rounded-lg flex items-center justify-center flex-shrink-0">
+            <Zap className="w-4 h-4 text-white" />
+          </div>
+          <div className="flex-1">
+            <p className="text-xs text-white/50 font-semibold uppercase tracking-wide">Bước tiếp theo</p>
+            <p className="text-sm font-semibold">{nextMilestone.label}</p>
+          </div>
+          <Link to={createPageUrl("Chat")} className="text-xs bg-blue-500 hover:bg-blue-400 text-white px-3 py-1.5 rounded-lg font-semibold transition-colors flex-shrink-0">
+            Hỏi AI →
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────
 // Score bar
 // ──────────────────────────────────────────────────────────────
 function EOIScoreBadge({ profile }) {
@@ -491,6 +571,9 @@ export default function MyPlan() {
             Đây là lộ trình được tùy biến theo hồ sơ của bạn (Visa {profile.current_visa_type}).
           </p>
         </div>
+
+        {/* Progress Dashboard */}
+        <ProgressDashboard profile={profile} />
 
         {/* Progress + EOI score */}
         <div className="grid md:grid-cols-2 gap-4 mb-6">
