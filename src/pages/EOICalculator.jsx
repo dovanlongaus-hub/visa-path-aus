@@ -7,6 +7,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase, entities } from '@/api/supabaseClient';
 import { Calculator, TrendingUp, Info, Save, Star, ChevronDown, ChevronUp, Award, Clock, CheckCircle2, AlertCircle, RotateCcw, Download, Share2 } from 'lucide-react';
+import { trackEvent, fbTrackEOIComplete } from '@/utils/analytics';
 
 const EOI_SAVED_KEY = "visapath_eoi_form";
 const EOI_HISTORY_KEY = "visapath_eoi_history";
@@ -94,6 +95,67 @@ function saveToHistory(form, score) {
     const updated = [entry, ...history].slice(0, 10); // keep last 10
     localStorage.setItem(EOI_HISTORY_KEY, JSON.stringify(updated));
   } catch { /* quota exceeded */ }
+}
+
+// ─── Email Capture Component ──────────────────────────────────
+
+function EmailCapture({ points }) {
+  const [email, setEmail] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, eoi_points: points, source: 'eoi_calculator' }),
+      });
+      setSubmitted(true);
+      trackEvent('email_capture', { source: 'eoi_calculator' });
+      fbTrackEOIComplete();
+    } catch (err) {
+      console.error('Subscribe error:', err);
+      setSubmitted(true); // still show success to avoid friction
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (submitted) return (
+    <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+      <p className="text-green-700 font-medium">✅ Đã đăng ký! Kiểm tra email của bạn.</p>
+    </div>
+  );
+
+  return (
+    <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mt-6">
+      <h3 className="font-bold text-gray-800 mb-1">📬 Nhận cập nhật vòng mời miễn phí</h3>
+      <p className="text-gray-600 text-sm mb-4">
+        Thông báo ngay khi có vòng mời mới + tips tăng điểm EOI
+      </p>
+      <form onSubmit={handleSubmit} className="flex gap-2">
+        <input
+          type="email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          placeholder="email@example.com"
+          required
+          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <button
+          type="submit"
+          disabled={loading}
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-60"
+        >
+          {loading ? '...' : 'Đăng ký'}
+        </button>
+      </form>
+      <p className="text-xs text-gray-400 mt-2">Miễn phí. Không spam. Có thể hủy bất kỳ lúc nào.</p>
+    </div>
+  );
 }
 
 // ─── Calculator component ──────────────────────────────────
@@ -473,6 +535,9 @@ export default function EOICalculator() {
                   </div>
                 </div>
               )}
+
+              {/* Email Capture */}
+              <EmailCapture points={score} />
             </div>
           </div>
 

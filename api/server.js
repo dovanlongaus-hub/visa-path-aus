@@ -165,6 +165,40 @@ app.post('/api/auth/activate', async (req, res) => {
   }
 });
 
+// ── Email Subscription ────────────────────────────────────────
+app.post('/api/subscribe', async (req, res) => {
+  try {
+    const { email, eoi_points, source } = req.body;
+    if (!email) return res.status(400).json({ error: 'Email required' });
+
+    const { writeFileSync, mkdirSync, existsSync: fsExists, readFileSync: fsRead } = await import('fs');
+    const dataDir = join(__dirname, 'data');
+    const subFile = join(dataDir, 'subscribers.json');
+
+    if (!fsExists(dataDir)) mkdirSync(dataDir, { recursive: true });
+
+    let subscribers = [];
+    if (fsExists(subFile)) {
+      try { subscribers = JSON.parse(fsRead(subFile, 'utf8')); } catch { subscribers = []; }
+    }
+
+    if (!subscribers.find(s => s.email === email)) {
+      subscribers.push({
+        email,
+        eoi_points: eoi_points || null,
+        source: source || 'unknown',
+        subscribed_at: new Date().toISOString(),
+      });
+      writeFileSync(subFile, JSON.stringify(subscribers, null, 2));
+    }
+
+    res.json({ success: true, message: 'Subscribed!' });
+  } catch (err) {
+    console.error('Subscribe error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 // ── Start ────────────────────────────────────────────────────
 app.listen(PORT, () => {
   console.log(`[visa-path-aus-api] Running on port ${PORT}`);
