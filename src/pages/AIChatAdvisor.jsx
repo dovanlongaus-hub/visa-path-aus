@@ -11,11 +11,15 @@ export default function AIChatAdvisor() {
     if (!input.trim()) return;
     setLoading(true);
     setMessages([...messages, { role: "user", content: input }]);
-    // TODO: Tích hợp API AI tư vấn di trú (OpenClaw, Base44, v.v.)
-    setTimeout(() => {
-      setMessages(msgs => [...msgs, { role: "assistant", content: "(Demo) Câu trả lời AI: Hãy kiểm tra điểm EOI, chuẩn bị hồ sơ thẩm định nghề, và theo dõi các cập nhật mới nhất từ Bộ Di trú Úc." }]);
-      setLoading(false);
-    }, 1200);
+    try {
+      // Gọi API AI tư vấn di trú
+      const { invokeLLMSmart } = await import("../api/aiClient");
+      const aiReply = await invokeLLMSmart(input, { history: messages.filter(m => m.role !== "system") });
+      setMessages(msgs => [...msgs, { role: "assistant", content: aiReply }]);
+    } catch (err) {
+      setMessages(msgs => [...msgs, { role: "assistant", content: "Xin lỗi, hệ thống AI đang bảo trì. Vui lòng thử lại sau." }]);
+    }
+    setLoading(false);
     setInput("");
   }
 
