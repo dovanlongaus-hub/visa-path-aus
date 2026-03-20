@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CheckCircle, Circle, ChevronDown, ChevronUp, Clock, ArrowRight, User, Zap } from "lucide-react";
 import { createPageUrl } from "@/utils";
 import { Link } from "react-router-dom";
 import { useUserProfile } from "../components/useUserProfile";
 import { entities } from "@/api/supabaseClient";
+import ImmiStudentPage from "@/components/templates/ImmiStudentPage";
 
 const stages = [
   {
@@ -158,6 +159,24 @@ export default function Roadmap() {
   const [expanded, setExpanded] = useState(null);
   const [checklistCompletedKeys, setChecklistCompletedKeys] = useState(null);
 
+  // ImmiAgent intake override (so users can see the correct current stage even before filling Profile)
+  const localVisaType =
+    typeof window !== "undefined" ? localStorage.getItem("visapath_immi_visa_type_override") : null;
+  const localStageOverride =
+    typeof window !== "undefined" ? localStorage.getItem("visapath_immi_stage_override") : null;
+
+  const virtualStage = useMemo(() => {
+    if (profile || !localStageOverride) return null;
+    if (localStageOverride === "studying" || localStageOverride === "student") return "student";
+    if (localStageOverride === "skills") return "skills";
+    if (localStageOverride === "eoi") return "eoi";
+    if (localStageOverride === "state") return "state";
+    if (localStageOverride === "pr") return "pr";
+    // Fallback by visa type
+    if (localVisaType === "485") return "graduate";
+    return "student";
+  }, [localStageOverride, localVisaType, profile]);
+
   const isChecklistItemDone = (stageId, itemText) =>
     checklistCompletedKeys?.has(`${stageId}__${itemText}`);
 
@@ -182,7 +201,13 @@ export default function Roadmap() {
   };
 
   // Auto-expand the current stage when profile loads
-  useState(() => { if (currentStage) setExpanded(currentStage); });
+  useEffect(() => {
+    if (currentStage) setExpanded(currentStage);
+  }, [currentStage]);
+
+  useEffect(() => {
+    if (!profile && virtualStage) setExpanded(virtualStage);
+  }, [profile, virtualStage]);
 
   useEffect(() => {
     entities.ChecklistItem
@@ -201,14 +226,11 @@ export default function Roadmap() {
   const needsEnglish = englishLevel === "below" || englishLevel === null;
 
   return (
-    <div className="min-h-screen bg-[#f8f9fc]">
-      <div className="max-w-4xl mx-auto px-4 py-10">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#0a1628] mb-3">Lộ trình đến PR tại Úc</h1>
-          <p className="text-gray-500 text-lg">Từng bước từ visa sinh viên đến Thường trú nhân – dành riêng cho sinh viên Việt tại Úc</p>
-        </div>
-
+    <ImmiStudentPage
+      title="Lộ trình đến PR tại Úc"
+      subtitle="Từng bước từ visa sinh viên đến Thường trú nhân – dành riêng cho sinh viên Việt tại Úc"
+      maxWidthClass="max-w-4xl"
+    >
         {/* Personalized banner */}
         {profile ? (
           <div className="bg-gradient-to-r from-[#0f2347] to-[#1a3a6e] rounded-2xl p-5 mb-8 text-white flex flex-col md:flex-row md:items-center gap-4">
@@ -232,12 +254,21 @@ export default function Roadmap() {
             )}
           </div>
         ) : (
-          <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-8 flex items-center gap-3">
-            <User className="w-5 h-5 text-blue-500 flex-shrink-0" />
-            <p className="text-sm text-blue-700">
-              <Link to={createPageUrl("Profile")} className="font-semibold underline">Điền hồ sơ cá nhân</Link> để lộ trình được cá nhân hóa theo visa và điểm tiếng Anh của bạn.
-            </p>
-          </div>
+          virtualStage ? (
+            <div className="bg-gradient-to-r from-[#0f2347] to-[#1a3a6e] rounded-2xl p-5 mb-8 text-white flex items-center gap-3">
+              <Zap className="w-5 h-5 text-yellow-300 flex-shrink-0" />
+              <p className="text-sm text-white/90">
+                Lộ trình đang được hiển thị theo câu trả lời nhanh của Immi Agent (Visa {localVisaType || "500"}). Bạn có thể tinh chỉnh chính xác hơn khi điền `Profile`.
+              </p>
+            </div>
+          ) : (
+            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-8 flex items-center gap-3">
+              <User className="w-5 h-5 text-blue-500 flex-shrink-0" />
+              <p className="text-sm text-blue-700">
+                <Link to={createPageUrl("Profile")} className="font-semibold underline">Điền hồ sơ cá nhân</Link> để lộ trình được cá nhân hóa theo visa và điểm tiếng Anh của bạn.
+              </p>
+            </div>
+          )
         )}
 
         {/* Timeline */}
@@ -245,8 +276,10 @@ export default function Roadmap() {
           {stages.map((stage, idx) => {
             const c = colorMap[stage.color];
             const isOpen = expanded === stage.id;
-            let status = profile ? getStageStatus(stage.id, profile.current_visa_type) : "upcoming";
-            if (profile && isStageDoneByChecklist(stage.id)) status = "done";
+            let status = profile
+              ? getStageStatus(stage.id, profile.current_visa_type)
+              : (stage.id === virtualStage ? "current" : "upcoming");
+            if (isStageDoneByChecklist(stage.id)) status = "done";
             const isCurrent = status === "current";
             const isDone = status === "done";
             return (
@@ -339,7 +372,6 @@ export default function Roadmap() {
             <div className="text-gray-500 text-sm mt-1">Giải đáp thắc mắc cụ thể</div>
           </Link>
         </div>
-      </div>
-    </div>
+    </ImmiStudentPage>
   );
 }

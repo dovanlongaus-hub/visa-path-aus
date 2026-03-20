@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { useUserProfile } from "../components/useUserProfile";
 import { entities } from '@/api/supabaseClient';
+import ImmiStudentPage from "@/components/templates/ImmiStudentPage";
 
 const defaultStages = [
   {
@@ -225,14 +226,11 @@ export default function Checklist() {
   });
 
   return (
-    <div className="min-h-screen bg-[#f8f9fc]">
-      <div className="max-w-3xl mx-auto px-4 py-10">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#0a1628] mb-2">Checklist Lộ trình PR</h1>
-          <p className="text-gray-500">Theo dõi tiến trình của bạn từng bước một</p>
-        </div>
-
+    <ImmiStudentPage
+      title="Checklist Lộ trình PR"
+      subtitle="Theo dõi tiến trình của bạn từng bước một"
+      maxWidthClass="max-w-3xl"
+    >
         {/* Personalized hint */}
         {effectiveVisaType ? (
           <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-4 mb-6 text-white flex items-center gap-3">
@@ -354,7 +352,6 @@ export default function Checklist() {
             );
           })}
         </div>
-      </div>
-    </div>
+    </ImmiStudentPage>
   );
 }

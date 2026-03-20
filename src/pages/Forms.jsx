@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { FileText, Download, Eye, ChevronDown, ChevronUp, Loader2, CheckCircle, Zap, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -252,7 +252,27 @@ export default function Forms() {
   const [profileData, setProfileData] = useState({});
 
   // Auto-set expanded group and pre-fill data from profile
-  const recommendedGroup = profile?.current_visa_type ? visaToFormGroup[profile.current_visa_type] : "Visa Sinh viên (500)";
+  const IMMI_VISA_OVERRIDE_KEY = "visapath_immi_visa_type_override";
+  const IMMI_STAGE_OVERRIDE_KEY = "visapath_immi_stage_override";
+  const IMMI_INTAKE_OVERRIDE_KEY = "visapath_immi_intake_override";
+
+  const immiIntake = useMemo(() => {
+    if (typeof window === "undefined") return null;
+    const raw = localStorage.getItem(IMMI_INTAKE_OVERRIDE_KEY);
+    if (!raw) return null;
+    try { return JSON.parse(raw); } catch { return null; }
+  }, []);
+
+  const intakeVisaType = useMemo(() => {
+    if (typeof window === "undefined") return null;
+    return localStorage.getItem(IMMI_VISA_OVERRIDE_KEY);
+  }, []);
+
+  const intakeFormGroup = intakeVisaType ? (visaToFormGroup[intakeVisaType] || null) : null;
+
+  const recommendedGroup = profile?.current_visa_type
+    ? visaToFormGroup[profile.current_visa_type]
+    : (intakeFormGroup || "Visa Sinh viên (500)");
   const [expandedGroup, setExpandedGroup] = useState(null);
 
   useEffect(() => {
@@ -274,10 +294,32 @@ export default function Forms() {
         occupation_code: profile.occupation_code || "",
         points_score: profile.points_score || "",
       });
-    } else {
-      setExpandedGroup("Visa Sinh viên (500)");
+      return;
     }
-  }, [profile]);
+
+    // Intake-based prefill (no Profile yet)
+    if (intakeFormGroup) {
+      setExpandedGroup(intakeFormGroup);
+      setProfileData({
+        full_name: "",
+        email: "",
+        phone: "",
+        date_of_birth: "",
+        nationality: "",
+        passport_number: "",
+        passport_expiry: "",
+        university: "",
+        course: "",
+        english_test_type: immiIntake?.english_test_type || "",
+        english_score: immiIntake?.english_score || "",
+        occupation_code: immiIntake?.occupation_code || immiIntake?.occupation_code || "",
+        points_score: "",
+      });
+      return;
+    }
+
+    setExpandedGroup("Visa Sinh viên (500)");
+  }, [profile, intakeFormGroup, immiIntake]);
 
   // Sort groups: recommended first
   const sortedGroups = [...formGroups].sort((a, b) => {
@@ -308,6 +350,12 @@ export default function Forms() {
                 Form tự động điền từ hồ sơ Visa {profile.current_visa_type} của bạn
               </div>
             )}
+            {!profile && intakeFormGroup && (
+              <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-200 text-blue-700 px-4 py-2.5 rounded-xl text-sm font-medium">
+                <Zap className="w-4 h-4" />
+                Gợi ý điền từ intake Immi Agent (chưa lưu vào Profile)
+              </div>
+            )}
           </div>
         </div>
 
@@ -324,7 +372,7 @@ export default function Forms() {
           {sortedGroups.map((group) => {
             const c = colorMap[group.color];
             const isOpen = expandedGroup === group.category;
-            const isRecommended = group.category === recommendedGroup && !!profile;
+            const isRecommended = group.category === recommendedGroup && (!!profile || !!intakeFormGroup);
             return (
               <div key={group.category} className={`bg-white rounded-2xl border overflow-hidden shadow-sm ${isRecommended ? "border-blue-300 ring-2 ring-blue-100" : c.border}`}>
                 <button

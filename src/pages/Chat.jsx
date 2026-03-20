@@ -299,6 +299,7 @@ export default function Chat() {
   // Voice chat (STT + TTS)
   const [voiceOutputEnabled] = useState(true);
   const [voiceSupported, setVoiceSupported] = useState(false);
+  const [ttsSupported, setTtsSupported] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [voiceTranscriptPreview, setVoiceTranscriptPreview] = useState("");
 
@@ -337,6 +338,7 @@ export default function Chat() {
     const SpeechRecognitionCtor =
       typeof window !== "undefined" ? (window.SpeechRecognition || window.webkitSpeechRecognition) : null;
     setVoiceSupported(Boolean(SpeechRecognitionCtor));
+    setTtsSupported(typeof window !== "undefined" && "speechSynthesis" in window);
 
     return () => {
       try {
@@ -559,6 +561,16 @@ Hãy cá nhân hoá câu trả lời dựa trên hồ sơ này. Nếu người d
     setVoiceTranscriptPreview("");
     recognition.start();
   }, [loading, isListening, voiceSupported, stopVoiceInput, sendMessage]);
+
+  const runVoiceDemo = useCallback(() => {
+    if (loading || isListening) return;
+    // Demo câu hỏi để test: AI trả lời + TTS tự đọc lại (không cần micro)
+    const demoText =
+      agentKey === "research"
+        ? "Mình đang ở visa 500. Bạn hãy cho mình next step 30 ngày để hướng tới visa 485 và cho biết những gì cần kiểm tra trên Home Affairs."
+        : "Mình đang ở visa 500. Mình nên làm gì trong 30 ngày tới để chuẩn bị lộ trình sang visa 485? Hãy đưa checklist và mốc thời gian ước tính.";
+    sendMessage(demoText);
+  }, [agentKey, loading, isListening, sendMessage]);
 
   const startNewConversation = (nextAgentKey = agentKey) => {
     setAgentKey(nextAgentKey);
@@ -802,6 +814,20 @@ Hãy cá nhân hoá câu trả lời dựa trên hồ sơ này. Nếu người d
             {voiceTranscriptPreview ? `Bạn nói: ${voiceTranscriptPreview}` : "Đang nghe..."}
           </div>
         )}
+        <div className="max-w-3xl mx-auto mt-2 text-[11px] text-center text-gray-400">
+          Voice status: STT {voiceSupported ? "Có" : "Không"} · TTS {ttsSupported ? "Có" : "Không"}
+        </div>
+        <div className="max-w-3xl mx-auto mt-2 text-xs text-center">
+          <button
+            type="button"
+            onClick={runVoiceDemo}
+            disabled={loading || isListening}
+            className="text-xs bg-white border border-gray-200 text-gray-700 px-3 py-1.5 rounded-full hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            title="Test end-to-end: AI trả lời tự động + trình duyệt đọc lại (TTS) nếu bật"
+          >
+            Thử nhanh AI + TTS
+          </button>
+        </div>
         <p className="text-center text-[10px] text-gray-300 mt-2">
           Thông tin dựa trên hướng dẫn của DoHA. Xác minh tại{" "}
           <a href="https://homeaffairs.gov.au" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-400">homeaffairs.gov.au</a>

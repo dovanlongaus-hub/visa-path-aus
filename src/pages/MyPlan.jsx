@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PremiumGate from "@/components/PremiumGate";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -20,6 +20,55 @@ function getAge(dob) {
 function daysUntil(dateStr) {
   if (!dateStr) return null;
   return Math.ceil((new Date(dateStr) - new Date()) / (1000 * 60 * 60 * 24));
+}
+
+// ImmiAgent intake override keys (used to create a "virtual" profile)
+const IMMI_VISA_OVERRIDE_KEY = "visapath_immi_visa_type_override";
+const IMMI_STAGE_OVERRIDE_KEY = "visapath_immi_stage_override";
+const IMMI_INTAKE_OVERRIDE_KEY = "visapath_immi_intake_override";
+
+function getVirtualProfileFromImmiIntake() {
+  if (typeof window === "undefined") return null;
+
+  const visaType = localStorage.getItem(IMMI_VISA_OVERRIDE_KEY);
+  const stageOverride = localStorage.getItem(IMMI_STAGE_OVERRIDE_KEY);
+  if (!visaType && !stageOverride) return null;
+
+  let intake = null;
+  try { intake = JSON.parse(localStorage.getItem(IMMI_INTAKE_OVERRIDE_KEY) || "null"); } catch { /* ignore */ }
+
+  const effectiveVisaType = visaType || intake?.visa_type || null;
+  if (!effectiveVisaType) return null;
+
+  const skillsAssessmentDone =
+    stageOverride === "eoi" || stageOverride === "state" || stageOverride === "pr"
+      ? true
+      : stageOverride === "skills"
+        ? false
+        : intake?.skills_assessment_done;
+
+  const english_test_type = intake?.english_test_type || "";
+  const english_score = intake?.english_score || "";
+
+  return {
+    // Minimal fields used by MyPlan/buildTaskList/ProgressDashboard
+    id: "virtual_immi_profile",
+    full_name: "bạn",
+    current_visa_type: effectiveVisaType,
+    current_visa_expiry: null,
+    passport_expiry: null,
+    date_of_birth: null,
+    nationality: "Việt Nam",
+    english_test_type,
+    english_score,
+    skills_assessment_done: skillsAssessmentDone,
+    skills_assessment_authority: intake?.skills_assessment_authority || "",
+    occupation_code: intake?.occupation_code || "",
+    australia_work_years: 0,
+    regional_study: "no",
+    graduation_year: null,
+    points_score: null,
+  };
 }
 
 function buildTaskList(profile) {
@@ -568,6 +617,8 @@ export default function MyPlan() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
   const [completedChecklistKeys, setCompletedChecklistKeys] = useState(null);
+  const virtualProfile = useMemo(() => getVirtualProfileFromImmiIntake(), []);
+  const effectiveProfile = profile || virtualProfile;
 
   useEffect(() => {
     Promise.all([
@@ -591,7 +642,7 @@ export default function MyPlan() {
     </div>
   );
 
-  if (!profile) return (
+  if (!effectiveProfile) return (
     <div className="min-h-screen bg-[#f8f9fc]">
       <div className="max-w-2xl mx-auto px-4 py-20 text-center">
         <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -606,7 +657,7 @@ export default function MyPlan() {
     </div>
   );
 
-  const allTasks = buildTaskList(profile);
+  const allTasks = buildTaskList(effectiveProfile);
   const filters = [
     { key: "all", label: "Tất cả", count: allTasks.length },
     { key: "high", label: "🚨 Làm ngay", count: allTasks.filter(t => t.urgency === "high").length },
@@ -628,13 +679,17 @@ export default function MyPlan() {
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-[#0a1628] mb-1">Kế hoạch cá nhân 🎯</h1>
           <p className="text-gray-500">
-            Xin chào <span className="font-semibold text-[#0f2347]">{profile.full_name || "bạn"}</span>!
-            Đây là lộ trình được tùy biến theo hồ sơ của bạn (Visa {profile.current_visa_type}).
+            Xin chào <span className="font-semibold text-[#0f2347]">{effectiveProfile.full_name || "bạn"}</span>!
+            {virtualProfile && !profile ? (
+              <span>Đây là kế hoạch tạm dựa trên câu trả lời nhanh từ Immi Agent (Visa {effectiveProfile.current_visa_type}).</span>
+            ) : (
+              <span>Đây là lộ trình được tùy biến theo hồ sơ của bạn (Visa {effectiveProfile.current_visa_type}).</span>
+            )}
           </p>
         </div>
 
         {/* Progress Dashboard */}
-        <ProgressDashboard profile={profile} checklistCompletedKeys={completedChecklistKeys} />
+        <ProgressDashboard profile={effectiveProfile} checklistCompletedKeys={completedChecklistKeys} />
 
         {/* Progress + EOI score */}
         <div className="grid md:grid-cols-2 gap-4 mb-6">
@@ -651,7 +706,7 @@ export default function MyPlan() {
               {urgentCount > 0 && <span className="text-rose-500 font-semibold">{urgentCount} việc cần làm ngay</span>}
             </div>
           </div>
-          <EOIScoreBadge profile={profile} />
+          <EOIScoreBadge profile={effectiveProfile} />
         </div>
 
         {/* Urgent banner */}
