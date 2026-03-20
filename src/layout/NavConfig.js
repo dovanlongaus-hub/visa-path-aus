@@ -40,6 +40,7 @@ export const navGroups = [
     color: "sage",
     items: [
       { label: "Knowledge Base", icon: BookOpen, page: "Guide", desc: "Hướng dẫn chính thức" },
+      { label: "Immi Agent (Sinh viên → PR)", icon: Bot, page: "ImmiAgent", desc: "Knowledge pack + liên kết chat" },
       { label: "FAQ", icon: HelpCircle, page: "FAQ", desc: "Câu hỏi thường gặp" },
       { label: "Câu chuyện thành công", icon: Users, page: "Testimonials", desc: "Kinh nghiệm thực tế" },
       { label: "Bookmarks", icon: Bookmark, page: "Bookmarks", desc: "Lưu bài yêu thích" },
@@ -82,6 +83,7 @@ export const PAGE_TITLES = {
   Forms: "Biểu mẫu di trú",
   EOIGenerator: "EOI & CV AI",
   Guide: "Knowledge Base",
+  ImmiAgent: "Immi Agent (Sinh viên → PR)",
   FAQ: "FAQ",
   Testimonials: "Câu chuyện thành công",
   Contact: "Liên hệ",

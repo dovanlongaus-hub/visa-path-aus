@@ -140,15 +140,36 @@ const visaRelevantStages = {
 
 export default function Checklist() {
   const { profile, loading: profileLoading } = useUserProfile();
+  const localVisaType =
+    typeof window !== "undefined" ? localStorage.getItem("visapath_immi_visa_type_override") : null;
+  const localStageOverride =
+    typeof window !== "undefined" ? localStorage.getItem("visapath_immi_stage_override") : null;
+  const effectiveVisaType = profile?.current_visa_type || localVisaType || null;
+
   const [checked, setChecked] = useState({});
   const [expanded, setExpanded] = useState({ visa500: true });
 
   useEffect(() => {
-    if (profile?.current_visa_type) {
-      const stage = visaToChecklistStage[profile.current_visa_type];
-      if (stage) setExpanded({ [stage]: true });
+    if (!effectiveVisaType) return;
+
+    if (effectiveVisaType === "500") {
+      // Show both the generic 500 prep and the in-study tasks.
+      setExpanded({ visa500: true, studying: true });
+      return;
     }
-  }, [profile]);
+
+    if (effectiveVisaType === "485") {
+      if (localStageOverride === "skills") setExpanded({ visa485: true, skills: true });
+      else if (localStageOverride === "eoi") setExpanded({ visa485: true, eoi: true });
+      else if (localStageOverride === "state") setExpanded({ visa485: true, state: true });
+      else if (localStageOverride === "pr") setExpanded({ visa485: true, pr: true });
+      else setExpanded({ visa485: true, skills: true });
+      return;
+    }
+
+    const stage = visaToChecklistStage[effectiveVisaType];
+    if (stage) setExpanded({ [stage]: true });
+  }, [effectiveVisaType, localStageOverride]);
 
   useEffect(() => {
     entities.ChecklistItem.list().then((records) => {
@@ -192,7 +213,7 @@ export default function Checklist() {
   };
 
   const overall = totalProgress();
-  const relevantStageIds = profile?.current_visa_type ? (visaRelevantStages[profile.current_visa_type] || []) : [];
+  const relevantStageIds = effectiveVisaType ? (visaRelevantStages[effectiveVisaType] || []) : [];
 
   // Sort stages: relevant first, then the rest
   const sortedStages = [...defaultStages].sort((a, b) => {
@@ -213,11 +234,11 @@ export default function Checklist() {
         </div>
 
         {/* Personalized hint */}
-        {profile ? (
+        {effectiveVisaType ? (
           <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-4 mb-6 text-white flex items-center gap-3">
             <Zap className="w-5 h-5 text-yellow-300 flex-shrink-0" />
             <div className="text-sm">
-              <span className="font-semibold">Cá nhân hóa theo Visa {profile.current_visa_type}:</span>{" "}
+              <span className="font-semibold">Cá nhân hóa theo Visa {effectiveVisaType}:</span>{" "}
               Các giai đoạn quan trọng nhất với bạn hiện tại được hiển thị đầu tiên.
             </div>
           </div>
@@ -234,9 +255,18 @@ export default function Checklist() {
         <div className="bg-[#0f2347] rounded-2xl p-6 mb-8 text-white">
           <div className="flex justify-between items-center mb-3">
             <span className="font-semibold">Tiến trình tổng thể</span>
-            <span className="text-2xl font-bold">{overall.pct}%</span>
+            <span className="text-2xl font-bold" aria-live="polite" aria-atomic="true">
+              {overall.pct}%
+            </span>
           </div>
-          <div className="w-full bg-white/20 rounded-full h-3 mb-2">
+          <div
+            className="w-full bg-white/20 rounded-full h-3 mb-2"
+            role="progressbar"
+            aria-label="Tiến trình tổng thể"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={overall.pct}
+          >
             <div
               className="bg-gradient-to-r from-blue-400 to-emerald-400 h-3 rounded-full transition-all duration-500"
               style={{ width: `${overall.pct}%` }}
@@ -253,11 +283,18 @@ export default function Checklist() {
             const isOpen = expanded[stage.id];
             const isRelevant = relevantStageIds.includes(stage.id);
 
+            const panelId = `checklist-stage-${stage.id}`;
+            const stageTitleId = `checklist-stage-title-${stage.id}`;
+
             return (
               <div key={stage.id} className={`rounded-2xl border overflow-hidden shadow-sm ${isRelevant ? `bg-white ${c.border} ring-2 ring-offset-1` : "bg-white border-gray-200 opacity-80"}`} style={isRelevant ? { "--tw-ring-color": "rgba(59,130,246,0.2)" } : {}}>
                 <button
+                  type="button"
                   className="w-full px-5 py-4 flex items-center gap-4 text-left"
                   onClick={() => setExpanded((p) => ({ ...p, [stage.id]: !p[stage.id] }))}
+                  aria-expanded={isOpen}
+                  aria-controls={panelId}
+                  aria-labelledby={stageTitleId}
                 >
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
@@ -267,7 +304,7 @@ export default function Checklist() {
                       {isRelevant && <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-blue-600 text-white">⭐ Ưu tiên</span>}
                       {done === total && <span className="text-xs text-emerald-600 font-medium">✓ Hoàn thành</span>}
                     </div>
-                    <div className="font-semibold text-[#0a1628] text-sm">{stage.title}</div>
+                    <div id={stageTitleId} className="font-semibold text-[#0a1628] text-sm">{stage.title}</div>
                     <div className="w-full bg-gray-100 rounded-full h-1.5 mt-2">
                       <div
                         className={`${c.header} h-1.5 rounded-full transition-all duration-300`}
@@ -279,7 +316,12 @@ export default function Checklist() {
                 </button>
 
                 {isOpen && (
-                  <div className="px-5 pb-5 border-t border-gray-50">
+                  <div
+                    id={panelId}
+                    role="region"
+                    aria-labelledby={stageTitleId}
+                    className="px-5 pb-5 border-t border-gray-50"
+                  >
                     <div className="space-y-2 mt-3">
                       {stage.items.map((item, i) => {
                         const key = `${stage.id}__${item}`;
@@ -287,7 +329,9 @@ export default function Checklist() {
                         return (
                           <button
                             key={i}
+                            type="button"
                             onClick={() => toggle(stage.id, item)}
+                            aria-pressed={isDone}
                             className={`w-full flex items-start gap-3 p-3 rounded-xl text-left transition-colors ${
                               isDone ? "bg-emerald-50" : "hover:bg-gray-50"
                             }`}

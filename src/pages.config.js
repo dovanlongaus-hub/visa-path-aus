@@ -54,6 +54,7 @@ import Article from './pages/Article';
 import Bookmarks from './pages/Bookmarks';
 import CVUpload from './pages/CVUpload';
 import Chat from './pages/Chat';
+import ImmiAgent from './pages/ImmiAgent';
 import Checklist from './pages/Checklist';
 import Contact from './pages/Contact';
 import Downloads from './pages/Downloads';
@@ -97,6 +98,7 @@ export const PAGES = {
     "Bookmarks": Bookmarks,
     "CVUpload": CVUpload,
     "Chat": Chat,
+    "ImmiAgent": ImmiAgent,
     "Checklist": Checklist,
     "Contact": Contact,
     "Downloads": Downloads,

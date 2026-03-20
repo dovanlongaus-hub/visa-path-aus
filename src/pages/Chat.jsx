@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Send, Bot, User, Loader2, Trash2, Sparkles, Lock, LogIn, Crown, X, MessageSquarePlus, ChevronRight } from "lucide-react";
+import { Send, Bot, User, Loader2, Trash2, Lock, Crown, X, MessageSquarePlus, ChevronRight } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -11,7 +11,7 @@ const BASIC_LIMIT = 999999;
 const CHAT_HISTORY_KEY = "visapath_chat_history";
 const CHAT_CONVERSATIONS_KEY = "visapath_conversations";
 
-const SYSTEM_PROMPT = `Bạn là chuyên gia tư vấn luật di trú Úc, chuyên hỗ trợ sinh viên và người Việt Nam tại Úc.
+const PLANNING_SYSTEM_PROMPT = `Bạn là chuyên gia tư vấn luật di trú Úc, chuyên hỗ trợ sinh viên và người Việt Nam tại Úc.
 Bạn có kiến thức chuyên sâu về:
 - Visa sinh viên 500, visa tốt nghiệp 485
 - Các visa skilled: 189 (Independent), 190 (State Nominated), 491 (Regional), 191 (Permanent from Regional)
@@ -27,7 +27,7 @@ Bạn có kiến thức chuyên sâu về:
 
 Hãy trả lời bằng tiếng Việt, rõ ràng, cụ thể và thực tế. Khi không chắc chắn, khuyên tham khảo MARA agent. Trích dẫn số form hoặc visa code khi liên quan.`;
 
-const GREETING = `Xin chào! Tôi là trợ lý tư vấn di trú Úc của **Visa Path Australia**.
+const PLANNING_GREETING = `Xin chào! Tôi là trợ lý tư vấn di trú Úc của **Visa Path Australia**.
 
 Tôi có thể giúp bạn về:
 - **Visa 500/485** — yêu cầu và quy trình
@@ -39,8 +39,103 @@ Tôi có thể giúp bạn về:
 
 Hãy hỏi bất kỳ câu hỏi nào về visa và di trú Úc!`;
 
-function getGreeting(profile) {
-  if (!profile) return GREETING;
+const IMMI_SYSTEM_PROMPT = `Bạn là Immi Agent, chuyên tư vấn quy trình định cư Úc cho SINH VIÊN người Việt tại Úc theo lộ trình Student visa → PR.
+
+Kiến thức cốt lõi bạn cần áp dụng (trả lời bằng tiếng Việt):
+- Student Visa (Visa 500) → Graduate Visa (Visa 485) → Skills Assessment → EOI SkillSelect → State Nomination (190/491) → PR (191/hoặc visa PR tương ứng theo lộ trình).
+- Visa 500 (Student): cần CoE từ trường CRICOS, chứng minh tài chính, OSHC trong suốt thời gian học, Health Examination, Police Clearance, nộp Form 157A (hoặc nộp online qua ImmiAccount), Form 1221 (Additional Personal Particulars), phí visa AUD 650; English mục tiêu IELTS 5.5+ (hoặc tương đương PTE 42+).
+- Visa 485 (Graduate): tốt nghiệp trong 6 tháng gần nhất, học ít nhất 2 năm tại Úc (16 tháng học thực tế), tuổi < 50 tại thời điểm nộp (theo mô tả tổng quan), IELTS 6.0 trung bình và mỗi kỹ năng không dưới 5.0 (hoặc PTE 50+), còn trong hạn visa sinh viên khi nộp, Health exam nếu cần; nộp Form 1276; phí visa AUD 1,840.
+- Skills Assessment: xác định ANZSCO code phù hợp và cơ quan đánh giá tương ứng (Engineers Australia, ACS, VETASSESS, AITSL, ...); chuẩn bị bằng cấp/bảng điểm/kinh nghiệm liên quan; dịch công chứng sang tiếng Anh; thời gian xử lý thường vài tháng; mục tiêu nhận kết quả Positive Skills Assessment.
+- EOI SkillSelect: mục tiêu thường ≥ 65 điểm; English mục tiêu Competent/Proficient/Superior (IELTS 7.0+ / PTE 65+ / IELTS 8.0+ / PTE 79+ cho điểm cao hơn); tuổi 18–44; cập nhật EOI khi có thay đổi điểm (IELTS/kinh nghiệm); làm rõ bước “Submit EOI và chờ ITA (Invitation to Apply)”.
+- State Nomination: đối với visa 190/491, thường cần chọn tiểu bang phù hợp, có bằng chứng liên kết và chuẩn bị hồ sơ supporting theo yêu cầu tiểu bang; cộng điểm nomination vào EOI; lưu ý visa 491 thường yêu cầu sống & làm việc vùng 3 năm trước giai đoạn PR.
+- PR: khi nhận ITA, chuẩn bị toàn bộ hồ sơ trong “cửa sổ nộp” (ứng với checklist trong sản phẩm), khám sức khỏe tại panel doctor, Police Check (đủ thời gian cư trú), thu thập tài liệu kinh nghiệm làm việc, điền biểu mẫu (ví dụ các form trong checklist).
+
+Quy tắc trả lời:
+1. Luôn bắt đầu bằng việc xác định user đang ở visa 500/485 hay đã chuyển sang skilled/PR.
+2. Đưa ra “Bước tiếp theo” ngay lập tức theo stage phù hợp và giải thích vì sao.
+3. Trả lời dạng checklist + timeline ước tính (dùng mốc tổng quan), đồng thời nêu rủi ro phổ biến cần tránh.
+4. Nếu thiếu dữ liệu quan trọng (ngày tốt nghiệp, OSHC expiry, kết quả IELTS, ANZSCO code/assessment authority, EOI điểm hiện tại, tiểu bang liên kết…), hãy hỏi 3 câu làm rõ.
+5. Không cung cấp tư vấn pháp lý chính thức; luôn khuyên tham vấn MARA agent cho quyết định quan trọng.
+
+Bạn phải trả lời rõ ràng, cụ thể, thực tế, ưu tiên người dùng là sinh viên ở Úc.`;
+
+const IMMI_GREETING = `Xin chào! Tôi là Immi Agent — trợ lý chuyên tư vấn lộ trình định cư cho SINH VIÊN tại Úc.
+
+Tôi có thể hướng dẫn:
+- Student visa 500 → Graduate visa 485
+- Skills Assessment + chọn ANZSCO đúng ngành
+- EOI SkillSelect + chiến lược tăng điểm
+- State nomination (190/491) → PR theo stage tương ứng
+
+Hãy nói bạn đang ở visa nào (500/485/đang làm hồ sơ EOI) và ngành dự định (hoặc ANZSCO code) nhé!`;
+
+const RESEARCH_SYSTEM_PROMPT = `Bạn là Research Agent tư vấn di trú và định cư Úc cho SINH VIÊN người Việt.
+Mục tiêu của bạn là giúp người dùng hiểu đúng lộ trình và biết cần kiểm tra gì trên nguồn chính thức trước khi ra quyết định.
+
+Quy tắc bắt buộc:
+- Luôn trả lời bằng tiếng Việt.
+- Không cung cấp tư vấn pháp lý chính thức; luôn khuyên tham vấn MARA agent cho quyết định quan trọng.
+- Nếu thiếu dữ liệu quan trọng, hãy hỏi tối đa 3 câu làm rõ trước khi chốt “next step”.
+- Trả lời theo cấu trúc (đúng thứ tự):
+  1) Kết luận nhanh (2-3 gạch đầu dòng, tập trung bước tiếp theo)
+  2) Những điều cần kiểm tra trên nguồn chính thức (3-6 mục, kèm link/đường dẫn gợi ý đến Home Affairs hoặc trang visa liên quan)
+  3) Checklist hồ sơ cần chuẩn bị (theo stage phù hợp: Student 500 / Graduate 485 / Skills Assessment / EOI / State nomination / PR)
+  4) Rủi ro phổ biến & cách tránh
+  5) (Voice) Tóm tắt để đọc: 1-3 câu ngắn gọn, dễ nghe khi đọc bằng voice.
+
+Bạn có thể đề xuất câu hỏi nên hỏi, thuật ngữ nên tìm kiếm, và cách tự kiểm tra thông tin. Không bịa “giá trị chắc chắn” nếu chưa đủ dữ liệu.`;
+
+const RESEARCH_GREETING = `Xin chào! Tôi là Research Agent của Visa Path Australia.
+
+Bạn cho tôi biết hiện bạn đang ở visa nào (500/485/đang làm EOI/PR dự kiến), ngành dự định và các mốc thời gian chính.
+Tôi sẽ trả lời theo dạng “Kết luận nhanh + checklist + những thứ cần kiểm tra trên nguồn chính thức” để bạn chuẩn bị đúng và giảm rủi ro.`;
+
+const CHAT_AGENT_KEY = "visapath_chat_agent";
+// Immi Agent (Sinh viên -> PR) intake overrides (from ImmiAgent page)
+const IMMI_VISA_OVERRIDE_KEY = "visapath_immi_visa_type_override";
+const IMMI_STAGE_OVERRIDE_KEY = "visapath_immi_stage_override";
+const IMMI_INTAKE_OVERRIDE_KEY = "visapath_immi_intake_override";
+
+function getGreeting(profile, agentKey) {
+  if (agentKey === "immi") {
+    const storedVisa = typeof window !== "undefined" ? localStorage.getItem(IMMI_VISA_OVERRIDE_KEY) : null;
+    const storedStage = typeof window !== "undefined" ? localStorage.getItem(IMMI_STAGE_OVERRIDE_KEY) : null;
+
+    if (!profile) {
+      if (!storedVisa && !storedStage) return IMMI_GREETING;
+      const visaLabel = storedVisa ? ` đang ở Visa ${storedVisa}` : "";
+      const stageLabel = storedStage ? ` (${storedStage})` : "";
+      return `Xin chào! 👋 Tôi thấy bạn${visaLabel}${stageLabel}.
+
+Hãy cùng tối ưu lộ trình từ Student → PR cho bạn theo bước tiếp theo phù hợp:
+1) Điều kiện Visa 500/485 hoặc stage hiện tại
+2) Checklist cần làm ngay trong 30 ngày
+3) Mốc thời gian & rủi ro cần tránh
+
+Bạn muốn hỏi phần nào trước?`;
+    }
+
+    const visaLabel = profile.current_visa_type ? ` đang ở ${profile.current_visa_type}` : "";
+    return `Xin chào! 👋 Tôi thấy bạn${visaLabel}.
+
+Hãy cùng tối ưu lộ trình từ Student → PR cho bạn theo bước tiếp theo phù hợp:
+1) Điều kiện Visa 500/485 hoặc stage hiện tại
+2) Checklist cần làm ngay trong 30 ngày
+3) Mốc thời gian & rủi ro cần tránh
+
+Bạn muốn hỏi phần nào trước?`;
+  }
+
+  if (agentKey === "research") {
+    if (!profile) return RESEARCH_GREETING;
+    const visaLabel = profile.current_visa_type ? ` đang ở ${profile.current_visa_type}` : "";
+    const occLabel = profile.occupation_code ? ` (${profile.occupation_code})` : "";
+    return `Xin chào trở lại! Tôi thấy hồ sơ của bạn${visaLabel}${occLabel}.
+
+Bạn muốn mình “nghiên cứu & chỉ ra cần kiểm tra gì trên nguồn chính thức” cho stage nào trước?`;
+  }
+
+  if (!profile) return PLANNING_GREETING;
   const visaLabel = profile.current_visa_type ? ` đang ở ${profile.current_visa_type}` : "";
   const occupationLabel = profile.occupation_code ? ` (${profile.occupation_code})` : "";
   return `Xin chào trở lại! 👋
@@ -105,6 +200,42 @@ const SUGGESTED_QUESTIONS = [
   ]},
 ];
 
+const SUGGESTED_QUESTIONS_IMMI = [
+  { category: "Lộ trình Student → PR", questions: [
+    "Tôi nên làm gì ngay bây giờ để đi từ visa 500 lên PR?",
+    "Timeline visa 500 → 485 → Skills Assessment → EOI → 190/491 → PR nên tính thế nào?",
+    "Các mốc nào thường bị bỏ qua dẫn đến chậm PR?",
+  ]},
+  { category: "Visa 500 & 485", questions: [
+    "Visa 500 cần chuẩn bị những tài liệu gì và lỗi hay gặp?",
+    "Visa 485 yêu cầu IELTS bao nhiêu và điều kiện 'trong 6 tháng' hiểu thế nào?",
+    "Nếu IELTS hiện tại chưa đủ thì nên nâng như thế nào để tối ưu?",
+  ]},
+  { category: "Skills Assessment & EOI", questions: [
+    "Chọn ANZSCO code đúng có ảnh hưởng gì đến EOI/Skills Assessment?",
+    "EOI tối ưu điểm ra sao nếu tôi đang nhắm 190 hay 491?",
+    "Khi nào nên nộp EOI để tăng cơ hội ITA?",
+  ]},
+];
+
+const SUGGESTED_QUESTIONS_RESEARCH = [
+  { category: "Xác định stage", questions: [
+    "Tôi đang ở stage nào (500/485/EOI/190/491) và next step là gì?",
+    "Nếu thiếu thông tin, tôi cần thu thập gì để xác định đúng pathway?",
+    "Tôi nên tập trung vào visa nào trước để tối ưu rủi ro/chậm trễ?",
+  ]},
+  { category: "Tra cứu nguồn chính thức", questions: [
+    "Tôi nên kiểm tra những điều gì trên Home Affairs để tránh sai hồ sơ?",
+    "Bạn gợi ý link/đường dẫn và từ khóa nên tra cho visa 500/485?",
+    "Tôi cần kiểm tra gì về Skills Assessment & ANZSCO để không bị mismatch?",
+  ]},
+  { category: "Checklist & timeline", questions: [
+    "Làm checklist 30 ngày cho stage hiện tại của tôi?",
+    "Timeline chuẩn bị tài liệu từ hiện tại đến khi nộp EOI/ITA là gì?",
+    "Các rủi ro phổ biến khiến hồ sơ bị chậm/bị trả lại?",
+  ]},
+];
+
 // ── Upgrade Gate Modal ──────────────────────────────────────
 function UpgradeGate({ onClose }) {
   return (
@@ -154,6 +285,7 @@ function TypingIndicator() {
 }
 
 export default function Chat() {
+  const [agentKey, setAgentKey] = useState(() => localStorage.getItem(CHAT_AGENT_KEY) || "planning");
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -163,8 +295,16 @@ export default function Chat() {
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [showUpgradeGate, setShowUpgradeGate] = useState(false);
   const [freeCount, setFreeCount] = useState(0);
+
+  // Voice chat (STT + TTS)
+  const [voiceOutputEnabled] = useState(true);
+  const [voiceSupported, setVoiceSupported] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [voiceTranscriptPreview, setVoiceTranscriptPreview] = useState("");
+
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
+  const recognitionRef = useRef(null);
 
   useEffect(() => {
     setFreeCount(getDailyFreeCount());
@@ -185,11 +325,24 @@ export default function Chat() {
       if (saved && saved.length > 0) {
         setMessages(saved);
       } else {
-        setMessages([{ role: "assistant", content: getGreeting(loadedProfile) }]);
+        setMessages([{ role: "assistant", content: getGreeting(loadedProfile, agentKey) }]);
       }
       setLoadingHistory(false);
     };
     init();
+  }, []);
+
+  useEffect(() => {
+    // SpeechRecognition varies by browser (Chrome uses window.SpeechRecognition, others may use webkitSpeechRecognition)
+    const SpeechRecognitionCtor =
+      typeof window !== "undefined" ? (window.SpeechRecognition || window.webkitSpeechRecognition) : null;
+    setVoiceSupported(Boolean(SpeechRecognitionCtor));
+
+    return () => {
+      try {
+        recognitionRef.current?.stop?.();
+      } catch { /* ignore */ }
+    };
   }, []);
 
   const isPremium = profile?.is_premium === true;
@@ -204,6 +357,37 @@ export default function Chat() {
       saveConversation(messages);
     }
   }, [messages, loadingHistory]);
+
+  const getTextForTTS = (text) => {
+    if (!text) return "";
+    const voiceMatch = text.match(/Tóm tắt để đọc:\\s*([\\s\\S]{0,450})/i);
+    const candidate = (voiceMatch?.[1] || text).trim();
+    const cleaned = candidate
+      .replace(/\[(.*?)\]\(.*?\)/g, "$1") // strip markdown links
+      .replace(/[*#`>_\\-]/g, " ") // remove common markdown symbols
+      .replace(/\\s+/g, " ")
+      .trim();
+    return cleaned.slice(0, 900);
+  };
+
+  const maybeSpeak = useCallback((text) => {
+    if (!voiceOutputEnabled) return;
+    if (typeof window === "undefined") return;
+    if (!("speechSynthesis" in window)) return;
+    try {
+      const textForTTS = getTextForTTS(text);
+      if (!textForTTS) return;
+
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(textForTTS);
+      utter.lang = "vi-VN";
+      utter.rate = 1.02;
+      utter.pitch = 1;
+      window.speechSynthesis.speak(utter);
+    } catch {
+      // TTS is best-effort; ignore errors.
+    }
+  }, [voiceOutputEnabled]);
 
   const sendMessage = useCallback(async (text) => {
     const userMsg = text || input.trim();
@@ -235,17 +419,43 @@ export default function Chat() {
       let eoiData = null;
       try { eoiData = storedEoi ? JSON.parse(storedEoi) : null; } catch(e) {}
 
+      const storedImmiVisa = localStorage.getItem(IMMI_VISA_OVERRIDE_KEY);
+      const storedImmiStage = localStorage.getItem(IMMI_STAGE_OVERRIDE_KEY);
+      let intake = null;
+      try { intake = JSON.parse(localStorage.getItem(IMMI_INTAKE_OVERRIDE_KEY) || "null"); } catch { /* ignore */ }
+
+      const effectiveVisa = profile?.current_visa_type || storedImmiVisa || "chưa rõ";
+      const effectiveEnglishType = profile?.english_test_type || intake?.english_test_type || "";
+      const effectiveEnglishScore = profile?.english_score || intake?.english_score || "";
+      const effectiveOccupation = profile?.occupation_code || intake?.occupation_code || intake?.occupation || "chưa rõ";
+      const effectiveWorkYears = profile?.australia_work_years || profile?.work_experience_years || "chưa rõ";
+
+      const intakeSkillsDone = intake?.skills_assessment_done;
+      const skillsAssessmentDone =
+        profile?.skills_assessment_done !== undefined
+          ? profile.skills_assessment_done
+          : (intakeSkillsDone !== undefined
+              ? intakeSkillsDone
+              : (storedImmiStage
+                  ? (storedImmiStage === "eoi" || storedImmiStage === "state" || storedImmiStage === "pr")
+                  : undefined));
+
+      const skillsAssessmentAuthority = profile?.skills_assessment_authority || intake?.skills_assessment_authority || "";
+      const skillsText =
+        skillsAssessmentDone === true
+          ? `Đã hoàn thành${skillsAssessmentAuthority ? ` (${skillsAssessmentAuthority})` : ""}`
+          : (skillsAssessmentDone === false ? "Chưa làm" : "Chưa rõ");
+
       return `
 Thông tin người dùng:
-${profile ? `
-- Visa hiện tại: ${profile.current_visa_type || "chưa rõ"}, hết hạn: ${profile.current_visa_expiry || "chưa rõ"}
-- Trường/tổ chức: ${profile.university || "chưa rõ"}, ngành: ${profile.course || "chưa rõ"}
-- Kết quả tiếng Anh: ${profile.english_test_type || ""} ${profile.english_score || ""}
-- Skills Assessment: ${profile.skills_assessment_done ? "Đã hoàn thành (" + (profile.skills_assessment_authority || "") + ")" : "Chưa làm"}
-- Mã nghề ANZSCO: ${profile.occupation_code || "chưa rõ"}
-- Kinh nghiệm làm việc: ${profile.work_experience_years || "chưa rõ"} năm
-- Quốc tịch: ${profile.nationality || "Việt Nam"}
-` : "Người dùng chưa cập nhật hồ sơ chi tiết."}
+- Visa hiện tại: ${effectiveVisa}, hết hạn: ${profile?.current_visa_expiry || "chưa rõ"}
+${storedImmiStage ? `- Giai đoạn theo lựa chọn Immi Agent: ${storedImmiStage}` : ""}
+- Trường/tổ chức: ${profile?.university || "chưa rõ"}, ngành: ${profile?.course || "chưa rõ"}
+- Kết quả tiếng Anh: ${effectiveEnglishType} ${effectiveEnglishScore}
+- Skills Assessment: ${skillsText}
+- Mã nghề ANZSCO: ${effectiveOccupation}
+- Kinh nghiệm làm việc: ${effectiveWorkYears} năm
+- Quốc tịch: ${profile?.nationality || "Việt Nam"}
 ${eoiData ? `- Điểm EOI gần nhất: ${eoiData.totalPoints || ""} điểm (tính lần cuối: ${eoiData.calculatedAt || ""})` : ""}
 
 Hãy cá nhân hoá câu trả lời dựa trên hồ sơ này. Nếu người dùng hỏi điều gì đó phù hợp với thông tin trên, hãy tham chiếu cụ thể. Nếu thông tin chưa đủ, hỏi thêm để tư vấn chính xác hơn.
@@ -268,13 +478,19 @@ Hãy cá nhân hoá câu trả lời dựa trên hồ sơ này. Nếu người d
         },
         {
           model: MODELS.balanced,
-          systemPrompt: SYSTEM_PROMPT + "\n" + profileContext,
+          systemPrompt:
+            (agentKey === "immi"
+              ? IMMI_SYSTEM_PROMPT
+              : agentKey === "research"
+                ? RESEARCH_SYSTEM_PROMPT
+                : PLANNING_SYSTEM_PROMPT) + "\n" + profileContext,
           history: history.slice(0, -1), // exclude the current user message (it's the prompt)
         }
       );
 
       const assistantMsg = { role: "assistant", content: fullText };
       setMessages(prev => [...prev, assistantMsg]);
+      maybeSpeak(fullText);
     } catch (err) {
       console.error("AI error:", err);
       const errorMsg = { role: "assistant", content: "Xin lỗi, đã có lỗi xảy ra. Vui lòng thử lại sau." };
@@ -284,14 +500,80 @@ Hãy cá nhân hoá câu trả lời dựa trên hồ sơ này. Nếu người d
     setStreamingContent("");
     setLoading(false);
     inputRef.current?.focus();
-  }, [input, loading, messages, user, freeCount, profile]);
+  }, [input, loading, messages, user, freeCount, profile, agentKey, maybeSpeak]);
 
-  const startNewConversation = () => {
-    setMessages([{ role: "assistant", content: GREETING }]);
+  const stopVoiceInput = useCallback(() => {
+    try {
+      recognitionRef.current?.stop?.();
+    } catch { /* ignore */ }
+    setIsListening(false);
+    setVoiceTranscriptPreview("");
+  }, []);
+
+  const startVoiceInput = useCallback(() => {
+    if (loading || isListening) return;
+    if (!voiceSupported) return;
+
+    const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognitionCtor) return;
+
+    // Stop any ongoing voice output to reduce confusion.
+    try {
+      window.speechSynthesis?.cancel?.();
+    } catch { /* ignore */ }
+
+    const recognition = new SpeechRecognitionCtor();
+    recognitionRef.current = recognition;
+
+    recognition.lang = "vi-VN";
+    recognition.interimResults = true;
+    recognition.continuous = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onresult = (event) => {
+      let transcript = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        transcript += event.results[i][0].transcript;
+      }
+      const latest = (transcript || "").trim();
+      setVoiceTranscriptPreview(latest);
+
+      const lastResult = event.results[event.results.length - 1];
+      const isFinal = Boolean(lastResult?.isFinal);
+      if (isFinal && latest.length > 0) {
+        stopVoiceInput();
+        sendMessage(latest);
+      }
+    };
+
+    recognition.onerror = () => {
+      setIsListening(false);
+      setVoiceTranscriptPreview("");
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    setIsListening(true);
+    setVoiceTranscriptPreview("");
+    recognition.start();
+  }, [loading, isListening, voiceSupported, stopVoiceInput, sendMessage]);
+
+  const startNewConversation = (nextAgentKey = agentKey) => {
+    setAgentKey(nextAgentKey);
+    localStorage.setItem(CHAT_AGENT_KEY, nextAgentKey);
+    setMessages([{ role: "assistant", content: getGreeting(profile, nextAgentKey) }]);
     localStorage.removeItem(CHAT_HISTORY_KEY);
   };
 
   const remaining = FREE_LIMIT - freeCount;
+  const suggestedQuestions =
+    agentKey === "immi"
+      ? SUGGESTED_QUESTIONS_IMMI
+      : agentKey === "research"
+        ? SUGGESTED_QUESTIONS_RESEARCH
+        : SUGGESTED_QUESTIONS;
 
   return (
     <div className="min-h-screen bg-[#f8f9fc] flex flex-col">
@@ -306,6 +588,38 @@ Hãy cá nhân hoá câu trả lời dựa trên hồ sơ này. Nếu người d
             </div>
             <div>
               <div className="font-bold text-[#0a1628]">AI Tư vấn Di trú Úc</div>
+              <div className="mt-1 flex gap-2 flex-wrap">
+                <button
+                  onClick={() => startNewConversation("planning")}
+                  className={`text-xs px-3 py-1.5 rounded-lg border transition-colors ${
+                    agentKey === "planning"
+                      ? "bg-[#0f2347] text-white border-[#0f2347]"
+                      : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+                  }`}
+                >
+                  Agent Planning
+                </button>
+                <button
+                  onClick={() => startNewConversation("immi")}
+                  className={`text-xs px-3 py-1.5 rounded-lg border transition-colors ${
+                    agentKey === "immi"
+                      ? "bg-[#0f2347] text-white border-[#0f2347]"
+                      : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+                  }`}
+                >
+                  Immi Agent (Sinh viên → PR)
+                </button>
+                <button
+                  onClick={() => startNewConversation("research")}
+                  className={`text-xs px-3 py-1.5 rounded-lg border transition-colors ${
+                    agentKey === "research"
+                      ? "bg-[#0f2347] text-white border-[#0f2347]"
+                      : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+                  }`}
+                >
+                  Research Agent (Voice)
+                </button>
+              </div>
               <div className="text-xs text-gray-400 flex items-center gap-2">
                 <span className="flex items-center gap-1 text-emerald-600">
                   <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" /> Đang hoạt động
@@ -437,7 +751,7 @@ Hãy cá nhân hoá câu trả lời dựa trên hồ sơ này. Nếu người d
           <div className="max-w-3xl mx-auto">
             <p className="text-xs text-gray-400 mb-2">Câu hỏi gợi ý:</p>
             <div className="flex flex-wrap gap-2">
-              {SUGGESTED_QUESTIONS.flatMap(cat =>
+              {suggestedQuestions.flatMap(cat =>
                 cat.questions.map((q, i) => (
                   <button
                     key={`${cat.category}-${i}`}
@@ -468,6 +782,14 @@ Hãy cá nhân hoá câu trả lời dựa trên hồ sơ này. Nếu người d
             disabled={loading}
           />
           <button
+            onClick={() => (isListening ? stopVoiceInput() : startVoiceInput())}
+            disabled={loading || !voiceSupported || (!isListening && !user && freeCount >= FREE_LIMIT)}
+            className="bg-gray-50 border border-gray-200 text-gray-700 w-12 h-12 rounded-xl flex items-center justify-center hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex-shrink-0"
+            title={!voiceSupported ? "Trình duyệt không hỗ trợ SpeechRecognition (voice chat)" : (isListening ? "Dừng ghi" : "Nói vào đây")}
+          >
+            {isListening ? "Stop" : "Mic"}
+          </button>
+          <button
             onClick={() => sendMessage()}
             disabled={loading || !input.trim()}
             className="bg-[#0f2347] text-white w-12 h-12 rounded-xl flex items-center justify-center hover:bg-[#1a3a6e] disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex-shrink-0"
@@ -475,6 +797,11 @@ Hãy cá nhân hoá câu trả lời dựa trên hồ sơ này. Nếu người d
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
           </button>
         </div>
+        {isListening && (
+          <div className="max-w-3xl mx-auto mt-2 text-xs text-center text-gray-400">
+            {voiceTranscriptPreview ? `Bạn nói: ${voiceTranscriptPreview}` : "Đang nghe..."}
+          </div>
+        )}
         <p className="text-center text-[10px] text-gray-300 mt-2">
           Thông tin dựa trên hướng dẫn của DoHA. Xác minh tại{" "}
           <a href="https://homeaffairs.gov.au" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-400">homeaffairs.gov.au</a>
