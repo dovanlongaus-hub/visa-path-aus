@@ -407,19 +407,69 @@ function TaskCard({ task }) {
 // ──────────────────────────────────────────────────────────────
 // Progress Dashboard
 // ──────────────────────────────────────────────────────────────
-function ProgressDashboard({ profile }) {
+function ProgressDashboard({ profile, checklistCompletedKeys }) {
   if (!profile) return null;
+
+  const isItemDone = (stageId, itemText) =>
+    checklistCompletedKeys?.has(`${stageId}__${itemText}`);
 
   // Determine milestones completed
   const milestones = [
-    { id: "profile", label: "Hoàn thiện hồ sơ", done: !!(profile.current_visa_type && profile.occupation_code) },
-    { id: "english", label: "Kết quả tiếng Anh", done: !!(profile.english_score && parseFloat(profile.english_score) >= 6) },
-    { id: "skills_assess", label: "Skills Assessment", done: !!profile.skills_assessment_done },
-    { id: "eoi", label: "Nộp EOI SkillSelect", done: !!profile.eoi_submitted },
-    { id: "invitation", label: "Nhận Invitation to Apply", done: !!profile.invitation_received },
-    { id: "lodge", label: "Nộp hồ sơ visa", done: !!profile.visa_lodged },
-    { id: "health", label: "Khám sức khỏe", done: !!profile.health_exam_done },
-    { id: "grant", label: "Visa được cấp 🎉", done: !!profile.visa_granted },
+    {
+      id: "profile",
+      label: "Hoàn thiện hồ sơ",
+      done: !!(profile.current_visa_type && profile.occupation_code) ||
+        isItemDone("visa500", "Nộp đơn visa 500 online qua ImmiAccount") ||
+        isItemDone("pr", "Nộp hồ sơ online qua ImmiAccount"),
+    },
+    {
+      id: "english",
+      label: "Kết quả tiếng Anh",
+      done: !!(profile.english_score && parseFloat(profile.english_score) >= 6) ||
+        isItemDone("visa500", "Thi IELTS / PTE đạt yêu cầu (IELTS 5.5+)") ||
+        isItemDone("visa485", "Thi lại IELTS/PTE nếu chưa đạt 6.0 (mỗi kỹ năng 5.0+)"),
+    },
+    {
+      id: "skills_assess",
+      label: "Skills Assessment",
+      done: !!profile.skills_assessment_done ||
+        isItemDone("skills", "Nhận thư kết quả Skills Assessment"),
+    },
+    {
+      id: "eoi",
+      label: "Nộp EOI SkillSelect",
+      done: !!profile.eoi_submitted ||
+        isItemDone("eoi", "Submit EOI và chờ được mời (ITA)"),
+    },
+    {
+      id: "state",
+      label: "State Nomination (190/491)",
+      done: isItemDone("state", "Nộp đơn bảo lãnh tiểu bang (190/491)"),
+    },
+    {
+      id: "invitation",
+      label: "Nhận Invitation to Apply",
+      done: !!profile.invitation_received ||
+        isItemDone("pr", "Nhận Invitation to Apply (ITA)"),
+    },
+    {
+      id: "lodge",
+      label: "Nộp hồ sơ visa",
+      done: !!profile.visa_lodged ||
+        isItemDone("pr", "Nộp hồ sơ online qua ImmiAccount"),
+    },
+    {
+      id: "health",
+      label: "Khám sức khỏe",
+      done: !!profile.health_exam_done ||
+        isItemDone("pr", "Khám sức khỏe tại panel doctor được chỉ định"),
+    },
+    {
+      id: "grant",
+      label: "Visa được cấp 🎉",
+      done: !!profile.visa_granted ||
+        isItemDone("pr", "Chờ xử lý và nhận visa PR"),
+    },
   ];
 
   const completedCount = milestones.filter(m => m.done).length;
@@ -517,10 +567,21 @@ export default function MyPlan() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
+  const [completedChecklistKeys, setCompletedChecklistKeys] = useState(null);
 
   useEffect(() => {
-    entities.UserProfile.list("-created_date", 1)
-      .then(list => setProfile(list[0] || null))
+    Promise.all([
+      entities.UserProfile.list("-created_date", 1),
+      entities.ChecklistItem.filter({ completed: true }, "-created_at", 500).catch(() => []),
+    ])
+      .then(([list, checklistRecords]) => {
+        setProfile(list[0] || null);
+        const keys = new Set();
+        (checklistRecords || []).forEach((r) => {
+          if (r?.stage && r?.item) keys.add(`${r.stage}__${r.item}`);
+        });
+        setCompletedChecklistKeys(keys);
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -573,7 +634,7 @@ export default function MyPlan() {
         </div>
 
         {/* Progress Dashboard */}
-        <ProgressDashboard profile={profile} />
+        <ProgressDashboard profile={profile} checklistCompletedKeys={completedChecklistKeys} />
 
         {/* Progress + EOI score */}
         <div className="grid md:grid-cols-2 gap-4 mb-6">

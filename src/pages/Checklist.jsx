@@ -81,8 +81,21 @@ const defaultStages = [
     ],
   },
   {
+    id: "state",
+    title: "Giai đoạn 6: Bảo lãnh Tiểu bang (190/491)",
+    color: "sky",
+    items: [
+      "Chọn tiểu bang phù hợp với ngành nghề và nơi cư trú",
+      "Đảm bảo nghề nghiệp nằm trong danh sách nghề của tiểu bang đó",
+      "Chuẩn bị bằng chứng liên kết tiểu bang (học/làm/định cư tại bang)",
+      "Nộp đơn bảo lãnh tiểu bang (190/491)",
+      "Chuẩn bị điểm EOI base và hồ sơ supporting cho nomination",
+      "Nếu chọn Visa 491: cam kết sống & làm việc vùng 3 năm",
+    ],
+  },
+  {
     id: "pr",
-    title: "Giai đoạn 6: Nộp hồ sơ PR",
+    title: "Giai đoạn 7: Nộp hồ sơ PR",
     color: "rose",
     items: [
       "Nhận Invitation to Apply (ITA)",
@@ -108,15 +121,21 @@ const colorMap = {
 };
 
 // Maps visa type → checklist stage id to auto-expand
-const visaToChecklistStage = { "500": "visa500", "485": "visa485", "189": "eoi", "190": "eoi", "491": "eoi" };
+const visaToChecklistStage = {
+  "500": "visa500",
+  "485": "visa485",
+  "189": "eoi",
+  "190": "state",
+  "491": "state",
+};
 
 // Priority order per visa type - which stages are most relevant
 const visaRelevantStages = {
   "500": ["visa500", "studying"],
   "485": ["visa485", "skills"],
   "189": ["eoi", "pr"],
-  "190": ["eoi", "pr"],
-  "491": ["eoi", "pr"],
+  "190": ["state", "pr"],
+  "491": ["state", "pr"],
 };
 
 export default function Checklist() {
@@ -132,7 +151,7 @@ export default function Checklist() {
   }, [profile]);
 
   useEffect(() => {
-    entities.Checklist.list().then((records) => {
+    entities.ChecklistItem.list().then((records) => {
       const state = {};
       records.forEach((r) => {
         state[`${r.stage}__${r.item}`] = r.completed;
@@ -147,11 +166,11 @@ export default function Checklist() {
     setChecked((prev) => ({ ...prev, [key]: newVal }));
 
     // Upsert to entity
-    const existing = await entities.Checklist.filter({ stage: stageId, item });
+    const existing = await entities.ChecklistItem.filter({ stage: stageId, item });
     if (existing.length > 0) {
-      await entities.Checklist.update(existing[0].id, { completed: newVal });
+      await entities.ChecklistItem.update(existing[0].id, { completed: newVal });
     } else {
-      await entities.Checklist.create({ stage: stageId, item, completed: newVal });
+      await entities.ChecklistItem.create({ stage: stageId, item, completed: newVal });
     }
   };
 

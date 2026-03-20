@@ -227,7 +227,12 @@ export default function ArrivalGuide() {
       const p = profiles[0] || null;
       setProfile(p);
 
-      const records = await entities.Checklist.filter({ stage: { $regex: "^arrival__" } }).catch(() => []);
+      // Load all checklist items locally, then filter by arrival prefix.
+      // (The entity filter helper doesn't support $regex across providers.)
+      const allChecklist = await entities.ChecklistItem.filter({}).catch(() => []);
+      const records = (allChecklist || []).filter(
+        (r) => typeof r.stage === "string" && r.stage.startsWith(ENTITY_PREFIX)
+      );
       const state = {};
       records.forEach((r) => { state[`${r.stage}__${r.item}`] = r.completed; });
       setChecked(state);
@@ -252,11 +257,11 @@ export default function ArrivalGuide() {
     const newVal = !checked[key];
     setChecked((prev) => ({ ...prev, [key]: newVal }));
     const fullStageId = `${ENTITY_PREFIX}${stageId}`;
-    const existing = await entities.Checklist.filter({ stage: fullStageId, item: itemText }).catch(() => []);
+    const existing = await entities.ChecklistItem.filter({ stage: fullStageId, item: itemText }).catch(() => []);
     if (existing.length > 0) {
-      entities.Checklist.update(existing[0].id, { completed: newVal }).catch(() => {});
+      entities.ChecklistItem.update(existing[0].id, { completed: newVal }).catch(() => {});
     } else {
-      entities.Checklist.create({ stage: fullStageId, item: itemText, completed: newVal }).catch(() => {});
+      entities.ChecklistItem.create({ stage: fullStageId, item: itemText, completed: newVal }).catch(() => {});
     }
   };
 

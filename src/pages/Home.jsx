@@ -350,7 +350,7 @@ const HomeV2 = () => {
       <div className="bg-neutral-900 text-white py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-sm opacity-80">
-            © 2026 Visa Path Australia. All rights reserved. 
+            © 2026 Visa Path Australia. All rights reserved. • Cursor 2026-03-20
             <span className="block md:inline"> Registered Migration Agents: MARA 0000000</span>
           </p>
           <p className="text-xs opacity-60 mt-2">

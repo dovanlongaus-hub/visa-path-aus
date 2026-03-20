@@ -28,7 +28,7 @@ export default function DashboardSummary() {
         }
 
         // Fetch tasks/checklist
-        const checklistItems = await entities.Checklist.filter(
+        const checklistItems = await entities.ChecklistItem.filter(
           { completed: false },
           'created_date',
           5

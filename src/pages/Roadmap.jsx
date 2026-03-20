@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CheckCircle, Circle, ChevronDown, ChevronUp, Clock, ArrowRight, User, Zap } from "lucide-react";
 import { createPageUrl } from "@/utils";
 import { Link } from "react-router-dom";
 import { useUserProfile } from "../components/useUserProfile";
+import { entities } from "@/api/supabaseClient";
 
 const stages = [
   {
@@ -155,9 +156,46 @@ export default function Roadmap() {
   const { profile, loading, getCurrentStage, getEnglishLevel } = useUserProfile();
   const currentStage = profile ? (getCurrentStage() || "student") : null;
   const [expanded, setExpanded] = useState(null);
+  const [checklistCompletedKeys, setChecklistCompletedKeys] = useState(null);
+
+  const isChecklistItemDone = (stageId, itemText) =>
+    checklistCompletedKeys?.has(`${stageId}__${itemText}`);
+
+  const isStageDoneByChecklist = (roadmapStageId) => {
+    if (!checklistCompletedKeys) return false;
+    if (roadmapStageId === "student")
+      return (
+        isChecklistItemDone("visa500", "Nhận visa và chuẩn bị sang Úc") ||
+        isChecklistItemDone("visa500", "Đóng phí visa AUD 650")
+      );
+    if (roadmapStageId === "graduate")
+      return isChecklistItemDone("visa485", "Nộp đơn visa 485 trong 6 tháng sau tốt nghiệp");
+    if (roadmapStageId === "skills")
+      return isChecklistItemDone("skills", "Nhận thư kết quả Skills Assessment");
+    if (roadmapStageId === "eoi")
+      return isChecklistItemDone("eoi", "Submit EOI và chờ được mời (ITA)");
+    if (roadmapStageId === "pr")
+      return isChecklistItemDone("pr", "Chờ xử lý và nhận visa PR");
+    if (roadmapStageId === "state")
+      return isChecklistItemDone("state", "Nộp đơn bảo lãnh tiểu bang (190/491)");
+    return false; // state stage handled by current visa type for now
+  };
 
   // Auto-expand the current stage when profile loads
   useState(() => { if (currentStage) setExpanded(currentStage); });
+
+  useEffect(() => {
+    entities.ChecklistItem
+      .filter({ completed: true }, "-created_at", 1000)
+      .then((records) => {
+        const keys = new Set();
+        (records || []).forEach((r) => {
+          if (r?.stage && r?.item) keys.add(`${r.stage}__${r.item}`);
+        });
+        setChecklistCompletedKeys(keys);
+      })
+      .catch(() => setChecklistCompletedKeys(new Set()));
+  }, []);
 
   const englishLevel = getEnglishLevel();
   const needsEnglish = englishLevel === "below" || englishLevel === null;
@@ -207,7 +245,8 @@ export default function Roadmap() {
           {stages.map((stage, idx) => {
             const c = colorMap[stage.color];
             const isOpen = expanded === stage.id;
-            const status = profile ? getStageStatus(stage.id, profile.current_visa_type) : "upcoming";
+            let status = profile ? getStageStatus(stage.id, profile.current_visa_type) : "upcoming";
+            if (profile && isStageDoneByChecklist(stage.id)) status = "done";
             const isCurrent = status === "current";
             const isDone = status === "done";
             return (
