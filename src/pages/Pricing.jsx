@@ -4,7 +4,9 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { loadStripe } from "@stripe/stripe-js";
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+const stripePromise = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY 
+  ? loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY) 
+  : Promise.resolve(null);
 
 // ── Pricing tiers (AUD) ───────────────────────────────────────
 const PLANS_CONFIG = [

@@ -82,15 +82,11 @@ import VisaTimeline from './pages/VisaTimeline';
 import WorkflowEngine from './pages/WorkflowEngine';
 import Community from './pages/Community';
 import Referral from './pages/Referral';
-<<<<<<< HEAD
 import Blog from './pages/Blog';
-import __Layout from './Layout.jsx';
-=======
 //import __Layout from './Layout.jsx';
 //import Layout from './Layout.jsx';
 import __LayoutNew from './layout/LayoutNew.jsx';
 import LayoutNew from './layout/LayoutNew.jsx';
->>>>>>> da7fe85 (feat: refactor header navigation layout with new components and structure more clean and minimalism)
 
 
 export const PAGES = {
@@ -136,5 +132,5 @@ export const pagesConfig = {
     mainPage: "Home",
     Pages: PAGES,
     //Layout: __Layout,
-    LayoutNew: __LayoutNew,
+    Layout: __LayoutNew,
 };

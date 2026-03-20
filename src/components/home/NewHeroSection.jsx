@@ -1,6 +1,6 @@
 // NewHeroSection.jsx - UI/UX Pro Max Trust & Authority Hero
 import React from 'react';
-import { ArrowRight, CheckCircle, MapPin, Calendar, FileText, Users } from 'lucide-react';
+import { ArrowRight, CheckCircle, MapPin, Calendar, FileText, Users, Award } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import TrustBadge, { ImmigrationTrustBadges } from '@/components/ui/TrustBadge';
 
@@ -220,7 +220,7 @@ const NewHeroSection = () => {
       </div>
       
       {/* CSS for grid pattern */}
-      <style jsx>{`
+      <style>{`
         .bg-grid-pattern {
           background-image: 
             linear-gradient(to right, rgba(30, 58, 95, 0.05) 1px, transparent 1px),
