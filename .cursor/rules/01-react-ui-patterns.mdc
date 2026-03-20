@@ -1,0 +1,18 @@
+---
+description: React/UI patterns and hook safety
+globs: src/**/*.jsx
+alwaysApply: false
+---
+
+# UI + Hooks
+
+- Functional components only.
+- Hooks:
+  - only at top-level of components/custom hooks.
+  - ensure dependency arrays are correct; prefer `useCallback` for callbacks used in effects.
+- Lists:
+  - prefer stable keys (`id`/slug). Avoid `key={index}` for dynamic lists.
+- IO:
+  - avoid `fetch`/Supabase/AI calls directly inside UI components; go through `src/api/*`.
+- If you need large prompt/system messages, prefer `src/lib/ai/*` over keeping them inside a React component.
+

@@ -1,0 +1,14 @@
+---
+description: AI prompt organization and safety
+globs: src/pages/Chat.jsx
+alwaysApply: false
+---
+
+# AI prompt handling
+
+- Do not change existing safety/disclaimer behavior accidentally.
+- When editing Chat personas:
+  - keep the language requirement (VN) and the “not legal advice” guidance.
+  - keep the “ask up to 3 clarifying questions when missing data” guideline.
+- Prefer extracting prompt constants into `src/lib/ai/*` as the app grows.
+

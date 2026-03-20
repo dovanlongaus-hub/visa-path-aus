@@ -1,0 +1,22 @@
+---
+description: Core standards for Visa Path AUS (Immi Coder Agent)
+alwaysApply: true
+---
+
+# Always follow
+
+- Respect layer boundaries:
+  - `src/pages/` orchestrates + renders UI.
+  - `src/components/` reusable UI.
+  - `src/api/` all external IO (AI/Supabase/HTTP).
+  - `src/lib/` pure logic/utilities (and prompt templates when possible).
+- AI changes:
+  - Keep safety/disclaimer behavior consistent (no legal advice).
+  - Prefer moving system/persona prompt constants into `src/lib/ai/*`.
+- Error handling:
+  - `src/api/*` throw clear errors.
+  - UI catches and shows user-friendly messages.
+- Testing:
+  - Pure logic => Vitest unit tests in `src/__tests__/`.
+  - Before PR: `npm run lint` and `npm run test` must pass.
+

@@ -1,0 +1,15 @@
+---
+description: API/service conventions (external IO)
+globs: src/api/**/*.js
+alwaysApply: false
+---
+
+# API layer rules
+
+- Keep `src/api/*` as the only place that performs external IO (`fetch`, Supabase, third-party SDK calls).
+- Error handling:
+  - throw `Error` (or a consistent error wrapper) with a message that UI can map to a friendly text.
+- Inputs/outputs:
+  - validate inputs where practical (especially for AI routing/model selection).
+  - return data in simple JSON-friendly shapes for UI.
+
