@@ -21,6 +21,7 @@ export default function Dashboard() {
           </div>
         </div>
         <div className="mt-8 flex flex-col md:flex-row gap-4">
+          <a href="/AIChatAdvisor" className="w-full md:w-auto bg-green-600 text-white py-3 rounded-xl font-bold text-lg text-center">AI Chat Tư Vấn Di Trú</a>
           <a href="/ChecklistOnboarding" className="w-full md:w-auto bg-blue-600 text-white py-3 rounded-xl font-bold text-lg text-center">Checklist nhập môn</a>
           <a href="/AuthOnboarding" className="w-full md:w-auto bg-indigo-600 text-white py-3 rounded-xl font-bold text-lg text-center">Đăng ký & Onboarding</a>
         </div>
