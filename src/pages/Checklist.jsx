@@ -49,7 +49,7 @@ const defaultStages = [
       "Thi lại IELTS/PTE nếu chưa đạt 6.0 (mỗi kỹ năng 5.0+)",
       "Nộp đơn visa 485 trong 6 tháng sau tốt nghiệp",
       "Chuẩn bị health exam mới nếu cần",
-      "Đóng phí visa AUD 1,840",
+      "Đóng phí visa AUD 4,600",
       "Trong khi chờ 485: tiếp tục tích lũy kinh nghiệm",
     ],
   },

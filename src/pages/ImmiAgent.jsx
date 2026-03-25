@@ -294,7 +294,7 @@ export default function ImmiAgent() {
             <li>Tốt nghiệp trong 6 tháng gần nhất, học tối thiểu 2 năm tại Úc (đạt chuẩn thực học)</li>
             <li>Tuổi &lt; 50 (tại thời điểm nộp) + IELTS 6.0 (mỗi kỹ năng không dưới 5.0) hoặc PTE 50+</li>
             <li>Còn trong hạn visa sinh viên khi nộp; Health exam nếu cần</li>
-            <li>Form 1276; phí visa: ~AUD 1,840</li>
+            <li>Form 1276; phí visa: ~AUD 4,600</li>
           </ul>
           <div className="flex gap-2 flex-wrap">
             <button onClick={() => openImmiChat({ visaType: "485", visaStage: "skills" })} className="text-sm font-semibold text-[#0f2347] hover:underline">

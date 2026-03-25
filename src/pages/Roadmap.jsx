@@ -43,7 +43,7 @@ const stages = [
       "IELTS 6.0 trung bình (mỗi kỹ năng không dưới 5.0) hoặc PTE 50+",
       "Còn trong hạn visa sinh viên khi nộp đơn",
       "Hồ sơ sức khỏe mới nếu cần",
-      "Phí visa: AUD 1,840",
+      "Phí visa: AUD 4,600",
     ],
     forms: ["Form 1276 – Temporary Graduate Visa Application"],
     tips: "Nộp đơn trước khi visa sinh viên hết hạn. Sau khi có 485, bắt đầu tích lũy điểm EOI.",
