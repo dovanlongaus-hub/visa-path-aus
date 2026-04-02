@@ -60,7 +60,7 @@ const visaStreams = [
     ],
     duration: "Thêm 1-2 năm (tùy Category regional area)",
     workRights: "Không giới hạn giờ làm việc – toàn thời gian",
-    fee: "AUD 1,250",
+    fee: "AUD 1,810 (phí gia hạn)",
     prPathway: "Tích lũy thêm thời gian và kinh nghiệm để đủ điều kiện PR",
   },
 ];
