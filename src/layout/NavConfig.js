@@ -14,7 +14,8 @@ export const navGroups = [
     color: "navy",
     items: [
       { label: "Lộ trình PR", icon: Map, page: "Roadmap", desc: "Định hướng từng giai đoạn" },
-      { label: "Visa 500", icon: Sparkles, page: "Visa500", desc: "Visa sinh viên" },
+      { label: "Visa 500", icon: BookOpen, page: "Visa500", desc: "Visa du học" },
+      { label: "Visa 485", icon: Briefcase, page: "Visa485", desc: "Visa tốt nghiệp" },
       { label: "Visa 482", icon: Briefcase, page: "Visa482", desc: "Employer Sponsored" },
       { label: "Visa 858", icon: Award, page: "Visa858", desc: "National Innovation" },
       { label: "Kế hoạch cá nhân", icon: Target, page: "MyPlan", desc: "Mục tiêu theo mốc thời gian" },
@@ -75,6 +76,7 @@ export const NO_BACK_PAGES = ["Home", "Chat"];
 export const PAGE_TITLES = {
   Roadmap: "Lộ trình PR",
   Visa482: "Visa 482",
+  Visa485: "Visa 485",
   Visa500: "Visa 500",
   Visa858: "Visa 858",
   Profile: "Hồ sơ cá nhân",

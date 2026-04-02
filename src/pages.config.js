@@ -72,6 +72,7 @@ import Roadmap from './pages/Roadmap';
 import Settings from './pages/Settings';
 import Testimonials from './pages/Testimonials';
 import Visa482 from './pages/Visa482';
+import Visa485 from './pages/Visa485';
 import Visa500 from './pages/Visa500';
 import Visa858 from './pages/Visa858';
 import ArrivalGuide from './pages/ArrivalGuide';
@@ -117,6 +118,7 @@ export const PAGES = {
     "Settings": Settings,
     "Testimonials": Testimonials,
     "Visa482": Visa482,
+    "Visa485": Visa485,
     "Visa500": Visa500,
     "Visa858": Visa858,
     "ArrivalGuide": ArrivalGuide,
